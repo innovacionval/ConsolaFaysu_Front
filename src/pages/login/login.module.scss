@@ -1,0 +1,66 @@
+@import "../../styles/colors.scss";
+
+.container{
+  display: flex;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+}
+
+.containerLogin {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  .containerForm{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 20px;
+    padding: 20px;
+    width: 30%;
+    background-color: $gray;
+    gap: 20px;
+    .title{
+      font-size: 2.5rem;
+      font-weight: 500;
+    }
+    form{
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      height: 100%;
+      .input{
+        width: 100%;
+        padding: 20px;
+        font-size: 1.3rem;
+        font-weight: 400;
+        margin-bottom: 1rem;
+      }
+      .button{
+        background-color: $primary;
+        color: $secondary;
+        width: 30%;
+        font-weight: 500;
+        border-radius: 50px;
+        padding: 10px 20px;
+        margin-top: 1rem;
+        font-size: 1.3rem;
+      }
+    }
+    .text{
+      font-size: 0.8rem;
+      font-weight: 400;
+      cursor: pointer;
+    }
+  
+  }
+  img{
+    object-position: center 30vh;
+    object-fit: cover;
+    width: 60%;
+    height: 100%;
+  }
+}
