@@ -1,7 +1,7 @@
 
 import styles from './table.module.scss'
 
-export const Table = ({labels, data}) => {
+export const Table = ({labels, data, actions}) => {
   return (
     <div className={styles.containerTable}>
       <table>
@@ -19,13 +19,19 @@ export const Table = ({labels, data}) => {
             data.map((item, index) => (
               <tr key={index}>
                 {
-                  Object.keys(item).map((key, index) => (
-                    <td key={index}>{item[key]}</td>
-                  ))
+                  Object.keys(item).map((key, index) => {
+                    if (key == 'status') {
+                      return <td key={index} className={item[key] == "Activo" ? styles.active : styles.inactive}>{item[key]}</td>
+                    }
+                    return <td key={index}>{item[key]}</td>
+                  })
                 }
                 <td className={styles.actions}>
-                  <button>Editar</button>
-                  <button>Eliminar</button>
+                  {
+                    actions.map((action, index) => (
+                      <button key={index} onClick={action.action}>{action.name}</button>
+                    ))
+                  }
                 </td>
               </tr>
             ))
