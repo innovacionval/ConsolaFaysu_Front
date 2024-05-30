@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from 'react';
 import styles from './corporateEntity.module.scss'
 import { useNavigate } from 'react-router-dom';
 import { ModalContext } from '@/contexts/modalContext';
-import { FaPlus, FaSearch } from 'react-icons/fa';
+import { FaEdit, FaPlus, FaRegTrashAlt, FaSearch } from 'react-icons/fa';
 import { Table } from '@/components/table/table';
 import { RiArrowGoBackFill } from 'react-icons/ri';
 
@@ -11,7 +11,7 @@ export const CorporateEntity = () => {
   const [search, setSearch] = useState("");
   const {openModal} = useContext(ModalContext);
   const [data, setData] = useState([{}]);
-  const labels = ["Nombres", "Identidad", "Email", "Rol", "Estado", "Acciones"];
+  const labels = ["Nombre", "Usuario", "Logo", "Color Principal", "Color Secundario", "Acciones"];
   const navigate = useNavigate();
   useEffect(() => {
     if(search == ""){
@@ -19,46 +19,39 @@ export const CorporateEntity = () => {
       setData([
         {
           name: "Juan Perez",
-          identity: "0801199900000",
-          email: "",
-          role: "Admin",
-          status: "Activo",
+          user: "JuanPerez",
+          logo: "",
+          primaryColor: "#F22ab2",
+          secondaryColor: "#ffffff",
         },
         {
-        name: "Juan Perez",
-        identity: "0801199900000",
-        email: "",
-        role: "Admin",
-        status: "Activo",
-      },
-      {
-        name: "Juan Perez",
-        identity: "0801199900000",
-        email: "",
-        role: "Admin",
-        status: "Activo",
-      },
-      {
-        name: "Juan Perez",
-        identity: "0801199900000",
-        email: "",
-        role: "Admin",
-        status: "Inactivo",
-      },
-      {
-        name: "Juan Perez",
-        identity: "0801199900000",
-        email: "",
-        role: "Admin",
-        status: "Inactivo",
-      },
-      {
-        name: "Jorge Perez",
-        identity: "0801199900000",
-        email: "",
-        role: "Admin",
-        status: "Activo",
-      },
+          name: "Juan Perez",
+          user: "JuanPerez",
+          logo: "",
+          primaryColor: "#000000",
+          secondaryColor: "#ffffff",
+        },
+        {
+          name: "Juan Perez",
+          user: "JuanPerez",
+          logo: "",
+          primaryColor: "#000000",
+          secondaryColor: "#ffffff",
+        },
+        {
+          name: "Juan Perez",
+          user: "JuanPerez",
+          logo: "",
+          primaryColor: "#000000",
+          secondaryColor: "#ffffff",
+        },
+        {
+          name: "Juan Perez",
+          user: "JuanPerez",
+          logo: "",
+          primaryColor: "#000000",
+          secondaryColor: "#ffffff",
+        },
     ]);
   }
 
@@ -66,10 +59,12 @@ export const CorporateEntity = () => {
   const actions = [
     {
       name: "Editar",
+      icon: <FaEdit />,
       action: () => alert("Editar"),
     },
     {
       name: "Eliminar",
+      icon: <FaRegTrashAlt />,
       action: () => alert("Eliminar"),
     },
   ];
@@ -91,7 +86,7 @@ export const CorporateEntity = () => {
     navigate("/configuration");
   }
   const handleOpen = () => {
-    openModal();
+    openModal("corporateEntity");
   }
 
 

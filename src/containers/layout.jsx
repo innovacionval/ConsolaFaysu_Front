@@ -3,14 +3,16 @@ import { Navbar } from '../components/navbar/navbar'
 import styles from './layout.module.scss'
 import { ModalContext } from '@/contexts/modalContext';
 import { useContext } from 'react';
-import { Modal } from '@/components/modal/modal';
+import { ModalUsers } from '@/components/users/modal';
+import { ModalCorporateEntity } from '@/components/corporateEntity/modal';
+
 
 export const Layout = () => {
   const {isOpen} = useContext(ModalContext);
-  console.log(isOpen)
   return (
     <>
-    {isOpen && <Modal/>}
+    {isOpen.users && <ModalUsers/>}
+    {isOpen.corporateEntity && <ModalCorporateEntity/>}
       <div className={styles.container}>
         <Navbar />
         <div className={styles.containerPages}>

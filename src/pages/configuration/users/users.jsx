@@ -1,6 +1,6 @@
 import { Table } from "@/components/table/table";
 import styles from "./users.module.scss";
-import { FaPlus, FaSearch } from "react-icons/fa";
+import { FaEdit, FaPlus, FaSearch } from "react-icons/fa";
 import { RiArrowGoBackFill } from "react-icons/ri";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -10,13 +10,14 @@ export const Users = () => {
   const [search, setSearch] = useState("");
   const {openModal} = useContext(ModalContext);
   const [data, setData] = useState([{}]);
-  const labels = ["Nombres", "Identidad", "Email", "Rol", "Estado", "Acciones"];
+  const labels = ["id", "Nombres", "Identidad", "Email", "Rol", "Estado", "Acciones"];
   const navigate = useNavigate();
   useEffect(() => {
     if(search == ""){
 
       setData([
         {
+          id: 1,
           name: "Juan Perez",
           identity: "0801199900000",
           email: "",
@@ -24,6 +25,7 @@ export const Users = () => {
           status: "Activo",
         },
         {
+        id: 2,
         name: "Juan Perez",
         identity: "0801199900000",
         email: "",
@@ -31,6 +33,7 @@ export const Users = () => {
         status: "Activo",
       },
       {
+        id: 3,
         name: "Juan Perez",
         identity: "0801199900000",
         email: "",
@@ -38,6 +41,7 @@ export const Users = () => {
         status: "Activo",
       },
       {
+        id: 4,
         name: "Juan Perez",
         identity: "0801199900000",
         email: "",
@@ -45,6 +49,7 @@ export const Users = () => {
         status: "Inactivo",
       },
       {
+        id: 5,
         name: "Juan Perez",
         identity: "0801199900000",
         email: "",
@@ -52,6 +57,7 @@ export const Users = () => {
         status: "Inactivo",
       },
       {
+        id: 6,
         name: "Jorge Perez",
         identity: "0801199900000",
         email: "",
@@ -64,12 +70,24 @@ export const Users = () => {
   }, [search]);
   const actions = [
     {
-      name: "Editar",
-      action: () => alert("Editar"),
+      name: "switch",
+      action: (id) => {
+        // Find the item with the given id
+        const item = data.find(item => item.id === id);
+  
+        // Toggle the status of the item
+        item.status = item.status === 'Activo' ? 'Inactivo' : 'Activo';
+  
+        // Update the state with the new item
+        setData([...data]);
+      }
     },
     {
-      name: "Eliminar",
-      action: () => alert("Eliminar"),
+      name: "edit",
+      icon: <FaEdit />,
+      action: (id) => {
+        console.log(id)
+      }
     },
   ];
 
@@ -90,7 +108,7 @@ export const Users = () => {
     navigate("/configuration");
   }
   const handleOpen = () => {
-    openModal();
+    openModal("users");
   }
 
   return (

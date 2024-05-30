@@ -3,11 +3,12 @@ import styles from './modal.module.scss'
 import { useContext } from 'react';
 import { useForm } from 'react-hook-form';
 import { BiSave } from 'react-icons/bi';
-export const Modal = () => {
+
+export const ModalUsers = () => {
   const {closeModal} = useContext(ModalContext);
   const {register, handleSubmit, formState:{errors}} = useForm();
   const handleClose = () => {
-    closeModal()
+    closeModal("corporateEntity")
   }
   const inputs = [
     {

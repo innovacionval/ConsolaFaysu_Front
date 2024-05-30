@@ -26,7 +26,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = () => {
     sessionStorage.removeItem('token')
-    setIsValid(false)
+    setIsValid(null)
   }
 
   useEffect(() => {

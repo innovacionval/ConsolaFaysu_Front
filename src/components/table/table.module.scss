@@ -49,6 +49,40 @@
           }
         }
       }
+      .actions{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        .action{
+          display: flex;
+          align-items: center;
+          border: none;
+          border-radius: 5px;
+          cursor: pointer;
+          background-color: transparent;
+          transition: all 0.1s ease-out;
+          &:hover{
+            background-color: transparent;
+            box-shadow: none;
+            color: $primary;
+          }
+        }
+      }
+      .containerColor{
+        appearance: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        input[type="color"]{
+          width: 30px;
+          height: 30px;
+          cursor: pointer;
+          &::-webkit-color-swatch {
+            border: none;
+          }
+        }
+      }
     }
 
     th {
