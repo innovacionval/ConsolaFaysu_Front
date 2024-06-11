@@ -1,0 +1,119 @@
+@import "@/styles/colors.scss";
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  gap: 20px;
+
+  .containerHeader {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 20px;
+
+    .containerInput {
+      display: flex;
+      gap: 10px;
+      input {
+        border-radius: 20px;
+        border: 1px solid #ccc;
+        padding: 5px 10px;
+        font-size: larger;
+      }
+      button {
+        width: 60px;
+        border: none;
+        border-radius: 20px;
+        padding: 5px 10px;
+        background-color: $darkGray;
+        color: white;
+        cursor: pointer;
+      }
+    }
+    .button {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      background-color: $darkGray;
+      color: white;
+      border: none;
+      border-radius: 15px;
+      padding: 5px 10px;
+      cursor: pointer;
+    }
+  }
+
+  h2 {
+    text-align: start;
+    width: 100%;
+  }
+  .form{
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    width: 100%;
+    .error{
+      font-weight: bold;
+      font-size: small;
+      color: red;
+      margin: 5px 0;
+    }
+    .formGroup{
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      width: 100%;
+      label{
+        font-weight: bold;
+        font-size: 1.4rem;
+        width: 200px;
+        min-width: 200px;
+      }
+      input {
+        border-radius: 20px;
+        border: 1px solid $secondary;
+        padding: 5px 10px;
+        font-size: larger;
+      }
+      select{
+        border-radius: 20px;
+        border: 1px solid $secondary;
+        padding: 5px;
+        font-size: larger;
+        width: 520px;
+      }
+      button {
+        width: 60px;
+        border: none;
+        border-radius: 20px;
+        padding: 5px 10px;
+        background-color: $darkGray;
+        color: white;
+        cursor: pointer;
+      }
+    }
+    .containerBtn{
+      display: flex;
+      justify-content: center;
+      width: 100%;
+      gap: 20px;
+      margin-top: 20px;
+      button {
+        display: flex;
+        align-items: center;
+        font-size: 1.3rem;
+        gap: 5px;
+        background-color: $darkGray;
+        color: white;
+        border: none;
+        border-radius: 15px;
+        padding: 10px;
+        width: max-content;
+        cursor: pointer;
+      }
+    }
+  }
+}

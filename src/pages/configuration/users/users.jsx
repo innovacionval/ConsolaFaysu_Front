@@ -72,13 +72,8 @@ export const Users = () => {
     {
       name: "switch",
       action: (id) => {
-        // Find the item with the given id
         const item = data.find(item => item.id === id);
-  
-        // Toggle the status of the item
         item.status = item.status === 'Activo' ? 'Inactivo' : 'Activo';
-  
-        // Update the state with the new item
         setData([...data]);
       }
     },
