@@ -13,6 +13,8 @@ export const Campaigns = () => {
     register,
     handleSubmit,
     formState: { errors },
+    setValue,
+    getValues,
   } = useForm();
   const [dataCampaign, setDataCampaign] = useState([]);
   const [steps, setSteps] = useState(0);
@@ -21,15 +23,21 @@ export const Campaigns = () => {
     setDataCampaign([...dataCampaign, data]);
     setSteps(1);
   };
+  const variablesValues =
+    {
+    Nombres: "Juan",
+    saldo: "12312",
+    }
   const onSubmitStep2 = (data) => {
     console.log(data);
     setDataCampaign([...dataCampaign, data]);
     setSteps(2);
   };
   const onSubmitStep3 = (data) => {
+    setValue("message", getValues("message") + variablesValues.Nombres);
     console.log(data);
-    setDataCampaign([...dataCampaign, data]);
-    setSteps(3);
+/*     setDataCampaign([...dataCampaign, data]);
+    setSteps(3); */
   };
   const handleBackStep1 = () => {
     setSteps(0);
@@ -182,7 +190,9 @@ export const Campaigns = () => {
           register={register}
           errors={errors}
           onSubmit={onSubmitStep3}
+          setValue={setValue}
           handleBack={handleBackStep2}
+          getValues={getValues}
         />
       )}
 
