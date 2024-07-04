@@ -198,8 +198,7 @@ export const Step3 = ({
                   <textarea
                     className={styles.textAreaSMS}
                     {...register('message', { required: true })}
-                    
-            
+
                   />
                   <p>{`${message?.length == undefined ? 0 : message.length } / ${maxLength}`}</p>
                 </div>
