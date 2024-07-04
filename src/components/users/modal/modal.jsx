@@ -20,7 +20,7 @@ export const ModalUsers = () => {
     {
       type: "text",
       name: "identity",
-      label: "Identidad",
+      label: "Identificación",
       required: true,
     },
     {

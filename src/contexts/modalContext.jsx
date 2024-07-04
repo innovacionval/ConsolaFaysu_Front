@@ -6,10 +6,12 @@ export const ModalProvider = ({children}) => {
   const [isOpen, setIsOpen] = useState({
     users: false,
     corporateEntity: false,
+    importData: false,
   });
   const [dataTable, setDataTable] = useState({
     users: [],
     corporateEntity: [],
+    importData: [],
   });
 
   const openModal = (modal) => {
@@ -19,6 +21,7 @@ export const ModalProvider = ({children}) => {
     setIsOpen({
       users: false,
       corporateEntity: false,
+      importData: false,
     });
   }
   const addData = (modal, data) => {
