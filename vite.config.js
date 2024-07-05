@@ -23,8 +23,8 @@ export default defineConfig(({command})=> {
   plugins: [react()],
   base:'/',
   }
-  if(command === 'serve'){
-    config.base = '/ConsolaFaysu_Front'
+  if(command != 'serve'){
+    config.base = '/ConsolaFaysu_Front/'
   }
   return config
 })
