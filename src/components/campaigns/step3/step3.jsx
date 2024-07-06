@@ -4,8 +4,7 @@ import { MdArrowForwardIos } from "react-icons/md";
 import { useEffect, useRef, useState } from "react";
 import { FaPaperclip, FaStar } from "react-icons/fa";
 import ReactQuill from "react-quill";
-import 'react-quill/dist/quill.snow.css'; // import styles
-import { CustomTextArea } from "./customTextArea/customTextArea";
+import "react-quill/dist/quill.snow.css"; // import styles
 
 export const Step3 = ({
   handleSubmit,
@@ -26,11 +25,9 @@ export const Step3 = ({
   const [selectedOption, setSelectedOption] = useState("E-mail");
   const [openVariables, setOpenVariables] = useState(false);
   const [valueMessage, setValueMessage] = useState("");
-  const [lenghtMessage, setLenghtMessage] = useState(0);
   const quillRef = useRef(null);
-  const maxLength = 319;
-  const message = watch('message');
-
+  const maxLength = 300;
+  const message = watch("message");
 
   useEffect(() => {
     setValue("typeCampaignStep3", "E-mail");
@@ -38,10 +35,10 @@ export const Step3 = ({
 
   useEffect(() => {
     const editor = quillRef?.current?.getEditor();
-    
+
     // Intercepta el evento de cambio de texto
-    editor?.on('text-change', (delta, oldDelta, source) => {
-      if (source === 'user') {
+    editor?.on("text-change", (delta, oldDelta, source) => {
+      if (source === "user") {
         const currentLength = editor.getLength();
         if (currentLength > maxLength) {
           // Si el texto añadido excede el límite, remuévelo
@@ -55,85 +52,92 @@ export const Step3 = ({
     setValue("typeCampaignStep3", e.target.value);
     setSelectedOption(e.target.value);
     setValue("message", "");
+    setValue("subject", "");
+    setValue("file", "");
   };
-  const handleChangeMessage = (e) => {
-    const editor = quillRef.current.getEditor();
-    if ((editor.getLength() - 1) >  319) return
-    setValueMessage(e);
-    setValue("message", e);
-    setLenghtMessage(editor.getLength() - 1);
-  }
-  const handleChangeVariables = (name) => {
-    const editor = quillRef.current.getEditor();
-    const cursorPosition = editor.getSelection().index;
-    editor.insertText(cursorPosition, `{{${name}}}`);
-  }
+  const handleChangeVariables = (e, name) => {
+    if (selectedOption != "E-mail") {
+      const cursorPosition = document.getElementById("message").selectionStart;
+      const currentText = message;
+      const newText =
+        currentText.slice(0, cursorPosition) +
+        `{{${name}}}` +
+        currentText.slice(cursorPosition);
+      setValue("message", newText);
+    } else {
+      const editor = quillRef.current.getEditor();
+      const cursorPosition = editor.getSelection().index;
+      editor.insertText(cursorPosition, `{{${name}}}`);
+    }
+  };
   const modules = {
     toolbar: [
-      [{ 'font': [] }, { 'size': [] }],
-      ['bold', 'italic', 'underline', 'strike'],
-      [{ 'color': [] }, { 'background': [] }],
-      [{ 'script': 'super' }, { 'script': 'sub' }],
-      [{ 'header': '1' }, { 'header': '2' }, 'blockquote', 'code-block'],
-      [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'indent': '-1' }, { 'indent': '+1' }],
-      [{ 'direction': 'rtl' }],
-      [{ 'align': [] }],
-      ['link', 'image', 'video'],
-      ['clean'],
-
+      [{ font: [] }, { size: [] }],
+      ["bold", "italic", "underline", "strike"],
+      [{ color: [] }, { background: [] }],
+      [{ script: "super" }, { script: "sub" }],
+      [{ header: "1" }, { header: "2" }, "blockquote", "code-block"],
+      [
+        { list: "ordered" },
+        { list: "bullet" },
+        { indent: "-1" },
+        { indent: "+1" },
+      ],
+      [{ direction: "rtl" }],
+      [{ align: [] }],
+      ["link", "image", "video"],
+      ["clean"],
     ],
   };
 
   const formats = [
-    'font', 'size',
-    'bold', 'italic', 'underline', 'strike',
-    'color', 'background',
-    'script', 'super', 'sub',
-    'header', 'blockquote', 'code-block',
-    'list', 'bullet', 'indent',
-    'direction', 'align',
-    'link', 'image', 'video',
-    'clean'
+    "font",
+    "size",
+    "bold",
+    "italic",
+    "underline",
+    "strike",
+    "color",
+    "background",
+    "script",
+    "super",
+    "sub",
+    "header",
+    "blockquote",
+    "code-block",
+    "list",
+    "bullet",
+    "indent",
+    "direction",
+    "align",
+    "link",
+    "image",
+    "video",
+    "clean",
   ];
-  /* const onClickVariables = () => {
-    const currentText = getValues('message');
-    const newText = currentText + ' Texto adicional';
-    setValue('message', newText);
-  } */
- const variables = /* ["Nombres", "Saldo", "Fecha de pago", "Cliente", "No. Obligación"] */
- [
-  {
-    "name": "Nombres",
-    "value": "juan"
-  },
-  {
-    "name": "Saldo",
-    "value": "12312"
-  },
-  {
-    "name": "Fecha de pago",
-    "value": "12/12/2021"
-  },
-  {
-    "name": "Cliente",
-    "value": "Cliente"
-  },
-  {
-    "name": "No. Obligación",
-    "value": "123123123"
-  }
- ]
 
-/*  const handleChangeSMS = (e) => {
-  const value = e.target.value;
-  if(value.length <= maxLength){
-    setValue('message', value);
-  }
-  else{
-    setValue('message', value.slice(0, maxLength));
-  }
-} */
-
+  const variables = [
+    {
+      name: "Nombres",
+      value: "juan",
+    },
+    {
+      name: "Saldo",
+      value: "12312",
+    },
+    {
+      name: "Fecha de pago",
+      value: "12/12/2021",
+    },
+    {
+      name: "Cliente",
+      value: "Cliente",
+    },
+    {
+      name: "No. Obligación",
+      value: "123123123",
+    },
+  ];
 
   return (
     <>
@@ -165,44 +169,84 @@ export const Step3 = ({
                     ))}
                   </div>
                 )}
-                { selectedOption == 'E-mail'? <>
-                  <div className={styles.containerInput}>
-                    <input
-                      type="text"
-                      {...register("subject", { required: true })}
-                      placeholder="Asunto"
+                {selectedOption == "E-mail" ? (
+                  <>
+                    <div className={styles.containerInput}>
+                      <input
+                        type="text"
+                        {...register("subject", { required: true })}
+                        placeholder="Asunto"
+                      />
+                      <div className={styles.containerInputFile}>
+                        <input
+                          hidden
+                          type="file"
+                          {...register("file")}
+                          id="file"
+                        />
+                        <label htmlFor="file">
+                          <FaPaperclip />
+                          Cargar imagen
+                        </label>
+                        <button
+                          className={styles.btnVariables}
+                          onClick={() => setOpenVariables(!openVariables)}
+                        >
+                          <FaStar />
+                          Variables
+                        </button>
+                      </div>
+                    </div>
+                    <ReactQuill
+                      value={valueMessage}
+                      onChange={setValueMessage}
+                      modules={modules}
+                      formats={formats}
+                      className={styles.containerText}
+                      ref={quillRef}
                     />
-                    <div className={styles.containerInputFile}>
-                      <input hidden type="file" {...register("file")} id="file" />
-                      <label htmlFor="file"><FaPaperclip/>Cargar imagen</label>
-                      <button onClick={() => setOpenVariables(!openVariables)}><FaStar/>Variables</button>
+                    {errors[input.name] && (
+                      <span className={styles.error}>{`El campo ${
+                        errors[input.name].message
+                      } es requerido`}</span>
+                    )}
+                  </>
+                ) : (
+                  <div className={styles.containerSMS}>
+                    <h3 className={styles.titleSMS}>Ingresa el texto</h3>
+                    <textarea
+                      id="message"
+                      className={styles.textAreaSMS}
+                      {...register("message", { required: true })}
+                    />
+                    <p>{`${
+                      message?.length == undefined ? 0 : message.length
+                    } / ${maxLength}`}</p>
+                    <div className={styles.containerInputFileSMS}>
+                      {selectedOption == "WhatsApp" && (
+                        <>
+                          <input
+                            hidden
+                            type="file"
+                            {...register("file")}
+                            id="file"
+                          />
+                          <label className={styles.btnImage} htmlFor="file">
+                            <FaPaperclip />
+                            Cargar imagen
+                          </label>
+                        </>
+                      )}
+                      <button
+                        className={styles.btnVariables}
+                        onClick={() => setOpenVariables(!openVariables)}
+                      >
+                        <FaStar />
+                        Variables
+                      </button>
                     </div>
                   </div>
-                  <ReactQuill
-                    value={valueMessage}
-                    onChange={handleChangeMessage}
-                    modules={modules}
-                    formats={formats}
-                    className={styles.containerText}
-                    ref={quillRef}
-                  />
-                  <p className={styles.lenghtMessage}>{`${lenghtMessage} / ${maxLength}` }</p>
-                  {errors[input.name] && (
-                    <span className={styles.error}>{`El campo ${
-                      errors[input.name].message
-                    } es requerido`}</span>
-                  )}
-                </> :
-                  <div className={styles.containerSMS}>
-                  <h3 className={styles.titleSMS}>Ingresa el texto</h3>
-                  <textarea
-                    className={styles.textAreaSMS}
-                    {...register('message', { required: true })}
-
-                  />
-                  <p>{`${message?.length == undefined ? 0 : message.length } / ${maxLength}`}</p>
-                </div>
-                }
+                )}
               </div>
             );
           })}
@@ -216,14 +260,19 @@ export const Step3 = ({
             </button>
           </div>
         </form>
-        <div className={openVariables ? styles.containerVariables : styles.hidden}>
+        <div
+          className={openVariables ? styles.containerVariables : styles.hidden}
+        >
           <div className={styles.containerVariablesContent}>
             <h3>Selecciona variables</h3>
-            {
-              variables.map((variable, index) => (
-                <button key={`${variable.name}${index}`} onClick={() => handleChangeVariables(variable.name)}>{variable.name}</button>
-              ))
-            }
+            {variables.map((variable, index) => (
+              <button
+                key={`${variable.name}${index}`}
+                onClick={(e) => handleChangeVariables(e, variable.name)}
+              >
+                {variable.name}
+              </button>
+            ))}
           </div>
         </div>
       </div>

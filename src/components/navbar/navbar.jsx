@@ -19,8 +19,8 @@ export const Navbar = () => {
         <Link className={path == 'campaigns' ? styles.active : ''} to="/campaigns">Campañas</Link>
       </div>
       <div className={styles.containerLogout}>
-        <button to="/login">
-          <Link to="/login" onClick={logout}>Cerrar sesión</Link>
+        <button to="/login"  onClick={logout}>
+          <Link to="/login">Cerrar sesión</Link>
         </button>
       </div>
     </nav>

@@ -5,7 +5,7 @@ export const Home = () => {
     <div className={styles.containerHome}>
       <img src={imageHome} alt="imagenHome"/>
       <h2>
-        Bienvenid@ a nustro portal
+        Bienvenid@ a nuestro portal de notificaciones
       </h2>
     </div>
   )

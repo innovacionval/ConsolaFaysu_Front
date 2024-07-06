@@ -1,6 +1,7 @@
 @import "../../styles/colors.scss";
 
 .container{
+  position: relative;
   display: flex;
   align-items: center;
   width: 100vw;
@@ -9,11 +10,12 @@
 
 .containerLogin {
   display: flex;
-  justify-content: space-around;
   align-items: center;
   width: 100%;
   height: 100%;
   .containerForm{
+    position: absolute;
+    right: 20%;
     display: flex;
     flex-direction: column;
     align-items: center;
