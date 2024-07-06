@@ -3,12 +3,15 @@ import imagenLogin from '../../assets/images/FAYSU 3_0014.png'
 import { useForm } from 'react-hook-form'
 import { useContext } from 'react'
 import { AuthContext } from '@/contexts/AuthContext'
+import { useNavigate } from 'react-router-dom'
 export const Login = () => {
   const {register, handleSubmit} = useForm()
   const{login} = useContext(AuthContext)
+  const navigate = useNavigate()
 
   const onSubmit = (data) => {
     login(data.user, data.password)
+    navigate('/')
   }
   return (
     <div className={styles.container}>
