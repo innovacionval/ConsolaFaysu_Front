@@ -74,7 +74,7 @@ export const ModalCorporateEntity = () => {
       <div className={styles.modal}>
         <div className={styles.header}>
           <div></div>
-          <h3>Entidades Corporativas</h3>
+          <h3>Identidades Corporativas</h3>
           <button onClick={handleClose}>X</button>
         </div>
         <form onSubmit={handleSubmit(onSubmit)} className={styles.body}>
