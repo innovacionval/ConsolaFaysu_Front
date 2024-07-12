@@ -32,7 +32,7 @@ export const Step2 = ({
       type: "select",
     },
     {
-      label: "Seleccionar entidad corporativa",
+      label: "Seleccionar identidad corporativa",
       name: "corporateEntity",
       type: "select",
     },

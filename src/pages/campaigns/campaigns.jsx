@@ -1,12 +1,12 @@
 import { useForm } from "react-hook-form";
 import styles from "./campaigns.module.scss";
 import { MdArrowForwardIos } from "react-icons/md";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { Table } from "@/components/table/table";
 import { FaEdit, FaPlus, FaSearch } from "react-icons/fa";
-import { ModalContext } from "@/contexts/modalContext";
 import { Step2 } from "@/components/campaigns/step2/step2";
 import { Step3 } from "@/components/campaigns/step3/step3";
+import { RiArrowGoBackFill } from "react-icons/ri";
 
 export const Campaigns = () => {
   const {
@@ -18,8 +18,7 @@ export const Campaigns = () => {
     getValues,
   } = useForm();
   const [dataCampaign, setDataCampaign] = useState([]);
-  const [steps, setSteps] = useState(0);
-  const { openModal } = useContext(ModalContext);
+  const [steps, setSteps] = useState(3);
   const onSubmit = (data) => {
     setDataCampaign([...dataCampaign, data]);
     setSteps(1);
@@ -115,9 +114,6 @@ export const Campaigns = () => {
   const handleChange = (e) => {
     setSearch(e.target.value);
   };
-  const handleOpen = () => {
-    openModal("corporateEntity");
-  };
 
   return (
     <div className={styles.container}>
@@ -165,6 +161,9 @@ export const Campaigns = () => {
             );
           })}
           <div className={styles.containerBtn}>
+          <button onClick={() => setSteps(3)} className={styles.button}>
+            <RiArrowGoBackFill /> Atrás
+          </button>
             <button className={styles.button}>
               <MdArrowForwardIos /> Siguiente
             </button>
@@ -207,7 +206,7 @@ export const Campaigns = () => {
               <FaSearch />
             </button>
           </form>
-          <button onClick={handleOpen} className={styles.button}>
+          <button onClick={() => setSteps(0)} className={styles.button}>
             <FaPlus />
             Nuevo
           </button>

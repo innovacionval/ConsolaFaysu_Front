@@ -92,7 +92,7 @@ export const CorporateEntity = () => {
 
   return (
     <div className={styles.container}>
-      <h2>Entidad Corporativa</h2>
+      <h2>Identidad Corporativa</h2>
       <div className={styles.containerHeader}>
         <form className={styles.containerInput}>
           <input

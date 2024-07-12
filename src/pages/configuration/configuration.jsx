@@ -12,7 +12,7 @@ export const Configuration = () => {
     },
     {
       icon: <FaRegBuilding />,
-      title: 'Entidad Corporativa',
+      title: 'Identidad Corporativa',
       url: '/configuration/corporate-entity'
     },
     {
