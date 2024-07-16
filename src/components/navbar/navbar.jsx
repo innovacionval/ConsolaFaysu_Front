@@ -1,18 +1,27 @@
 
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import styles from './navbar.module.scss'
 import { AuthContext } from '@/contexts/AuthContext'
 import { useContext } from 'react'
+import { FiLogOut } from "react-icons/fi";
+import imageLogo from '@/assets/images/Faysu.png'
+
 
 export const Navbar = () => {
   const { logout } = useContext(AuthContext)
   const location = useLocation()
   const path = location.pathname.split('/')[1]
+  const navigate = useNavigate()
+
+  const handleToHome = () => {
+    navigate('/')
+  }
 
   return (
     <nav>
       <div className={styles.containerItems}>
-      <div className={styles.logo}>
+      <div onClick={handleToHome} className={styles.logo}>
+        {/* <img width={50} src={imageLogo} alt="Faysu" /> */}
         <h2>Faysu</h2>
       </div>
         <Link className={path == 'configuration' ? styles.active : ''} to="/configuration">Configuración</Link>
@@ -20,7 +29,8 @@ export const Navbar = () => {
       </div>
       <div className={styles.containerLogout}>
         <button to="/login"  onClick={logout}>
-          <Link to="/login">Cerrar sesión</Link>
+          <Link to="/login">Cerrar sesión<FiLogOut />
+          </Link>
         </button>
       </div>
     </nav>

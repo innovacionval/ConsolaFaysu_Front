@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import styles from "./campaigns.module.scss";
 import { MdArrowForwardIos } from "react-icons/md";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Table } from "@/components/table/table";
 import { FaEdit, FaPlus, FaSearch } from "react-icons/fa";
 import { Step2 } from "@/components/campaigns/step2/step2";
@@ -17,8 +17,27 @@ export const Campaigns = () => {
     watch,
     getValues,
   } = useForm();
-  const [dataCampaign, setDataCampaign] = useState([]);
+  const [dataCampaign, setDataCampaign] = useState([
+    {
+      id: 1,
+      name: "Campaña 1",
+      notifier: "Si",
+      media: "Correo",
+      validity: "10/10/2021",
+      status: "Vigente",
+    },
+    {
+      id: 2,
+      name: "Campaña 2",
+      notifier: "No",
+      media: "WhatsApp",
+      validity: "10/10/2021",
+      status: "Terminada",
+    }
+  ]);
+  const [search, setSearch] = useState("");
   const [steps, setSteps] = useState(3);
+  
   const onSubmit = (data) => {
     setDataCampaign([...dataCampaign, data]);
     setSteps(1);
@@ -85,6 +104,7 @@ export const Campaigns = () => {
     },
   ];
   const labels = [
+    "",
     "Nombre",
     "Notificador",
     "Medio",
@@ -98,8 +118,10 @@ export const Campaigns = () => {
       name: "switch",
       action: (id) => {
         const item = dataCampaign.find((item) => item.id === id);
+        console.log(item)
         item.status = item.status === "Vigente" ? "Terminada" : "Vigente";
         setDataCampaign([...dataCampaign]);
+        
       },
     },
     {
@@ -110,10 +132,32 @@ export const Campaigns = () => {
       },
     },
   ];
-  const [search, setSearch] = useState("");
   const handleChange = (e) => {
     setSearch(e.target.value);
   };
+
+  const dataTable = [
+    {
+      id: 1,
+      name: "Campaña 1",
+      notifier: "Si",
+      media: "Correo",
+      validity: "10/10/2021",
+      status: "Vigente",
+    },
+    {
+      id: 2,
+      name: "Campaña 2",
+      notifier: "No",
+      media: "WhatsApp",
+      validity: "10/10/2021",
+      status: "Terminada",
+    }
+  ]
+
+  useEffect(() => {
+    setDataCampaign([...dataTable]);
+  }, [steps]);
 
   return (
     <div className={styles.container}>
@@ -211,7 +255,7 @@ export const Campaigns = () => {
             Nuevo
           </button>
         </div>
-        <Table labels={labels} data={[]} actions={actions} />
+        <Table labels={labels} data={dataCampaign} actions={actions} />
         </>}
     </div>
   );

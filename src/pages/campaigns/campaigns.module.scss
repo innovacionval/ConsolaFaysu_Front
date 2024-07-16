@@ -23,6 +23,9 @@
         font-size: larger;
       }
       button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
         width: 60px;
         border: none;
         border-radius: 20px;
@@ -48,6 +51,7 @@
   h2 {
     text-align: start;
     width: 100%;
+    font-size: 1.8rem;
   }
   .form{
     display: flex;
