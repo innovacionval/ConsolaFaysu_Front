@@ -115,6 +115,23 @@ export const Campaigns = () => {
     setSearch(e.target.value);
   };
 
+  const dataTable = [
+    {
+      name: "Campaña 1",
+      notifier: "Si",
+      media: "Correo",
+      validity: "10/10/2021",
+      status: "Vigente",
+    },
+    {
+      name: "Campaña 2",
+      notifier: "No",
+      media: "WhatsApp",
+      validity: "10/10/2021",
+      status: "Terminada",
+    }
+  ]
+
   return (
     <div className={styles.container}>
       <h2>{steps == 2 ? "Tipo de campaña" : "Campaña"}</h2>
@@ -211,7 +228,7 @@ export const Campaigns = () => {
             Nuevo
           </button>
         </div>
-        <Table labels={labels} data={[]} actions={actions} />
+        <Table labels={labels} data={dataTable} actions={actions} />
         </>}
     </div>
   );

@@ -22,7 +22,7 @@ export const Table = ({labels, data, actions}) => {
                 {
                   Object.keys(item).map((key, index) => {
                     if (key == 'status') {
-                      return <td key={index} className={item[key] == "Activo" ? styles.active : styles.inactive}>{item[key]}</td>
+                      return <td key={index} className={item[key] == "Activo" || item[key] == "Vigente" ? styles.active : styles.inactive}>{item[key]}</td>
                     }
                     if(key == 'primaryColor' || key == 'secondaryColor') {
                       return <td key={index}>
