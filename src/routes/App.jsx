@@ -9,6 +9,7 @@ import { Campaigns } from '@/pages/campaigns/campaigns'
 import { Users } from '@/pages/configuration/users/users'
 import { CorporateEntity } from '@/pages/configuration/corporateEntity/corporateEntity'
 import { ImportData } from '@/pages/configuration/importData/importData'
+import { Clients } from '@/pages/configuration/clients/clients'
 
 function App() {
 
@@ -26,6 +27,7 @@ const { isLogged } = useContext(AuthContext)
               <Route path="users" element={<Users />} />
               <Route path="corporate-entity" element={<CorporateEntity />} />
               <Route path="import-data" element={<ImportData />} />
+              <Route path="clients" element={<Clients />} />
             </Route>
             <Route path="campaigns" element={<Campaigns />} />
           </Route>

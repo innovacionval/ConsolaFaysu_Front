@@ -12,7 +12,7 @@ export const ModalCorporateEntity = () => {
   const [secondaryColor, setSecondaryColor] = useState("#000000")
 
   const handleClose = () => {
-    closeModal("corporateEntity")
+    closeModal()
   }
   const onSubmit = (data) => {
     console.log(data)
