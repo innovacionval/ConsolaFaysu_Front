@@ -141,6 +141,7 @@ export const Step3 = ({
 
   return (
     <>
+      <h2>Paso 3</h2>
       <div className={styles.containerCampaignType}>
         <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
           {inputsRadio.map((input, index) => {

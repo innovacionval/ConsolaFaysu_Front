@@ -16,7 +16,7 @@ export const Step2 = ({
       type: "text",
     },
     {
-      label: "Notificar a deudor",
+      label: "Notificar a deudor solidario",
       name: "notifier",
       type: "radio",
       options: ["Si", "No"],
@@ -24,7 +24,7 @@ export const Step2 = ({
     {
       label: "Fecha de notificación",
       name: "notificationDate",
-      type: "select",
+      type: "date",
     },
     {
       label: "Horario de envío",
@@ -44,10 +44,13 @@ export const Step2 = ({
     {
       label: "Vigencia de campaña",
       name: "validity",
-      type: "text",
+      type: "date",
     },
   ];
   return (
+    <>
+    <h2>Paso 2</h2>
+    
       <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
         {inputs.map((input, index) => {
           return (
@@ -57,6 +60,12 @@ export const Step2 = ({
                   <input
                     {...register(input.name, /* { required: true } */)}
                     type="text"
+                  />
+                )}
+                {input.type === "date" && (
+                  <input
+                    {...register(input.name, /* { required: true } */)}
+                    type="date"
                   />
                 )}
                 {input.type === "radio" && (
@@ -96,5 +105,6 @@ export const Step2 = ({
           </button>
         </div>
       </form>
+      </>
   );
 };
