@@ -35,10 +35,12 @@ nav{
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 20px;
     cursor: pointer;
     h2{
       color: $primary;
+    }
+    img{
+      object-fit: contain;
     }
   }
   .containerLogout{

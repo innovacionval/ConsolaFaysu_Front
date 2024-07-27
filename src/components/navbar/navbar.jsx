@@ -21,8 +21,7 @@ export const Navbar = () => {
     <nav>
       <div className={styles.containerItems}>
       <div onClick={handleToHome} className={styles.logo}>
-        {/* <img width={50} src={imageLogo} alt="Faysu" /> */}
-        <h2>Faysu</h2>
+        <img width={60} src={imageLogo} alt="Faysu" />
       </div>
         <Link className={path == 'configuration' ? styles.active : ''} to="/configuration">Configuración</Link>
         <Link className={path == 'campaigns' ? styles.active : ''} to="/campaigns">Campañas</Link>

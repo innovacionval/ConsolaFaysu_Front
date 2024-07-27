@@ -33,11 +33,11 @@ export const Campaigns = () => {
       media: "WhatsApp",
       validity: "10/10/2021",
       status: "Terminada",
-    }
+    },
   ]);
   const [search, setSearch] = useState("");
   const [steps, setSteps] = useState(3);
-  
+
   const onSubmit = (data) => {
     setDataCampaign([...dataCampaign, data]);
     setSteps(1);
@@ -50,7 +50,7 @@ export const Campaigns = () => {
   const onSubmitStep3 = (data) => {
     /* setValue("message", getValues("message") + " " + data.message); */
     console.log(data);
-/*     setDataCampaign([...dataCampaign, data]);
+    /*     setDataCampaign([...dataCampaign, data]);
     setSteps(3); */
   };
   const handleBackStep1 = () => {
@@ -66,7 +66,7 @@ export const Campaigns = () => {
       type: "select",
     },
     {
-      label: "Empresa",
+      label: "Empresa/importador",
       name: "company",
       type: "select",
     },
@@ -118,10 +118,9 @@ export const Campaigns = () => {
       name: "switch",
       action: (id) => {
         const item = dataCampaign.find((item) => item.id === id);
-        console.log(item)
+        console.log(item);
         item.status = item.status === "Vigente" ? "Terminada" : "Vigente";
         setDataCampaign([...dataCampaign]);
-        
       },
     },
     {
@@ -152,8 +151,8 @@ export const Campaigns = () => {
       media: "WhatsApp",
       validity: "10/10/2021",
       status: "Terminada",
-    }
-  ]
+    },
+  ];
 
   useEffect(() => {
     setDataCampaign([...dataTable]);
@@ -161,25 +160,43 @@ export const Campaigns = () => {
 
   return (
     <div className={styles.container}>
-      <h2>{steps == 2 ? "Tipo de campaña" : "Campaña"}</h2>
+        <h2>{steps == 2 ? "Tipo de campaña" : "Campaña"}</h2>
       {steps == 0 && (
-        <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
-          {inputs.map((input, index) => {
-            if (input.name == "daysOfDelay" || input.name == "balances") {
+        <>
+          <h2>Paso 1</h2>
+          <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
+            {inputs.map((input, index) => {
+              if (input.name == "daysOfDelay" || input.name == "balances") {
+                return (
+                  <div
+                    key={`${input.name}_${index}`}
+                    className={styles.formGroup}
+                  >
+                    <label htmlFor={input.name}>{input.label}</label>
+                    <select {...register(input.name)}>
+                      <option value="">{input.placeholder}</option>
+                    </select>
+                    <input
+                      type="number"
+                      placeholder="Número de días"
+                      {...register(`${input.name}numDays`)}
+                    />
+                    {errors[input.name] && (
+                      <span className={styles.error}>{`El campo ${
+                        errors[input.name].message
+                      } es requerido`}</span>
+                    )}
+                  </div>
+                );
+              }
               return (
-                <div
-                  key={`${input.name}_${index}`}
-                  className={styles.formGroup}
-                >
+                <div key={`${input.name}${index}`} className={styles.formGroup}>
                   <label htmlFor={input.name}>{input.label}</label>
                   <select {...register(input.name)}>
-                    <option value="">{input.placeholder}</option>
+                    <option disabled value="">
+                      {input.label}
+                    </option>
                   </select>
-                  <input
-                    type="number"
-                    placeholder="Número de días"
-                    {...register(`${input.name}numDays`)}
-                  />
                   {errors[input.name] && (
                     <span className={styles.error}>{`El campo ${
                       errors[input.name].message
@@ -187,32 +204,17 @@ export const Campaigns = () => {
                   )}
                 </div>
               );
-            }
-            return (
-              <div key={`${input.name}${index}`} className={styles.formGroup}>
-                <label htmlFor={input.name}>{input.label}</label>
-                <select {...register(input.name)}>
-                  <option disabled value="">
-                    {input.label}
-                  </option>
-                </select>
-                {errors[input.name] && (
-                  <span className={styles.error}>{`El campo ${
-                    errors[input.name].message
-                  } es requerido`}</span>
-                )}
-              </div>
-            );
-          })}
-          <div className={styles.containerBtn}>
-          <button onClick={() => setSteps(3)} className={styles.button}>
-            <RiArrowGoBackFill /> Atrás
-          </button>
-            <button className={styles.button}>
-              <MdArrowForwardIos /> Siguiente
-            </button>
-          </div>
-        </form>
+            })}
+            <div className={styles.containerBtn}>
+              <button onClick={() => setSteps(3)} className={styles.button}>
+                <RiArrowGoBackFill /> Atrás
+              </button>
+              <button className={styles.button}>
+                <MdArrowForwardIos /> Siguiente
+              </button>
+            </div>
+          </form>
+        </>
       )}
       {steps == 1 && (
         <Step2
@@ -236,27 +238,29 @@ export const Campaigns = () => {
         />
       )}
 
-      {steps == 3 && <>
-        <div className={styles.containerHeader}>
-          <form className={styles.containerInput}>
-            <input
-              type="text"
-              placeholder="Buscar"
-              name="search"
-              value={search}
-              onChange={handleChange}
-            />
-            <button>
-              <FaSearch />
+      {steps == 3 && (
+        <>
+          <div className={styles.containerHeader}>
+            <form className={styles.containerInput}>
+              <input
+                type="text"
+                placeholder="Buscar"
+                name="search"
+                value={search}
+                onChange={handleChange}
+              />
+              <button>
+                <FaSearch />
+              </button>
+            </form>
+            <button onClick={() => setSteps(0)} className={styles.button}>
+              <FaPlus />
+              Nuevo
             </button>
-          </form>
-          <button onClick={() => setSteps(0)} className={styles.button}>
-            <FaPlus />
-            Nuevo
-          </button>
-        </div>
-        <Table labels={labels} data={dataCampaign} actions={actions} />
-        </>}
+          </div>
+          <Table labels={labels} data={dataCampaign} actions={actions} />
+        </>
+      )}
     </div>
   );
 };
