@@ -6,6 +6,7 @@ import { useContext } from 'react';
 import { ModalUsers } from '@/components/users/modal/modal';
 import { ModalCorporateEntity } from '@/components/corporateEntity/modal/modal';
 import { ModalImportData } from '@/components/importData/modal/modal';
+import { ModalClients } from '@/components/clients/modal/modal';
 
 
 export const Layout = () => {
@@ -15,6 +16,7 @@ export const Layout = () => {
     {isOpen.users && <ModalUsers/>}
     {isOpen.corporateEntity && <ModalCorporateEntity/>}
     {isOpen.importData && <ModalImportData/>}
+    {isOpen.clients && <ModalClients/>}
       <div className={styles.container}>
         <Navbar />
         <div className={styles.containerPages}>

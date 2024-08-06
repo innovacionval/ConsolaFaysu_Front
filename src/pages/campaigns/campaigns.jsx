@@ -38,6 +38,16 @@ export const Campaigns = () => {
   const [search, setSearch] = useState("");
   const [steps, setSteps] = useState(3);
 
+  const [daysPeriodicity, setDaysPeriodicity] = useState({
+    monday: false,
+    tuesday: false,
+    wednesday: false,
+    thursday: false,
+    friday: false,
+    saturday: false,
+    sunday: false,
+  });
+
   const onSubmit = (data) => {
     setDataCampaign([...dataCampaign, data]);
     setSteps(1);
@@ -160,10 +170,14 @@ export const Campaigns = () => {
 
   return (
     <div className={styles.container}>
+      <div className={styles.containerTitle}>
         <h2>{steps == 2 ? "Tipo de campaña" : "Campaña"}</h2>
+        {steps == 0 && <h2>Paso 1</h2>}
+        {steps == 1 && <h2>Paso 2</h2>}
+        {steps == 2 && <h2>Paso 3</h2>}
+      </div>
       {steps == 0 && (
         <>
-          <h2>Paso 1</h2>
           <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
             {inputs.map((input, index) => {
               if (input.name == "daysOfDelay" || input.name == "balances") {
@@ -223,6 +237,9 @@ export const Campaigns = () => {
           errors={errors}
           onSubmit={onSubmitStep2}
           handleBack={handleBackStep1}
+          watch={watch}
+          daysPeriodicity={daysPeriodicity}
+          setDaysPeriodicity={setDaysPeriodicity}
         />
       )}
       {steps == 2 && (

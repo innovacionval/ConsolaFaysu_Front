@@ -1,10 +1,10 @@
-import { ModalContext } from '@/contexts/modalContext';
-import styles from './modal.module.scss'
-import { useContext } from 'react';
-import { useForm } from 'react-hook-form';
-import { BiSave } from 'react-icons/bi';
+import { ModalContext } from "@/contexts/modalContext";
+import { useContext } from "react";
+import { useForm } from "react-hook-form";
+import { BiSave } from "react-icons/bi";
+import styles from "./modal.module.scss";
 
-export const ModalUsers = () => {
+export const ModalClients = () => {
   const {closeModal} = useContext(ModalContext);
   const {register, handleSubmit, formState:{errors}} = useForm();
   const handleClose = () => {
@@ -14,35 +14,9 @@ export const ModalUsers = () => {
     {
       type: "text",
       name: "name",
-      label: "Nombres",
+      label: "Nombre del cliente",
       required: true,
     },
-    {
-      type: "text",
-      name: "identity",
-      label: "Identificación",
-      required: true,
-    },
-    {
-      type: "email",
-      name: "email",
-      label: "Email",
-      required: true,
-    },
-    {
-      type: "select",
-      name: "role",
-      label: "Rol",
-      required: true,
-      options: ["Admin", "User"],
-    },
-    {
-      type: "radio",
-      name: "status",
-      label: "Estado",
-      required: true,
-      options: ["Activo", "Inactivo"],
-    }
   ]
 
   const handleForm = (data) => {
@@ -55,7 +29,7 @@ export const ModalUsers = () => {
       <div className={styles.modal}>
         <div className={styles.header}>
           <div></div>
-          <h3>Usuarios</h3>
+          <h3>Clientes</h3>
           <button onClick={handleClose}>X</button>
         </div>
         <form onSubmit={handleSubmit(handleForm)} className={styles.body}>
@@ -95,3 +69,4 @@ export const ModalUsers = () => {
     </div>
   )
 }
+

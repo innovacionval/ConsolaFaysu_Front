@@ -7,11 +7,13 @@ export const ModalProvider = ({children}) => {
     users: false,
     corporateEntity: false,
     importData: false,
+    clients: false
   });
   const [dataTable, setDataTable] = useState({
     users: [],
     corporateEntity: [],
     importData: [],
+    clients:[]
   });
 
   const openModal = (modal) => {
@@ -22,11 +24,13 @@ export const ModalProvider = ({children}) => {
       users: false,
       corporateEntity: false,
       importData: false,
+      clients:false
     });
   }
   const addData = (modal, data) => {
     setDataTable({...dataTable, [modal]: [...dataTable[modal], data]});
   }
+
 
   return (
     <ModalContext.Provider value={{isOpen, openModal, closeModal, addData}}>

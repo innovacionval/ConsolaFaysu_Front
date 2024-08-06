@@ -1,6 +1,6 @@
 
 import styles from './configuration.module.scss'
-import { FaRegBuilding, FaUser } from 'react-icons/fa'
+import { FaRegBuilding, FaUser, FaUserCog } from 'react-icons/fa'
 import { MdDriveFolderUpload } from 'react-icons/md'
 import { Link } from 'react-router-dom'
 export const Configuration = () => {
@@ -20,6 +20,11 @@ export const Configuration = () => {
       title: 'Importar Datos',
       url: '/configuration/import-data'
     },
+    {
+      icon: <FaUserCog />,
+      title: 'Clientes',
+      url: '/configuration/clients'
+    }
 ]
   return (
     <div className={styles.containerConfiguration}>
