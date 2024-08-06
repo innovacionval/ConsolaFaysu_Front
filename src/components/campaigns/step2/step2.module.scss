@@ -15,13 +15,40 @@
   .formGroup{
     display: flex;
     align-items: center;
-    gap: 100px;
+    justify-content: start;
+    gap: 20px;
     width: 100%;
+
+    .days{
+      display: flex;
+      gap: 20px;
+
+      .active{
+        background-color: $primary;
+      }
+    }
+    .periodicity{
+      display: flex;
+      gap: 20px;
+      @media screen and (max-width: 900px){
+        flex-direction: column;
+      }
+    }
+    .inputMonth{
+      width: 100px
+    }
+
+
+    .containerPeriodicity{
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
     label{
       font-weight: bold;
       font-size: 1.4rem;
-      width: 300px;
-      min-width: 300px;
+      width: 400px;
+      min-width: 400px;
       white-space: nowrap;
     }
     input {
@@ -35,7 +62,8 @@
       border: 1px solid $secondary;
       padding: 5px;
       font-size: larger;
-      width: 520px;
+      width: 300px;
+      min-width: 100px
     }
     button {
       width: 60px;

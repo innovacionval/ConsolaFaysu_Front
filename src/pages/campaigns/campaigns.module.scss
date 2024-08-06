@@ -7,6 +7,16 @@
   height: 100%;
   gap: 20px;
 
+  .containerTitle{
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    
+    h2:last-child {
+      text-align: end;
+    }
+  }
+
 
   .containerHeader {
     display: flex;
@@ -89,7 +99,8 @@
         border: 1px solid $secondary;
         padding: 5px;
         font-size: larger;
-        width: 520px;
+        width: 300px;
+        min-width: 100px
       }
       button {
         width: 60px;

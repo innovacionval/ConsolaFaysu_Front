@@ -31,6 +31,13 @@ export const ModalImportData = () => {
       disabled: false,
     },
     {
+      type: "select",
+      name: "client",
+      label: "Cliente",
+      requierd: true,
+      disabled: false
+    },
+    {
       type: "file",
       name: "file",
       label: "Cargar",
@@ -38,6 +45,53 @@ export const ModalImportData = () => {
       disabled: false,
     }
   ]
+  const optionsClient = [
+    {
+      id: 1,
+      name: "Papeles RR",
+    },
+    {
+    id: 2,
+    name: "Papelera FK",
+  },
+  {
+    id: 3,
+    name: "Forest Spa Look",
+  },
+  {
+    id: 4,
+    name: "Escuela de formación aeronáutica EFA",
+  },
+  {
+    id: 5,
+    name: "Urban 960",
+
+  },
+  {
+    id: 6,
+    name: "Iris",
+  },
+  {
+    id: 7,
+    name: "Alheli",
+  },
+  {
+    id: 8,
+    name: "Atlantico",
+  },
+  {
+    id: 9,
+    name: "Alameda de Villamayor II",
+  },
+  {
+    id: 10,
+    name: "Cerezo",
+  },
+  {
+    id: 11,
+    name: "Carmesi",
+  },
+]
   useEffect(() => {
     setValue("date", new Date().toISOString().split("T")[0])
     setValue("user", "Juan Perez")
@@ -50,7 +104,6 @@ export const ModalImportData = () => {
     setFileName(e.target.files[0].name)
   }
 
-  console.log(errors)
   return (
     <div className={styles.modalContainer}>
       <div className={styles.modal}>
@@ -72,6 +125,15 @@ export const ModalImportData = () => {
                       <label className={styles.btnFile} htmlFor={input.name}>Adjuntar</label>
                       <p>{fileName}</p>
                     </>
+                    :
+                    input.type == "select" ?
+                    <select>
+                      {
+                        optionsClient.map((option, index) => (
+                          <option value={option.name} key={index}>{option.name}</option>
+                        ))
+                      }
+                    </select>
                     :
                     <input type={input.type} {...register(input.name, {required: {value:input.required, message: input.label}})} disabled={input.disabled} />
                   }
