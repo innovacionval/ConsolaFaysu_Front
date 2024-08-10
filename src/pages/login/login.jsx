@@ -6,11 +6,11 @@ import { AuthContext } from '@/contexts/AuthContext'
 import { useNavigate } from 'react-router-dom'
 export const Login = () => {
   const {register, handleSubmit} = useForm()
-  const{login} = useContext(AuthContext)
+  const{handleLogin} = useContext(AuthContext)
   const navigate = useNavigate()
 
   const onSubmit = (data) => {
-    login(data.user, data.password)
+    handleLogin(data.user, data.password)
     navigate('/')
   }
   return (

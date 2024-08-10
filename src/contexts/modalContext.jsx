@@ -9,12 +9,9 @@ export const ModalProvider = ({children}) => {
     importData: false,
     clients: false
   });
-  const [dataTable, setDataTable] = useState({
-    users: [],
-    corporateEntity: [],
-    importData: [],
-    clients:[]
-  });
+  const [dataTable, setDataTable] = useState({})
+
+  const [refetch, setRefetch] = useState(false);
 
   const openModal = (modal) => {
     setIsOpen({...isOpen, [modal]: true});
@@ -26,14 +23,19 @@ export const ModalProvider = ({children}) => {
       importData: false,
       clients:false
     });
+    cleanData();
   }
-  const addData = (modal, data) => {
-    setDataTable({...dataTable, [modal]: [...dataTable[modal], data]});
+  const addData = (data) => {
+    setDataTable(data);
+  }
+
+  const cleanData = () => {
+    setDataTable({});
   }
 
 
   return (
-    <ModalContext.Provider value={{isOpen, openModal, closeModal, addData}}>
+    <ModalContext.Provider value={{isOpen, openModal, closeModal, addData, dataTable, refetch, setRefetch}}>
       {children}
     </ModalContext.Provider>
   )

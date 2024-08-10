@@ -3,6 +3,7 @@ import { Switch } from '../shared/switch/Swtich'
 import styles from './table.module.scss'
 
 export const Table = ({labels, data, actions}) => {
+  const labelNames = new Set(labels.map(label => label.name));
   return (
     <div className={styles.containerTable}>
       <table>
@@ -10,7 +11,7 @@ export const Table = ({labels, data, actions}) => {
           <tr>
             {
               labels.map((label, index) => (
-                <th key={index}>{label}</th>
+                <th key={index}>{label.label}</th>
               ))
             }
           </tr>
@@ -21,6 +22,7 @@ export const Table = ({labels, data, actions}) => {
               <tr key={index}>
                 {
                   Object.keys(item).map((key, index) => {
+                    if (!labelNames.has(key)) return null;
                     if (key == 'status') {
                       return <td key={index} className={item[key] == "Activo" || item[key] == "Vigente" ? styles.active : styles.inactive}>{item[key]}</td>
                     }

@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useState } from "react";
 import { createContext } from "react";
+import { login } from "@/services/login.service";
 
 
 export const AuthContext = createContext()
@@ -9,11 +10,17 @@ export const AuthProvider = ({ children }) => {
   const [isLogged, setIsLogged] = useState(false)
   const [isValid, setIsValid] = useState(false)
 
-  const login = (username, password) => {
-    if (username === 'admin' && password === 'admin') {
-      sessionStorage.setItem('token', '1234')
-      setIsValid(true)
-    }
+  const handleLogin = (username, password) => {
+    login(username, password)
+      .then((response) => {
+        console.log(response)
+        sessionStorage.setItem('token', response.access_token)
+        sessionStorage.setItem('refreshToken', response.refresh_token)
+        setIsValid(true)
+      })
+      .catch(() => {
+        setIsValid(false)
+      })
   }
 
   const validateUser = () => {
@@ -26,6 +33,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = () => {
     sessionStorage.removeItem('token')
+    sessionStorage.removeItem('refreshToken')
     setIsValid(null)
   }
 
@@ -34,7 +42,7 @@ export const AuthProvider = ({ children }) => {
   }, [isValid])
 
   return (
-    <AuthContext.Provider value={{ isLogged, setIsLogged, login, logout }}>
+    <AuthContext.Provider value={{ isLogged, setIsLogged, handleLogin, logout }}>
       {children}
     </AuthContext.Provider>
   )

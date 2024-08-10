@@ -5,69 +5,57 @@ import { RiArrowGoBackFill } from "react-icons/ri";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ModalContext } from "@/contexts/modalContext";
+import { getAllUsers, getUserById } from "@/services/users.service";
 
 export const Users = () => {
   const [search, setSearch] = useState("");
-  const {openModal} = useContext(ModalContext);
+  const {openModal, refetch, addData} = useContext(ModalContext);
   const [data, setData] = useState([{}]);
-  const labels = ["id", "Nombres", "Identidad", "Email", "Rol", "Estado", "Acciones"];
+  const labels = [{
+    name: "name",
+    label: "Nombres",
+  },
+  {
+    name: "identity",
+    label: "Identidad",
+  },
+  {
+    name: "email",
+    label: "Email",
+  },
+  {
+    name: "role",
+    label: "Rol",
+  },
+  {
+    name: "status",
+    label: "Estado",
+  },
+  {
+    name: "",
+    label: "",
+  }];
   const navigate = useNavigate();
+
   useEffect(() => {
     if(search == ""){
-
-      setData([
-        {
-          id: 1,
-          name: "Juan Perez",
-          identity: "0801199900000",
-          email: "",
-          role: "Admin",
-          status: "Activo",
-        },
-        {
-        id: 2,
-        name: "Juan Perez",
-        identity: "0801199900000",
-        email: "",
-        role: "Admin",
-        status: "Activo",
-      },
-      {
-        id: 3,
-        name: "Juan Perez",
-        identity: "0801199900000",
-        email: "",
-        role: "Admin",
-        status: "Activo",
-      },
-      {
-        id: 4,
-        name: "Juan Perez",
-        identity: "0801199900000",
-        email: "",
-        role: "Admin",
-        status: "Inactivo",
-      },
-      {
-        id: 5,
-        name: "Juan Perez",
-        identity: "0801199900000",
-        email: "",
-        role: "Admin",
-        status: "Inactivo",
-      },
-      {
-        id: 6,
-        name: "Jorge Perez",
-        identity: "0801199900000",
-        email: "",
-        role: "Admin",
-        status: "Activo",
-      },
-    ]);
+    getAllUsers().then((response) => {
+      console.log(response)
+      let dataUser = response.data.map((item) => {
+        return {
+          id: item.UUID,
+          name: item.firstName + " " + item.lastName,
+          identity: item.identity,
+          email: item.email,
+          role: item.role,
+          status: item.status,
+        };
+      });
+      setData(dataUser);
+    });
   }
+  }, [search, refetch]);
 
-  }, [search]);
   const actions = [
     {
       name: "switch",
@@ -80,8 +68,10 @@ export const Users = () => {
     {
       name: "edit",
       icon: <FaEdit />,
-      action: (id) => {
-        console.log(id)
+      action: async (id) => {
+        const user = await getUserById(id);
+        openModal("users");
+        addData(user.data);
       }
     },
   ];

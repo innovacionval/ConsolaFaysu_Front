@@ -1,15 +1,27 @@
 import { ModalContext } from '@/contexts/modalContext';
 import styles from './modal.module.scss'
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { BiSave } from 'react-icons/bi';
+import { createUser, updateUser } from '@/services/users.service';
 
 export const ModalUsers = () => {
-  const {closeModal} = useContext(ModalContext);
-  const {register, handleSubmit, formState:{errors}} = useForm();
+  const {closeModal, refetch, setRefetch, dataTable} = useContext(ModalContext);
+  const {register, handleSubmit, setValue, formState:{errors}} = useForm();
   const handleClose = () => {
     closeModal()
   }
+  console.log(dataTable)
+  useEffect(() => {
+    if(Object.keys(dataTable).length > 0){
+      setValue("name", dataTable.firstName)
+      setValue("lastName", dataTable.lastName)
+      setValue("identity", dataTable.identity)
+      setValue("email", dataTable.email)
+      setValue("role", dataTable.role)
+      setValue("status", dataTable.status)
+    }}, [dataTable])
+
   const inputs = [
     {
       type: "text",
@@ -19,6 +31,12 @@ export const ModalUsers = () => {
     },
     {
       type: "text",
+      name: "lastName",
+      label: "Apellidos",
+      required: true,
+    },
+    {
+      type: "number",
       name: "identity",
       label: "Identificación",
       required: true,
@@ -34,7 +52,16 @@ export const ModalUsers = () => {
       name: "role",
       label: "Rol",
       required: true,
-      options: ["Admin", "User"],
+      options: [{
+        value: "admin",
+        label: "Administrador"
+      },
+      {
+        value: "CollectionsLeader",
+        label: "lider de cobranzas"
+      }
+    ],
+      
     },
     {
       type: "radio",
@@ -46,7 +73,43 @@ export const ModalUsers = () => {
   ]
 
   const handleForm = (data) => {
-    console.log(data)
+    if(Object.keys(dataTable).length > 0){
+      handleEdit(data)
+    } else {
+      handleCreate(data)
+    }
+  }
+  const handleCreate = (data) => {
+    const dataCreate = {
+      firstName: data.name,
+      lastName: data.lastName,
+      email: data.email,
+      role: data.role.toLowerCase(),
+    }
+    createUser(dataCreate).then((response) => {
+      console.log(response)
+      closeModal()
+      setRefetch(!refetch)
+    }).catch((error) => {
+      console.log(error)
+    })
+  }
+
+
+  const handleEdit = (data) => {
+    const dataEdit = {
+      firstName: data.name,
+      lastName: data.lastName,
+      role: data.role.toLowerCase(),
+      status: data.status,
+    }
+    updateUser(dataTable.UUID, dataEdit).then((response) => {
+      console.log(response)
+      closeModal()
+      setRefetch(!refetch)
+    }).catch((error) => {
+      console.log(error)
+    })
   }
 
 
@@ -69,7 +132,7 @@ export const ModalUsers = () => {
                       <select {...register(input.name, {required: { value: input.required, message: input.label}})}>
                         {
                           input.options.map((option, index) => (
-                            <option key={index} value={option}>{option}</option>
+                            <option key={index} value={option.value}>{option.label}</option>
                           ))
                         }
                       </select>
