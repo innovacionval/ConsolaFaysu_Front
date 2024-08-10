@@ -11,7 +11,30 @@ export const CorporateEntity = () => {
   const [search, setSearch] = useState("");
   const {openModal} = useContext(ModalContext);
   const [data, setData] = useState([{}]);
-  const labels = ["Nombre", "Usuario", "Logo", "Color Principal", "Color Secundario", "Acciones"];
+  const labels = [{
+    name: "name",
+    label: "Nombre",
+  },
+  {
+    name: "user",
+    label: "Usuario",
+  },
+  {
+    name: "logo",
+    label: "Logo",
+  },
+  {
+    name: "primaryColor",
+    label: "Color Principal",
+  },
+  {
+    name: "secondaryColor",
+    label: "Color Secundario",
+  },
+  {
+    name: "",
+    label: "",
+  }];
   const navigate = useNavigate();
   useEffect(() => {
     if(search == ""){

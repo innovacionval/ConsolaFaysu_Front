@@ -114,13 +114,30 @@ export const Campaigns = () => {
     },
   ];
   const labels = [
-    "",
-    "Nombre",
-    "Notificador",
-    "Medio",
-    "Vigencia",
-    "Estado",
-    "Acción",
+    {
+      name: "",
+      label: "",
+    },
+    {
+      name: "name",
+      label: "Nombre",
+    },
+    {
+      name: "notifier",
+      label: "Notificador",
+    },
+    {
+      name: "media",
+      label: "Medio",
+    },
+    {
+      name: "validity",
+      label: "Vigencia",
+    },
+    {
+      name: "status",
+      label: "Estado",
+    }
   ];
 
   const actions = [

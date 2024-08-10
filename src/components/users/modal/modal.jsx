@@ -46,6 +46,7 @@ export const ModalUsers = () => {
       name: "email",
       label: "Email",
       required: true,
+      disabled: Object.keys(dataTable).length > 0 ? true : false
     },
     {
       type: "select",
@@ -144,7 +145,7 @@ export const ModalUsers = () => {
                         </div>
                       ))
                     ) : (
-                      <input key={index} type={input.type} {...register(input.name, {required: { value: input.required, message: input.label}})}/>
+                      <input key={index} type={input.type} {...register(input.name, {required: { value: input.required, message: input.label}})} disabled={input.disabled}/>
                     )
                   }
                 </div>

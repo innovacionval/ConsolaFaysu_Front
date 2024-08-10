@@ -10,7 +10,22 @@ export const ImportData = () => {
   const [search, setSearch] = useState("");
   const {openModal} = useContext(ModalContext);
   const [data, setData] = useState([{}]);
-  const labels = ["Fecha", "Usuario", "Nombre","Acciones"];
+  const labels = [{
+    name: "date",
+    label: "Fecha",
+  },
+  {
+    name: "user",
+    label: "Usuario",
+  },
+  {
+    name: "name",
+    label: "Nombre",
+  },
+  {
+    name: "",
+    label: "",
+  }];
   const navigate = useNavigate();
   useEffect(() => {
     if(search == ""){

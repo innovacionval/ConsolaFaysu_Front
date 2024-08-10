@@ -10,7 +10,18 @@ export const Clients = () => {
   const [search, setSearch] = useState("");
   const {openModal} = useContext(ModalContext);
   const [data, setData] = useState([{}]);
-  const labels = ["id", "Nombres", ""];
+  const labels = [{
+    name: "id",
+    label: "id",
+  },
+  {
+    name: "name",
+    label: "Nombres",
+  },
+  {
+    name: "",
+    label: "",
+  }];
   const navigate = useNavigate();
   useEffect(() => {
     if(search == ""){
