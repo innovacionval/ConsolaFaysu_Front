@@ -85,7 +85,7 @@ export const ModalUsers = () => {
       firstName: data.name,
       lastName: data.lastName,
       email: data.email,
-      role: data.role.toLowerCase(),
+      role: data.role,
     }
     createUser(dataCreate).then((response) => {
       console.log(response)
@@ -99,14 +99,10 @@ export const ModalUsers = () => {
 
   const handleEdit = (data) => {
     const dataEdit = {
-/*       firstName: data.name,
-      lastName: data.lastName,
-      role: data.role.toLowerCase(),
-      status: data.status, */
     }
     if(data.name !== dataTable.firstName) dataEdit.firstName = data.name
     if(data.lastName !== dataTable.lastName) dataEdit.lastName = data.lastName
-    if(data.role !== dataTable.role) dataEdit.role = data.role.toLowerCase()
+    if(data.role !== dataTable.role) dataEdit.role = data.role
     if(data.status !== dataTable.status) dataEdit.status = data.status
 
     if(Object.keys(dataEdit).length === 0) return closeModal()
