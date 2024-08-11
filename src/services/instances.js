@@ -54,6 +54,7 @@ const handleTokenExpiration = async (error) => {
       return axios(originalRequest);
     } catch (refreshError) {
       console.error('Error al renovar el token:', refreshError);
+      sessionStorage.clear();
       // Redirige al login o realiza alguna acción
       return Promise.reject(refreshError);
     }

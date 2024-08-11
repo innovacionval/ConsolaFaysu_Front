@@ -99,11 +99,17 @@ export const ModalUsers = () => {
 
   const handleEdit = (data) => {
     const dataEdit = {
-      firstName: data.name,
+/*       firstName: data.name,
       lastName: data.lastName,
       role: data.role.toLowerCase(),
-      status: data.status,
+      status: data.status, */
     }
+    if(data.name !== dataTable.firstName) dataEdit.firstName = data.name
+    if(data.lastName !== dataTable.lastName) dataEdit.lastName = data.lastName
+    if(data.role !== dataTable.role) dataEdit.role = data.role.toLowerCase()
+    if(data.status !== dataTable.status) dataEdit.status = data.status
+
+    if(Object.keys(dataEdit).length === 0) return closeModal()
     updateUser(dataTable.UUID, dataEdit).then((response) => {
       console.log(response)
       closeModal()

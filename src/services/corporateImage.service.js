@@ -1,8 +1,8 @@
-import { axiosInstanceBearer } from "./instances";
+import { axiosInstanceBearer, axiosInstanceFormData } from "./instances";
 
 
 export const getAllCorporateImages = async () => {
-    const response = await axiosInstanceBearer.get("/corporate-image");
+    const response = await axiosInstanceBearer.get("/corporate-image/");
     return response.data;
 }
 
@@ -12,7 +12,7 @@ export const getCorporateImageById = async (id) => {
 }
 
 export const createCorporateImage = async (corporateImage) => {
-    const response = await axiosInstanceBearer.post("/corporate-image", corporateImage);
+    const response = await axiosInstanceFormData.post("/corporate-image/", corporateImage);
     return response.data;
 }
 

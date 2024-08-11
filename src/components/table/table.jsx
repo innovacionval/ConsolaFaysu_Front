@@ -26,6 +26,11 @@ export const Table = ({labels, data, actions}) => {
                     if (key == 'status') {
                       return <td key={index} className={item[key] == "Activo" || item[key] == "Vigente" ? styles.active : styles.inactive}>{item[key]}</td>
                     }
+                    if(key == 'logo') {
+                      return <td key={index}>
+                        <img src={item[key]} alt="logo" />
+                      </td>
+                    }
                     if(key == 'primaryColor' || key == 'secondaryColor') {
                       return <td key={index}>
                         <div className={styles.containerColor}>

@@ -1,89 +1,71 @@
-import { useContext, useEffect, useState } from 'react';
-import styles from './corporateEntity.module.scss'
-import { useNavigate } from 'react-router-dom';
-import { ModalContext } from '@/contexts/modalContext';
-import { FaEdit, FaPlus, FaRegTrashAlt, FaSearch } from 'react-icons/fa';
-import { Table } from '@/components/table/table';
-import { RiArrowGoBackFill } from 'react-icons/ri';
+import { useContext, useEffect, useState } from "react";
+import styles from "./corporateEntity.module.scss";
+import { useNavigate } from "react-router-dom";
+import { ModalContext } from "@/contexts/modalContext";
+import { FaEdit, FaPlus, FaRegTrashAlt, FaSearch } from "react-icons/fa";
+import { Table } from "@/components/table/table";
+import { RiArrowGoBackFill } from "react-icons/ri";
+import { getAllCorporateImages, getCorporateImageById } from "@/services/corporateImage.service";
 
 export const CorporateEntity = () => {
-  
   const [search, setSearch] = useState("");
-  const {openModal} = useContext(ModalContext);
+  const { openModal, refetch, addData } = useContext(ModalContext);
   const [data, setData] = useState([{}]);
-  const labels = [{
-    name: "name",
-    label: "Nombre",
-  },
-  {
-    name: "user",
-    label: "Usuario",
-  },
-  {
-    name: "logo",
-    label: "Logo",
-  },
-  {
-    name: "primaryColor",
-    label: "Color Principal",
-  },
-  {
-    name: "secondaryColor",
-    label: "Color Secundario",
-  },
-  {
-    name: "",
-    label: "",
-  }];
+  const labels = [
+    {
+      name: "name",
+      label: "Nombre",
+    },
+    {
+      name: "user",
+      label: "Usuario",
+    },
+    {
+      name: "logo",
+      label: "Logo",
+    },
+    {
+      name: "primaryColor",
+      label: "Color Principal",
+    },
+    {
+      name: "secondaryColor",
+      label: "Color Secundario",
+    },
+    {
+      name: "",
+      label: "",
+    },
+  ];
   const navigate = useNavigate();
+
   useEffect(() => {
-    if(search == ""){
+    if (search == "") {
+      getAllCorporateImages().then((response) => {
+        let dataCorporateImage = response.data.map((item) => {
+          return {
+            id: item.UUID,
+            name: item.name,
+            user: item.user,
+            logo: item.logo,
+            primaryColor: item.main_color,
+            secondaryColor: item.secondary_color,
+          };
+        });
+        setData(dataCorporateImage);
+      });
+    }
+  }, [search, refetch]);
 
-      setData([
-        {
-          name: "Juan Perez",
-          user: "JuanPerez",
-          logo: "",
-          primaryColor: "#F22ab2",
-          secondaryColor: "#ffffff",
-        },
-        {
-          name: "Juan Perez",
-          user: "JuanPerez",
-          logo: "",
-          primaryColor: "#000000",
-          secondaryColor: "#ffffff",
-        },
-        {
-          name: "Juan Perez",
-          user: "JuanPerez",
-          logo: "",
-          primaryColor: "#000000",
-          secondaryColor: "#ffffff",
-        },
-        {
-          name: "Juan Perez",
-          user: "JuanPerez",
-          logo: "",
-          primaryColor: "#000000",
-          secondaryColor: "#ffffff",
-        },
-        {
-          name: "Juan Perez",
-          user: "JuanPerez",
-          logo: "",
-          primaryColor: "#000000",
-          secondaryColor: "#ffffff",
-        },
-    ]);
-  }
-
-  }, [search]);
   const actions = [
     {
       name: "Editar",
       icon: <FaEdit />,
-      action: () => alert("Editar"),
+      action: async (id) => {
+        const corporateEntity = await getCorporateImageById(id);
+        openModal("corporateEntity");
+        addData(corporateEntity.data);
+      },
     },
     {
       name: "Eliminar",
@@ -91,7 +73,6 @@ export const CorporateEntity = () => {
       action: () => alert("Eliminar"),
     },
   ];
-
 
   const handleChange = (e) => {
     e.preventDefault();
@@ -107,11 +88,10 @@ export const CorporateEntity = () => {
   };
   const handleBack = () => {
     navigate("/configuration");
-  }
+  };
   const handleOpen = () => {
     openModal("corporateEntity");
-  }
-
+  };
 
   return (
     <div className={styles.container}>
@@ -142,4 +122,4 @@ export const CorporateEntity = () => {
       </div>
     </div>
   );
-}
+};
