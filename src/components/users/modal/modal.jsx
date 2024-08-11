@@ -11,7 +11,6 @@ export const ModalUsers = () => {
   const handleClose = () => {
     closeModal()
   }
-  console.log(dataTable)
   useEffect(() => {
     if(Object.keys(dataTable).length > 0){
       setValue("name", dataTable.firstName)
@@ -88,7 +87,6 @@ export const ModalUsers = () => {
       role: data.role,
     }
     createUser(dataCreate).then((response) => {
-      console.log(response)
       closeModal()
       setRefetch(!refetch)
     }).catch((error) => {
@@ -106,8 +104,7 @@ export const ModalUsers = () => {
     if(data.status !== dataTable.status) dataEdit.status = data.status
 
     if(Object.keys(dataEdit).length === 0) return closeModal()
-    updateUser(dataTable.UUID, dataEdit).then((response) => {
-      console.log(response)
+    updateUser(dataTable.UUID, dataEdit).then((_response) => {
       closeModal()
       setRefetch(!refetch)
     }).catch((error) => {

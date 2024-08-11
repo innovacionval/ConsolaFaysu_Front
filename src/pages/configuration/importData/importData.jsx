@@ -1,15 +1,20 @@
-import { FaDownload, FaEdit, FaEye, FaFileDownload, FaFileUpload, FaPlus, FaRegTrashAlt, FaSearch } from 'react-icons/fa';
+import { FaDownload, FaEdit, FaEye, FaFileUpload, FaRegTrashAlt, FaSearch } from 'react-icons/fa';
 import styles from './importData.module.scss'
 import { useContext, useEffect, useState } from 'react';
 import { ModalContext } from '@/contexts/modalContext';
 import { useNavigate } from 'react-router-dom';
 import { Table } from '@/components/table/table';
 import { RiArrowGoBackFill } from 'react-icons/ri';
+import { getAllSourceFiles, getSourceFileById } from '@/services/sourceFile.service';
+import { Pagination } from '@/components/shared/pagination/Pagination';
+import { getUserById } from '@/services/users.service';
 
 export const ImportData = () => {
   const [search, setSearch] = useState("");
-  const {openModal} = useContext(ModalContext);
+  const {openModal, refetch, addData} = useContext(ModalContext);
   const [data, setData] = useState([{}]);
+  const [pagination, setPagination] = useState(null);
+  const [page, setPage] = useState(1);
   const labels = [{
     name: "date",
     label: "Fecha",
@@ -27,50 +32,56 @@ export const ImportData = () => {
     label: "",
   }];
   const navigate = useNavigate();
+
   useEffect(() => {
+    const fetchInfo = async () => {
+      const sourceFiles = await getAllSourceFiles(page)
+      setPagination(sourceFiles.paging)
+      Promise.all(sourceFiles.data.map(async (item) => {
+        const user = await getUserById(item.user.UUID)
+        return {
+          id: item.UUID,
+          date: new Date(item.created).toLocaleDateString(),
+          user: user.data.firstName + " " + user.data.lastName,
+          name: item.file_name,
+        }
+      })
+    ).then((data) => setData(data))
+    }
     if(search == ""){
-
-      setData([
-        {
-          date: "12/12/2021",
-          user: "JuanPerez",
-          name: "Juan Perez",
-        },
-        {
-          date: "12/12/2021",
-          name: "Juan Perez",
-          user: "JuanPerez",
-        },
-        {
-          date: "12/12/2021",
-          name: "Juan Perez",
-          user: "JuanPerez",
-        },
-        {
-          date: "12/12/2021",
-          name: "Juan Perez",
-          user: "JuanPerez",
-        },
-        {
-          date: "12/12/2021",
-          name: "Juan Perez",
-          user: "JuanPerez",
-        },
-        
-    ]);
-  }
-
-  }, [search]);
+      fetchInfo()
+    }
+  }, [search, refetch]);
+  console.log(data)
   const actions = [
     {
       name: "Ver",
       icon: <FaEye />,
-      action: () => alert("Ver"),
+      action: (id) => {
+        getSourceFileById(id).then((response) => {
+          const link = document.createElement("a");
+          link.href = window.URL.createObjectURL(new Blob([response.data.file]));
+          link.setAttribute("target", "_blank");
+          document.body.appendChild(link);
+          link.click();
+          link.remove();
+        });
+      },
     },
     {
       name: "Descargar",
       icon: <FaDownload />,
-      action: () => alert("Descargar"),
+      action: (id) => {
+        getSourceFileById(id).then((response) => {
+          const url = window.URL.createObjectURL(new Blob([response.data.file]));
+          const link = document.createElement("a");
+          link.href = url;
+          link.setAttribute("download", response.data.file_name);
+          document.body.appendChild(link);
+          link.click();
+          link.remove();
+        });
+      },
     },
     {
       name: "Editar",
@@ -122,16 +133,15 @@ export const ImportData = () => {
         </form>
         <div className={styles.containerBtn}>
           <button onClick={handleOpen} className={styles.button}>
-          <FaFileDownload />
-            Descargar plantilla
-          </button>
-          <button onClick={handleOpen} className={styles.button}>
           <FaFileUpload />
             Cargar plantilla
           </button>
         </div>
       </div>
       <Table labels={labels} data={data} actions={actions} />
+      <div className={styles.pagination}>
+        <Pagination total={pagination?.count} page={page} setPage={setPage} />
+      </div>
       <div className={styles.containerBack}>
         <button onClick={handleBack} className={styles.backbtn}>
           <RiArrowGoBackFill /> Volver

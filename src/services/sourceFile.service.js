@@ -1,8 +1,8 @@
 import { axiosInstanceBearer } from "./instances";
 
 
-export const getAllSourceFiles = async () => {
-    const response = await axiosInstanceBearer.get("/source/?$expand=True");
+export const getAllSourceFiles = async (page) => {
+    const response = await axiosInstanceBearer.get(`${page != 1 && page ? `/source/?page=${page}` : "/source/"}`);
     return response.data;
 }
 

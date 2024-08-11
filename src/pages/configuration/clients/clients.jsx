@@ -5,15 +5,16 @@ import { RiArrowGoBackFill } from 'react-icons/ri';
 import { useNavigate } from 'react-router-dom';
 import { useContext, useEffect, useState } from 'react';
 import { ModalContext } from '@/contexts/modalContext';
+import { getAllCustomers, getCustomerById } from '@/services/customers.service';
+import { Pagination } from '@/components/shared/pagination/Pagination';
 
 export const Clients = () => {
   const [search, setSearch] = useState("");
-  const {openModal} = useContext(ModalContext);
+  const {openModal, refetch, addData} = useContext(ModalContext);
   const [data, setData] = useState([{}]);
-  const labels = [{
-    name: "id",
-    label: "id",
-  },
+  const [pagination, setPagination] = useState(null);
+  const [page, setPage] = useState(1);
+  const labels = [
   {
     name: "name",
     label: "Nombres",
@@ -25,57 +26,20 @@ export const Clients = () => {
   const navigate = useNavigate();
   useEffect(() => {
     if(search == ""){
-
-      setData([
-        {
-          id: 1,
-          name: "Papeles RR",
-        },
-        {
-        id: 2,
-        name: "Papelera FK",
-      },
-      {
-        id: 3,
-        name: "Forest Spa Look",
-      },
-      {
-        id: 4,
-        name: "Escuela de formación aeronáutica EFA",
-      },
-      {
-        id: 5,
-        name: "Urban 960",
-
-      },
-      {
-        id: 6,
-        name: "Iris",
-      },
-      {
-        id: 7,
-        name: "Alheli",
-      },
-      {
-        id: 8,
-        name: "Atlantico",
-      },
-      {
-        id: 9,
-        name: "Alameda de Villamayor II",
-      },
-      {
-        id: 10,
-        name: "Cerezo",
-      },
-      {
-        id: 11,
-        name: "Carmesi",
-      },
-    ]);
+      getAllCustomers(page).then((response) => {
+        setPagination(response.paging)
+        console.log(response)
+        let dataCustomer = response.data.map((item) => {
+          return {
+            id: item.UUID,
+            name: item.name,
+          };
+        });
+        setData(dataCustomer);
+      });
   }
 
-  }, [search]);
+  }, [search, refetch, page]);
   const actions = [
 /*     {
       name: "switch",
@@ -89,7 +53,10 @@ export const Clients = () => {
       name: "edit",
       icon: <FaEdit />,
       action: (id) => {
-        console.log(id)
+        getCustomerById(id).then((response) => {
+          addData(response.data);
+          openModal("clients");
+        });
       }
     },
   ];
@@ -135,6 +102,9 @@ export const Clients = () => {
         </button>
       </div>
       <Table labels={labels} data={data} actions={actions} />
+      <div className={styles.pagination}>
+        <Pagination total={pagination?.count} page={page} setPage={setPage} />
+      </div>
       <div className={styles.containerBack}>
         <button onClick={handleBack} className={styles.backbtn}>
           <RiArrowGoBackFill /> Volver

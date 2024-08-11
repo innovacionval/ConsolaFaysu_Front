@@ -13,7 +13,6 @@ export const AuthProvider = ({ children }) => {
   const handleLogin = (username, password) => {
     login(username, password)
       .then((response) => {
-        console.log(response)
         sessionStorage.setItem('token', response.access_token)
         sessionStorage.setItem('refreshToken', response.refresh_token)
         setIsValid(true)

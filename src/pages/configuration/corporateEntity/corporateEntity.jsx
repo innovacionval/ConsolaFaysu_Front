@@ -6,11 +6,14 @@ import { FaEdit, FaPlus, FaRegTrashAlt, FaSearch } from "react-icons/fa";
 import { Table } from "@/components/table/table";
 import { RiArrowGoBackFill } from "react-icons/ri";
 import { getAllCorporateImages, getCorporateImageById } from "@/services/corporateImage.service";
+import { Pagination } from "@/components/shared/pagination/Pagination";
 
 export const CorporateEntity = () => {
   const [search, setSearch] = useState("");
   const { openModal, refetch, addData } = useContext(ModalContext);
   const [data, setData] = useState([{}]);
+  const [pagination, setPagination] = useState(null);
+  const [page, setPage] = useState(1);
   const labels = [
     {
       name: "name",
@@ -42,6 +45,7 @@ export const CorporateEntity = () => {
   useEffect(() => {
     if (search == "") {
       getAllCorporateImages().then((response) => {
+        setPagination(response.paging);
         let dataCorporateImage = response.data.map((item) => {
           return {
             id: item.UUID,
@@ -115,6 +119,9 @@ export const CorporateEntity = () => {
         </button>
       </div>
       <Table labels={labels} data={data} actions={actions} />
+      <div className={styles.pagination}>
+        <Pagination total={pagination?.count} page={page} setPage={setPage} />
+      </div>
       <div className={styles.containerBack}>
         <button onClick={handleBack} className={styles.backbtn}>
           <RiArrowGoBackFill /> Volver

@@ -1,8 +1,8 @@
 import { axiosInstanceBearer, axiosInstanceFormData } from "./instances";
 
 
-export const getAllCorporateImages = async () => {
-    const response = await axiosInstanceBearer.get("/corporate-image/");
+export const getAllCorporateImages = async (page) => {
+    const response = await axiosInstanceBearer.get(`${page != 1 && page ? `/corporate-image/?page=${page}` : "/corporate-image/"}`);
     return response.data;
 }
 

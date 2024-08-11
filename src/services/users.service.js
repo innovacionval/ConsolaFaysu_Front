@@ -1,7 +1,7 @@
 import { axiosInstanceBearer } from "./instances";
 
-export const getAllUsers = async () => {
-    const response = await axiosInstanceBearer.get("/users");
+export const getAllUsers = async (page) => {
+    const response = await axiosInstanceBearer.get(`${page != 1 && page  ? `/users/?page=${page}` : "/users/"}`);
     return response.data;
 }
 

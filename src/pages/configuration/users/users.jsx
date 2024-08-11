@@ -6,11 +6,14 @@ import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ModalContext } from "@/contexts/modalContext";
 import { getAllUsers, getUserById } from "@/services/users.service";
+import { Pagination } from "@/components/shared/pagination/Pagination";
 
 export const Users = () => {
   const [search, setSearch] = useState("");
   const {openModal, refetch, addData} = useContext(ModalContext);
   const [data, setData] = useState([{}]);
+  const [pagination, setPagination] = useState(null);
+  const [page, setPage] = useState(1);
   const labels = [{
     name: "name",
     label: "Nombres",
@@ -40,6 +43,7 @@ export const Users = () => {
   useEffect(() => {
     if(search == ""){
     getAllUsers().then((response) => {
+      setPagination(response.paging)
       console.log(response)
       let dataUser = response.data.map((item) => {
         return {
@@ -118,6 +122,9 @@ export const Users = () => {
         </button>
       </div>
       <Table labels={labels} data={data} actions={actions} />
+      <div className={styles.pagination}>
+        <Pagination total={pagination?.count} page={page} setPage={setPage} />
+      </div>
       <div className={styles.containerBack}>
         <button onClick={handleBack} className={styles.backbtn}>
           <RiArrowGoBackFill /> Volver
