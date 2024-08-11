@@ -4,9 +4,11 @@ import { ModalContext } from '@/contexts/modalContext';
 import { useContext, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { createCorporateImage, updateCorporateImage } from '@/services/corporateImage.service';
+import { LoadingContext } from '@/contexts/LoadingContext';
 
 export const ModalCorporateEntity = () => {
   const {closeModal, refetch, setRefetch, dataTable} = useContext(ModalContext);
+  const {setLoading} = useContext(LoadingContext);
   const {register, handleSubmit, setValue, formState:{errors}} = useForm();
   const [previewImg, setPreviewImg] = useState(null)
   const [file, setFile] = useState(null)
@@ -32,6 +34,7 @@ export const ModalCorporateEntity = () => {
     closeModal()
   }
   const onSubmit = (data) => {
+    setLoading(true)
     if(Object.keys(dataTable).length > 0){
       handleEdit(data)
     } else {
@@ -51,7 +54,7 @@ export const ModalCorporateEntity = () => {
       closeModal()
     }).catch((error) => {
       console.log(error)
-    })
+    }).finally(() => setLoading(false))
   }
   const handleEdit = (data) => {
     const dataEdit = {
@@ -68,7 +71,7 @@ export const ModalCorporateEntity = () => {
       closeModal()
     }).catch((error) => {
       console.log(error)
-    })
+    }).finally(() => setLoading(false))
   }
 
 

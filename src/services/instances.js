@@ -2,6 +2,7 @@ import axios from "axios";
 
 const API_URL = import.meta.env.VITE_BACK_URL || "http://localhost:7088";
 
+
 export const axiosInstanceBearer = axios.create({
   baseURL: API_URL,
   headers: {
@@ -55,6 +56,7 @@ const handleTokenExpiration = async (error) => {
     } catch (refreshError) {
       console.error('Error al renovar el token:', refreshError);
       sessionStorage.clear();
+      window.location.href = '/';
       // Redirige al login o realiza alguna acción
       return Promise.reject(refreshError);
     }

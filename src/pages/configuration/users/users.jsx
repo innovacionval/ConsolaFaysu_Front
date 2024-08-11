@@ -7,10 +7,12 @@ import { useNavigate } from "react-router-dom";
 import { ModalContext } from "@/contexts/modalContext";
 import { getAllUsers, getUserById } from "@/services/users.service";
 import { Pagination } from "@/components/shared/pagination/Pagination";
+import { LoadingContext } from "@/contexts/LoadingContext";
 
 export const Users = () => {
   const [search, setSearch] = useState("");
   const {openModal, refetch, addData} = useContext(ModalContext);
+  const {setLoading} = useContext(LoadingContext);
   const [data, setData] = useState([{}]);
   const [pagination, setPagination] = useState(null);
   const [page, setPage] = useState(1);
@@ -41,6 +43,7 @@ export const Users = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    setLoading(true)
     if(search == ""){
     getAllUsers().then((response) => {
       setPagination(response.paging)
@@ -56,7 +59,9 @@ export const Users = () => {
         };
       });
       setData(dataUser);
-    });
+    }).catch((error) => {
+      console.log(error);
+    }).finally(() => setLoading(false));
   }
   }, [search, refetch]);
 
@@ -73,9 +78,11 @@ export const Users = () => {
       name: "edit",
       icon: <FaEdit />,
       action: async (id) => {
+        setLoading(true)
         const user = await getUserById(id);
         openModal("users");
         addData(user.data);
+        setLoading(false)
       }
     },
   ];

@@ -7,10 +7,12 @@ import { useContext, useEffect, useState } from 'react';
 import { ModalContext } from '@/contexts/modalContext';
 import { getAllCustomers, getCustomerById } from '@/services/customers.service';
 import { Pagination } from '@/components/shared/pagination/Pagination';
+import { LoadingContext } from '@/contexts/LoadingContext';
 
 export const Clients = () => {
   const [search, setSearch] = useState("");
   const {openModal, refetch, addData} = useContext(ModalContext);
+  const {setLoading} = useContext(LoadingContext);
   const [data, setData] = useState([{}]);
   const [pagination, setPagination] = useState(null);
   const [page, setPage] = useState(1);
@@ -25,6 +27,7 @@ export const Clients = () => {
   }];
   const navigate = useNavigate();
   useEffect(() => {
+    setLoading(true);
     if(search == ""){
       getAllCustomers(page).then((response) => {
         setPagination(response.paging)
@@ -36,7 +39,9 @@ export const Clients = () => {
           };
         });
         setData(dataCustomer);
-      });
+      }).catch((error) => {
+        console.log(error);
+      }).finally(() => setLoading(false));
   }
 
   }, [search, refetch, page]);
@@ -53,10 +58,13 @@ export const Clients = () => {
       name: "edit",
       icon: <FaEdit />,
       action: (id) => {
+        setLoading(true);
         getCustomerById(id).then((response) => {
           addData(response.data);
           openModal("clients");
-        });
+        }).catch((error) => {
+          console.log(error);
+        }).finally(() => setLoading(false));
       }
     },
   ];

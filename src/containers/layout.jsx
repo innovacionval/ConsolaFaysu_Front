@@ -7,16 +7,20 @@ import { ModalUsers } from '@/components/users/modal/modal';
 import { ModalCorporateEntity } from '@/components/corporateEntity/modal/modal';
 import { ModalImportData } from '@/components/importData/modal/modal';
 import { ModalClients } from '@/components/clients/modal/modal';
+import { LoadingContext } from '@/contexts/LoadingContext';
+import { Loading } from '@/components/shared/loading/Loading';
 
 
 export const Layout = () => {
   const {isOpen} = useContext(ModalContext);
+  const {loading} = useContext(LoadingContext);
   return (
     <>
     {isOpen.users && <ModalUsers/>}
     {isOpen.corporateEntity && <ModalCorporateEntity/>}
     {isOpen.importData && <ModalImportData/>}
     {isOpen.clients && <ModalClients/>}
+    {loading && <Loading/>}
       <div className={styles.container}>
         <Navbar />
         <div className={styles.containerPages}>

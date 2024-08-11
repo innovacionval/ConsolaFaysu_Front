@@ -4,9 +4,11 @@ import { useContext, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { BiSave } from 'react-icons/bi';
 import { createUser, updateUser } from '@/services/users.service';
+import { LoadingContext } from '@/contexts/LoadingContext';
 
 export const ModalUsers = () => {
   const {closeModal, refetch, setRefetch, dataTable} = useContext(ModalContext);
+  const {setLoading} = useContext(LoadingContext);
   const {register, handleSubmit, setValue, formState:{errors}} = useForm();
   const handleClose = () => {
     closeModal()
@@ -73,6 +75,7 @@ export const ModalUsers = () => {
   ]
 
   const handleForm = (data) => {
+    setLoading(true)
     if(Object.keys(dataTable).length > 0){
       handleEdit(data)
     } else {
@@ -91,7 +94,7 @@ export const ModalUsers = () => {
       setRefetch(!refetch)
     }).catch((error) => {
       console.log(error)
-    })
+    }).finally(() => setLoading(false))
   }
 
 
@@ -109,7 +112,7 @@ export const ModalUsers = () => {
       setRefetch(!refetch)
     }).catch((error) => {
       console.log(error)
-    })
+    }).finally(() => setLoading(false))
   }
 
 

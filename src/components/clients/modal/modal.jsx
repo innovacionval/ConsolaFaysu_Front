@@ -4,10 +4,11 @@ import { useForm } from "react-hook-form";
 import { BiSave } from "react-icons/bi";
 import styles from "./modal.module.scss";
 import { createCustomer, updateCustomer } from "@/services/customers.service";
+import { LoadingContext } from "@/contexts/LoadingContext";
 
 export const ModalClients = () => {
-  const { closeModal, refetch, setRefetch, dataTable } =
-    useContext(ModalContext);
+  const { closeModal, refetch, setRefetch, dataTable } = useContext(ModalContext);
+  const {setLoading} = useContext(LoadingContext);
   const {
     register,
     handleSubmit,
@@ -34,6 +35,7 @@ export const ModalClients = () => {
   ];
 
   const handleForm = (data) => {
+    setLoading(true);
     if (Object.keys(dataTable).length > 0) {
       handleEdit(data);
     } else {
@@ -44,7 +46,7 @@ export const ModalClients = () => {
         })
         .catch((error) => {
           console.log(error);
-        });
+        }).finally(()=>setLoading(false));
     }
   };
 
@@ -56,7 +58,7 @@ export const ModalClients = () => {
       })
       .catch((error) => {
         console.log(error);
-      });
+      }).finally(()=>setLoading(false));
   };
 
   return (

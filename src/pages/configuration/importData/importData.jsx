@@ -8,10 +8,12 @@ import { RiArrowGoBackFill } from 'react-icons/ri';
 import { getAllSourceFiles, getSourceFileById } from '@/services/sourceFile.service';
 import { Pagination } from '@/components/shared/pagination/Pagination';
 import { getUserById } from '@/services/users.service';
+import { LoadingContext } from '@/contexts/LoadingContext';
 
 export const ImportData = () => {
   const [search, setSearch] = useState("");
   const {openModal, refetch, addData} = useContext(ModalContext);
+  const {setLoading} = useContext(LoadingContext);
   const [data, setData] = useState([{}]);
   const [pagination, setPagination] = useState(null);
   const [page, setPage] = useState(1);
@@ -34,6 +36,7 @@ export const ImportData = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    setLoading(true);
     const fetchInfo = async () => {
       const sourceFiles = await getAllSourceFiles(page)
       setPagination(sourceFiles.paging)
@@ -46,7 +49,7 @@ export const ImportData = () => {
           name: item.file_name,
         }
       })
-    ).then((data) => setData(data))
+    ).then((data) => setData(data)).finally(() => setLoading(false))
     }
     if(search == ""){
       fetchInfo()
@@ -58,6 +61,7 @@ export const ImportData = () => {
       name: "Ver",
       icon: <FaEye />,
       action: (id) => {
+        setLoading(true)
         getSourceFileById(id).then((response) => {
           const link = document.createElement("a");
           link.href = window.URL.createObjectURL(new Blob([response.data.file]));
@@ -65,13 +69,16 @@ export const ImportData = () => {
           document.body.appendChild(link);
           link.click();
           link.remove();
-        });
+        }).catch((error) => {
+          console.log(error);
+        }).finally(() => setLoading(false));
       },
     },
     {
       name: "Descargar",
       icon: <FaDownload />,
       action: (id) => {
+        setLoading(true)
         getSourceFileById(id).then((response) => {
           const url = window.URL.createObjectURL(new Blob([response.data.file]));
           const link = document.createElement("a");
@@ -80,7 +87,9 @@ export const ImportData = () => {
           document.body.appendChild(link);
           link.click();
           link.remove();
-        });
+        }).catch((error) => {
+          console.log(error);
+        }).finally(() => setLoading(false));
       },
     },
     {

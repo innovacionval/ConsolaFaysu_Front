@@ -7,10 +7,12 @@ import { Table } from "@/components/table/table";
 import { RiArrowGoBackFill } from "react-icons/ri";
 import { getAllCorporateImages, getCorporateImageById } from "@/services/corporateImage.service";
 import { Pagination } from "@/components/shared/pagination/Pagination";
+import { LoadingContext } from "@/contexts/LoadingContext";
 
 export const CorporateEntity = () => {
   const [search, setSearch] = useState("");
   const { openModal, refetch, addData } = useContext(ModalContext);
+  const { setLoading } = useContext(LoadingContext);
   const [data, setData] = useState([{}]);
   const [pagination, setPagination] = useState(null);
   const [page, setPage] = useState(1);
@@ -43,6 +45,7 @@ export const CorporateEntity = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    setLoading(true);
     if (search == "") {
       getAllCorporateImages().then((response) => {
         setPagination(response.paging);
@@ -57,7 +60,9 @@ export const CorporateEntity = () => {
           };
         });
         setData(dataCorporateImage);
-      });
+      }).catch((error) => {
+        console.log(error);
+      }).finally(() => setLoading(false));
     }
   }, [search, refetch]);
 
@@ -66,9 +71,11 @@ export const CorporateEntity = () => {
       name: "Editar",
       icon: <FaEdit />,
       action: async (id) => {
+        setLoading(true);
         const corporateEntity = await getCorporateImageById(id);
         openModal("corporateEntity");
         addData(corporateEntity.data);
+        setLoading(false);
       },
     },
     {

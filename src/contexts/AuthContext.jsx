@@ -1,7 +1,8 @@
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { useState } from "react";
 import { createContext } from "react";
 import { login } from "@/services/login.service";
+import { LoadingContext } from "./LoadingContext";
 
 
 export const AuthContext = createContext()
@@ -9,8 +10,10 @@ export const AuthContext = createContext()
 export const AuthProvider = ({ children }) => {
   const [isLogged, setIsLogged] = useState(false)
   const [isValid, setIsValid] = useState(false)
+  const {setLoading} = useContext(LoadingContext);
 
   const handleLogin = (username, password) => {
+    setLoading(true)
     login(username, password)
       .then((response) => {
         sessionStorage.setItem('token', response.access_token)
@@ -19,7 +22,7 @@ export const AuthProvider = ({ children }) => {
       })
       .catch(() => {
         setIsValid(false)
-      })
+      }).finally(()=>setLoading(false))
   }
 
   const validateUser = () => {
