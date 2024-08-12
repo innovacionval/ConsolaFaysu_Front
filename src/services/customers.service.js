@@ -5,6 +5,11 @@ export const getAllCustomers = async (page) => {
     return response.data;
 }
 
+export const getAllCustomersTotal = async () => {
+    const response = await axiosInstanceBearer.get("/customers/?pageSize=1000");
+    return response.data;
+}
+
 export const getCustomerById = async (id) => {
     const response = await axiosInstanceBearer.get(`/customers/${id}`);
     return response.data;

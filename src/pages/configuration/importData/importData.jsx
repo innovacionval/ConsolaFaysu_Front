@@ -39,6 +39,7 @@ export const ImportData = () => {
     setLoading(true);
     const fetchInfo = async () => {
       const sourceFiles = await getAllSourceFiles(page)
+      console.log(sourceFiles)
       setPagination(sourceFiles.paging)
       Promise.all(sourceFiles.data.map(async (item) => {
         const user = await getUserById(item.user.UUID)
@@ -55,7 +56,6 @@ export const ImportData = () => {
       fetchInfo()
     }
   }, [search, refetch]);
-  console.log(data)
   const actions = [
     {
       name: "Ver",

@@ -31,7 +31,6 @@ export const Clients = () => {
     if(search == ""){
       getAllCustomers(page).then((response) => {
         setPagination(response.paging)
-        console.log(response)
         let dataCustomer = response.data.map((item) => {
           return {
             id: item.UUID,

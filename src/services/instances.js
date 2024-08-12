@@ -36,11 +36,9 @@ const handleTokenExpiration = async (error) => {
     try {
       // Llamada al servicio de refreshToken para obtener un nuevo token
       const refreshToken = sessionStorage.getItem("refreshToken");
-      console.log(refreshToken)
       const refreshResponse = await axiosInstanceBearer.post('/refresh', {
         refreshToken:refreshToken,
       });
-      console.log(refreshResponse)
 
       // Guardar el nuevo token en sessionStorage
       const newToken = refreshResponse.data.access_token;

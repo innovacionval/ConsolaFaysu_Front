@@ -1,4 +1,4 @@
-import { axiosInstanceBearer } from "./instances";
+import { axiosInstanceBearer, axiosInstanceFormData } from "./instances";
 
 
 export const getAllSourceFiles = async (page) => {
@@ -12,7 +12,7 @@ export const getSourceFileById = async (id) => {
 }
 
 export const createSourceFile = async (sourceFile) => {
-    const response = await axiosInstanceBearer.post("/source", sourceFile);
+    const response = await axiosInstanceFormData.post("/source/", sourceFile);
     return response.data;
 }
 

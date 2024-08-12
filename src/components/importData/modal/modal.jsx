@@ -4,6 +4,9 @@ import { useContext, useEffect, useState } from "react";
 import { BiSave } from "react-icons/bi";
 import { useForm } from "react-hook-form";
 import { MultipleSelect } from "@/components/shared/multipleSelect/MultipleSelect";
+import { getAllCustomersTotal } from "@/services/customers.service";
+import { createSourceFile } from "@/services/sourceFile.service";
+import { LoadingContext } from "@/contexts/LoadingContext";
 
 export const ModalImportData = () => {
   const { closeModal, refetch, setRefetch, dataTable } =
@@ -15,6 +18,10 @@ export const ModalImportData = () => {
     formState: { errors },
   } = useForm();
   const [fileName, setFileName] = useState("Archivo no seleccionado");
+  const [optionsClient, setOptionsClient] = useState([]);
+  const [clients, setClients] = useState([]);
+  const {setLoading} = useContext(LoadingContext);
+
   useEffect(() => {
     if (Object.keys(dataTable).length > 0) {
       setValue("date", dataTable.date);
@@ -52,69 +59,38 @@ export const ModalImportData = () => {
       disabled: false,
     },
   ];
-  const optionsClient = [
-    {
-      id: 1,
-      name: "Papeles RR",
-      isSelected: false,
-    },
-    {
-      id: 2,
-      name: "Papelera FK",
-      isSelected: false,
-    },
-    {
-      id: 3,
-      name: "Forest Spa Look",
-      isSelected: false,
-    },
-    {
-      id: 4,
-      name: "Escuela de formación aeronáutica EFA",
-      isSelected: false,
-    },
-    {
-      id: 5,
-      name: "Urban 960",
-      isSelected: false,
-    },
-    {
-      id: 6,
-      name: "Iris",
-      isSelected: false,
-    },
-    {
-      id: 7,
-      name: "Alheli",
-      isSelected: false,
-    },
-    {
-      id: 8,
-      name: "Atlantico",
-      isSelected: false,
-    },
-    {
-      id: 9,
-      name: "Alameda de Villamayor II",
-      isSelected: false,
-    },
-    {
-      id: 10,
-      name: "Cerezo",
-      isSelected: false,
-    },
-    {
-      id: 11,
-      name: "Carmesi",
-      isSelected: false,
-    },
-  ];
   useEffect(() => {
-    setValue("date", new Date().toISOString().split("T")[0]);
-    setValue("user", "Juan Perez");
+    getAllCustomersTotal().then((data) => {
+      setOptionsClient(
+        data.data.map((item) => {
+          return {
+            value: item.UUID,
+            label: item.name,
+          };
+        })
+      );
+    });
   }, []);
+
+
   const onSubmit = (data) => {
-    console.log(data);
+    handleCreate(data);
+  };
+  const handleCreate = (data) => {
+    setLoading(true);
+    const formData = new FormData();
+    formData.append("user", "525a0a5f-f1ab-4d95-a862-b61bc3aa3183");
+    formData.append("file", data.file[0]);
+    formData.append("file_name", fileName);
+    clients.forEach((client) => {
+      formData.append("customers", client);
+    });
+    createSourceFile(formData).then(() => {
+      setRefetch(!refetch);
+      closeModal();
+    }).catch((error) => {
+      console.log(error);
+    }).finally(() => setLoading(false));
   };
   const onChangeFile = (e) => {
     setFileName(e.target.files[0].name);
@@ -153,7 +129,7 @@ export const ModalImportData = () => {
                     <p>{fileName}</p>
                   </>
                 ) : input.name == "client" ? (
-                  <MultipleSelect input={input} data={optionsClient} />
+                  <MultipleSelect clients={clients} setClients={setClients} input={input} data={optionsClient} />
                 ) : (
                   <input
                     type={input.type}
