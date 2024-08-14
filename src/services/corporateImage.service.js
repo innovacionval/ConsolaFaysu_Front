@@ -18,7 +18,7 @@ export const createCorporateImage = async (corporateImage) => {
 
 
 export const updateCorporateImage = async (id, corporateImage) => {
-    const response = await axiosInstanceBearer.patch(`/corporate-image/${id}`, corporateImage);
+    const response = await axiosInstanceFormData.patch(`/corporate-image/${id}`, corporateImage);
     return response.data;
 }
 

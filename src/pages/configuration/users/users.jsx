@@ -5,13 +5,13 @@ import { RiArrowGoBackFill } from "react-icons/ri";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ModalContext } from "@/contexts/modalContext";
-import { getAllUsers, getUserById } from "@/services/users.service";
+import { getAllUsers, getUserById, updateUser } from "@/services/users.service";
 import { Pagination } from "@/components/shared/pagination/Pagination";
 import { LoadingContext } from "@/contexts/LoadingContext";
 
 export const Users = () => {
   const [search, setSearch] = useState("");
-  const {openModal, refetch, addData} = useContext(ModalContext);
+  const {openModal, refetch, setRefetch, addData} = useContext(ModalContext);
   const {setLoading} = useContext(LoadingContext);
   const [data, setData] = useState([{}]);
   const [pagination, setPagination] = useState(null);
@@ -33,7 +33,7 @@ export const Users = () => {
     label: "Rol",
   },
   {
-    name: "status",
+    name: "statusUser",
     label: "Estado",
   },
   {
@@ -55,7 +55,7 @@ export const Users = () => {
           identity: item.identity,
           email: item.email,
           role: item.role,
-          status: item.status,
+          statusUser: item.emailVerified,
         };
       });
       setData(dataUser);
@@ -65,13 +65,19 @@ export const Users = () => {
   }
   }, [search, refetch]);
 
+
   const actions = [
     {
       name: "switch",
       action: (id) => {
+        setLoading(true)
         const item = data.find(item => item.id === id);
-        item.status = item.status === 'Activo' ? 'Inactivo' : 'Activo';
-        setData([...data]);
+        item.statusUser = item.statusUser ? false : true;
+        updateUser(id, {emailVerified: item.statusUser, role:item.role}).then(() => {
+          setRefetch(!refetch)
+        }).catch((error) => {
+          console.log(error)
+        }).finally(() => setLoading(false))
       }
     },
     {

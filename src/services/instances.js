@@ -1,6 +1,8 @@
 import axios from "axios";
+import { jwtDecode } from "jwt-decode";
 
 const API_URL = import.meta.env.VITE_BACK_URL || "http://localhost:7088";
+const TOKEN_REFRESH_MARGIN = 5 * 60 * 1000; // 5 minutos en milisegundos
 
 
 export const axiosInstanceBearer = axios.create({
@@ -17,45 +19,65 @@ export const axiosInstanceFormData = axios.create({
   },
 })
 
-const addTokenToRequest = (config) => {
+const addTokenToRequest = async (config) => {
   const token = sessionStorage.getItem("token");
+
   if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+    const decodedToken = jwtDecode(token);
+    const currentTime = Date.now();
+    console.log(decodedToken);
+    const tokenExpirationTime = decodedToken.exp * 1000; 
+
+    
+    if (tokenExpirationTime - currentTime < TOKEN_REFRESH_MARGIN) {
+      try {
+        await refreshAuthToken(); 
+      } catch (error) {
+        console.error('Error refreshing token:', error);
+      }
+    }
+
+    const newToken = sessionStorage.getItem("token");
+    config.headers.Authorization = `Bearer ${newToken}`;
   }
+
   return config;
+};
+
+const refreshAuthToken = async () => {
+  const refreshToken = sessionStorage.getItem("refreshToken");
+
+  if (!refreshToken) {
+    throw new Error("No refresh token available");
+  }
+
+  const refreshResponse = await axiosInstanceBearer.post('/refresh', {
+    refreshToken: refreshToken,
+  });
+
+  const newToken = refreshResponse.data.access_token;
+  sessionStorage.setItem('token', newToken);
 };
 
 const handleTokenExpiration = async (error) => {
   const originalRequest = error.config;
 
-  // Verifica si el error es 401 y si no es un intento de refresh
-  console.log(error)
   if (error.response.status === 401 && !originalRequest._retry) {
     originalRequest._retry = true;
 
     try {
-      // Llamada al servicio de refreshToken para obtener un nuevo token
-      const refreshToken = sessionStorage.getItem("refreshToken");
-      const refreshResponse = await axiosInstanceBearer.post('/refresh', {
-        refreshToken:refreshToken,
-      });
+      await refreshAuthToken();
 
-      // Guardar el nuevo token en sessionStorage
-      const newToken = refreshResponse.data.access_token;
-      sessionStorage.setItem('token', newToken);
-
-      // Actualiza el token en la solicitud original
+      const newToken = sessionStorage.getItem("token");
       axiosInstanceBearer.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
       axiosInstanceFormData.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
       originalRequest.headers['Authorization'] = `Bearer ${newToken}`;
 
-      // Reintentar la solicitud original
       return axios(originalRequest);
     } catch (refreshError) {
       console.error('Error al renovar el token:', refreshError);
       sessionStorage.clear();
       window.location.href = '/';
-      // Redirige al login o realiza alguna acción
       return Promise.reject(refreshError);
     }
   }

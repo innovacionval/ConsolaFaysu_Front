@@ -19,13 +19,14 @@ export const ModalCorporateEntity = () => {
   useEffect(() => {
     const formData = new FormData()
     formData.append("name", dataTable.logo)
+    console.log(dataTable)
     if(Object.keys(dataTable).length > 0){
       setValue("name", dataTable.name)
       setValue("user", dataTable.user)
       setValue("logo", formData)
       setValue("primaryColor", dataTable.main_color)
       setValue("secondaryColor", dataTable.secondary_color)
-      setPreviewImg(dataTable.logo)
+      setPreviewImg(`${import.meta.env.VITE_URL_FILE}${dataTable.logo}`)
       setPrimaryColor(dataTable.main_color)
       setSecondaryColor(dataTable.secondary_color)
     }}, [dataTable])
@@ -57,17 +58,20 @@ export const ModalCorporateEntity = () => {
     }).finally(() => setLoading(false))
   }
   const handleEdit = (data) => {
-    const dataEdit = {
+    const formDataEdit = new FormData()
+    if(data.name !== dataTable.name) formDataEdit.append("name", data.name)
+    if(data.user !== dataTable.user) formDataEdit.append("user", data.user)
+    if(primaryColor !== dataTable.main_color) formDataEdit.append("main_color", primaryColor)
+    if(secondaryColor !== dataTable.secondary_color) formDataEdit.append("secondary_color", secondaryColor)
+    if(file) formDataEdit.append("logo", file)
+    const dataEdit = Object.fromEntries(formDataEdit)
+    if(Object.keys(dataEdit).length === 0) {
+      closeModal()
+      setLoading(false)
+      return
     }
-    if(data.name !== dataTable.name) dataEdit.name = data.name
-    if(data.user !== dataTable.user) dataEdit.user = data.user
-    if(primaryColor !== dataTable.main_color) dataEdit.main_color = primaryColor
-    if(secondaryColor !== dataTable.secondary_color) dataEdit.secondary_color = secondaryColor
-    if(previewImg && previewImg !== dataTable.logo) dataEdit.logo = previewImg
-
-    if(Object.keys(dataEdit).length === 0) return closeModal()
-    updateCorporateImage(dataTable.UUID, dataEdit).then(() => {
-      setRefetch(true)
+    updateCorporateImage(dataTable.UUID, formDataEdit).then(() => {
+      setRefetch(!refetch)
       closeModal()
     }).catch((error) => {
       console.log(error)

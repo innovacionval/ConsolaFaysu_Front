@@ -114,10 +114,7 @@ export const Campaigns = () => {
     },
   ];
   const labels = [
-    {
-      name: "",
-      label: "",
-    },
+    
     {
       name: "name",
       label: "Nombre",
@@ -137,7 +134,11 @@ export const Campaigns = () => {
     {
       name: "status",
       label: "Estado",
-    }
+    },
+    {
+      name: "",
+      label: "",
+    },
   ];
 
   const actions = [

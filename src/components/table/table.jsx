@@ -23,12 +23,17 @@ export const Table = ({labels, data, actions}) => {
                 {
                   Object.keys(item).map((key, index) => {
                     if (!labelNames.has(key)) return null;
+                    if (key == 'statusUser') {
+                      console.log(item)
+                      return <td key={index} className={item[key] ? styles.active : styles.inactive}>{item[key] ? 'Activo' : 'Inactivo'}</td>
+                    }
                     if (key == 'status') {
-                      return <td key={index} className={item[key] == "Activo" || item[key] == "Vigente" ? styles.active : styles.inactive}>{item[key]}</td>
+                      console.log(item)
+                      return <td key={index} className={item[key] == "Vigente" ? styles.active : styles.inactive}>{item[key]}</td>
                     }
                     if(key == 'logo') {
                       return <td key={index}>
-                        <img src={item[key]} alt="logo" />
+                        <img width="50px" src={item[key]} alt="logo" />
                       </td>
                     }
                     if(key == 'primaryColor' || key == 'secondaryColor') {
@@ -52,7 +57,7 @@ export const Table = ({labels, data, actions}) => {
                   {
                     actions.map((action, index) => {
                       if (action.name === 'switch') {
-                        return <Switch key={`${index} + $`} isOn={item.status === "Activo" || item.status =="Vigente"} handleToggle={() => action.action(item.id)} id={item.id} />;
+                        return <Switch key={`${index} + $`} isOn={item.statusUser || item.status =="Vigente"} handleToggle={() => action.action(item.id)} id={item.id} />;
                       }
                       return (
                         <button className={styles.action} key={index} onClick={() => action.action(item.id)}>

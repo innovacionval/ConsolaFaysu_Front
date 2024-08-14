@@ -54,7 +54,7 @@ export const CorporateEntity = () => {
             id: item.UUID,
             name: item.name,
             user: item.user,
-            logo: item.logo,
+            logo: `${import.meta.env.VITE_URL_FILE}${item.logo}`,
             primaryColor: item.main_color,
             secondaryColor: item.secondary_color,
           };

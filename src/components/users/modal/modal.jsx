@@ -64,13 +64,6 @@ export const ModalUsers = () => {
       }
     ],
       
-    },
-    {
-      type: "radio",
-      name: "status",
-      label: "Estado",
-      required: true,
-      options: ["Activo", "Inactivo"],
     }
   ]
 
@@ -104,7 +97,6 @@ export const ModalUsers = () => {
     if(data.name !== dataTable.firstName) dataEdit.firstName = data.name
     if(data.lastName !== dataTable.lastName) dataEdit.lastName = data.lastName
     if(data.role !== dataTable.role) dataEdit.role = data.role
-    if(data.status !== dataTable.status) dataEdit.status = data.status
 
     if(Object.keys(dataEdit).length === 0) return closeModal()
     updateUser(dataTable.UUID, dataEdit).then((_response) => {

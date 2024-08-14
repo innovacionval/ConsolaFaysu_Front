@@ -7,6 +7,8 @@ import { MultipleSelect } from "@/components/shared/multipleSelect/MultipleSelec
 import { getAllCustomersTotal } from "@/services/customers.service";
 import { createSourceFile } from "@/services/sourceFile.service";
 import { LoadingContext } from "@/contexts/LoadingContext";
+import { jwtDecode } from "jwt-decode";
+import { getAllUsers } from "@/services/users.service";
 
 export const ModalImportData = () => {
   const { closeModal, refetch, setRefetch, dataTable } =
@@ -19,6 +21,7 @@ export const ModalImportData = () => {
   } = useForm();
   const [fileName, setFileName] = useState("Archivo no seleccionado");
   const [optionsClient, setOptionsClient] = useState([]);
+  const [userId , setUserId] = useState("");
   const [clients, setClients] = useState([]);
   const {setLoading} = useContext(LoadingContext);
 
@@ -30,6 +33,14 @@ export const ModalImportData = () => {
     }
   }, [dataTable]);
 
+  useEffect(() => {
+    const decodeToken = jwtDecode(sessionStorage.getItem("token"));
+    getAllUsers().then((data) => {
+      const user = data.data.find((item) => item.email === decodeToken.email);
+      setUserId(user.UUID);
+      setValue("user", user.firstName + " " + user.lastName);
+    });
+  }, []);
   const inputs = [
     {
       type: "text",
@@ -79,7 +90,7 @@ export const ModalImportData = () => {
   const handleCreate = (data) => {
     setLoading(true);
     const formData = new FormData();
-    formData.append("user", "525a0a5f-f1ab-4d95-a862-b61bc3aa3183");
+    formData.append("user", userId);
     formData.append("file", data.file[0]);
     formData.append("file_name", fileName);
     clients.forEach((client) => {

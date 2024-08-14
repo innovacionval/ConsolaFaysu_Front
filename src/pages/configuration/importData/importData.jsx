@@ -39,7 +39,6 @@ export const ImportData = () => {
     setLoading(true);
     const fetchInfo = async () => {
       const sourceFiles = await getAllSourceFiles(page)
-      console.log(sourceFiles)
       setPagination(sourceFiles.paging)
       Promise.all(sourceFiles.data.map(async (item) => {
         const user = await getUserById(item.user.UUID)
@@ -63,12 +62,8 @@ export const ImportData = () => {
       action: (id) => {
         setLoading(true)
         getSourceFileById(id).then((response) => {
-          const link = document.createElement("a");
-          link.href = window.URL.createObjectURL(new Blob([response.data.file]));
-          link.setAttribute("target", "_blank");
-          document.body.appendChild(link);
-          link.click();
-          link.remove();
+          const url = import.meta.env.VITE_URL_FILE + response.data.file;
+          window.open(url, "_blank");
         }).catch((error) => {
           console.log(error);
         }).finally(() => setLoading(false));
@@ -80,7 +75,7 @@ export const ImportData = () => {
       action: (id) => {
         setLoading(true)
         getSourceFileById(id).then((response) => {
-          const url = window.URL.createObjectURL(new Blob([response.data.file]));
+          const url = window.URL.createObjectURL(new Blob([import.meta.env.VITE_URL_FILE + response.data.file]));
           const link = document.createElement("a");
           link.href = url;
           link.setAttribute("download", response.data.file_name);
