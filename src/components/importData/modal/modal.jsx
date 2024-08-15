@@ -5,7 +5,7 @@ import { BiSave } from "react-icons/bi";
 import { useForm } from "react-hook-form";
 import { MultipleSelect } from "@/components/shared/multipleSelect/MultipleSelect";
 import { getAllCustomersTotal } from "@/services/customers.service";
-import { createSourceFile } from "@/services/sourceFile.service";
+import { createSourceFile, updateSourceFile } from "@/services/sourceFile.service";
 import { LoadingContext } from "@/contexts/LoadingContext";
 import { jwtDecode } from "jwt-decode";
 import { getAllUsers } from "@/services/users.service";
@@ -25,11 +25,15 @@ export const ModalImportData = () => {
   const [clients, setClients] = useState([]);
   const {setLoading} = useContext(LoadingContext);
 
+  console.log(dataTable)
+
   useEffect(() => {
     if (Object.keys(dataTable).length > 0) {
       setValue("date", dataTable.date);
       setValue("user", dataTable.user);
-      setValue("name", dataTable.name);
+      setValue("name", dataTable.file_name);
+      setClients(dataTable.customers.map((item) => item)
+      )
     }
   }, [dataTable]);
 
@@ -85,6 +89,11 @@ export const ModalImportData = () => {
 
 
   const onSubmit = (data) => {
+    setLoading(true);
+    if(Object.keys(dataTable).length > 0) {
+      handleEdit(data);
+      return;
+    }
     handleCreate(data);
   };
   const handleCreate = (data) => {
@@ -103,6 +112,30 @@ export const ModalImportData = () => {
       console.log(error);
     }).finally(() => setLoading(false));
   };
+  const handleEdit = (data) => {
+    console.log(data)
+    setLoading(true);
+    const formDataEdit = new FormData();
+    if(data.file) {
+      formDataEdit.append("file", data.file[0]);
+      formDataEdit.append("file_name", fileName);
+    }
+    clients.forEach((client) => {
+      formDataEdit.append("customers", client);
+    });
+    const dataEdit = Object.fromEntries(formDataEdit);
+    if(Object.keys(dataEdit).length === 0) {
+      closeModal();
+      setLoading(false);
+      return;
+    }
+    updateSourceFile(dataTable.UUID, formDataEdit).then(() => {
+      setRefetch(!refetch);
+      closeModal();
+    }).catch((error) => {
+      console.log(error);
+    }).finally(() => setLoading(false));
+  }
   const onChangeFile = (e) => {
     setFileName(e.target.files[0].name);
   };

@@ -17,7 +17,7 @@ export const createSourceFile = async (sourceFile) => {
 }
 
 export const updateSourceFile = async (id, sourceFile) => {
-    const response = await axiosInstanceBearer.patch(`/source/${id}`, sourceFile);
+    const response = await axiosInstanceFormData.patch(`/source/${id}`, sourceFile);
     return response.data;
 }
 

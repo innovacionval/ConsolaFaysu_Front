@@ -5,14 +5,14 @@ import { ModalContext } from '@/contexts/modalContext';
 import { useNavigate } from 'react-router-dom';
 import { Table } from '@/components/table/table';
 import { RiArrowGoBackFill } from 'react-icons/ri';
-import { getAllSourceFiles, getSourceFileById } from '@/services/sourceFile.service';
+import { deleteSourceFile, getAllSourceFiles, getSourceFileById } from '@/services/sourceFile.service';
 import { Pagination } from '@/components/shared/pagination/Pagination';
 import { getUserById } from '@/services/users.service';
 import { LoadingContext } from '@/contexts/LoadingContext';
 
 export const ImportData = () => {
   const [search, setSearch] = useState("");
-  const {openModal, refetch, addData} = useContext(ModalContext);
+  const {openModal, refetch, setRefetch, addData} = useContext(ModalContext);
   const {setLoading} = useContext(LoadingContext);
   const [data, setData] = useState([{}]);
   const [pagination, setPagination] = useState(null);
@@ -90,12 +90,27 @@ export const ImportData = () => {
     {
       name: "Editar",
       icon: <FaEdit />,
-      action: () => alert("Editar"),
+      action: (id) => {
+        setLoading(true)
+        getSourceFileById(id).then((response) => {
+          addData(response.data);
+          openModal("importData");
+        }).catch((error) => {
+          console.log(error);
+        }).finally(() => setLoading(false));
+      } ,
     },
     {
       name: "Eliminar",
       icon: <FaRegTrashAlt />,
-      action: () => alert("Eliminar"),
+      action: (id) => {
+        setLoading(true)
+        deleteSourceFile(id).then(() => {
+          setRefetch(!refetch);
+        }).catch((error) => {
+          console.log(error);
+        }).finally(() => setLoading(false));
+      },
     },
   ];
 

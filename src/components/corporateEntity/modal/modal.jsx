@@ -152,8 +152,10 @@ export const ModalCorporateEntity = () => {
                   {
                     input.type === "file" ?
                     <>
+                    <div className={styles.containerFile}>
                       <input type={input.type} {...register(input.name, {required: { value: input.required, message: input.label}, onChange:(e) => handleChangeFile(e)})} accept='image/png, image/jpeg'  />
                       {previewImg&&<img src={previewImg} alt="preview" />}
+                    </div>
                     </>
                     : input.type === "color" ?
                     <>
