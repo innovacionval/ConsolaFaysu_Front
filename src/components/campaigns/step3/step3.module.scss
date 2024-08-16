@@ -111,21 +111,34 @@
       grid-template-columns: 1fr auto;
       width: 100%;
       border-radius: 20px 20px 0 0;
-      input{
+      input{/* 
         border-radius: 20px 0 0 0;
         border: 1px solid $secondary;
         padding: 10px;
         width: 100%;
-        font-size: larger;
+        font-size: larger; */
+
+        &:first-child{
+          border-radius: 20px 0 0 0;
+          border-bottom: 0;
+          border-right: 0;
+        }
+        &:last-child{
+          border-radius: 0;
+          border-bottom: 0px;
+          border-right: 0;
+        }
+
       }
       .containerInputFile{
         display: flex;
         flex-direction: column;
         justify-content: flex-end;
         border: 1px solid $secondary;
+        border-bottom: 0;
         align-items: center;
         border-radius: 0 20px 0 0;
-        gap: 10px;
+        gap: 5px;
         padding: 10px;
         label{
           display: flex;
@@ -221,7 +234,14 @@
       flex-direction: column;
       align-items: center;
       gap: 20px;
-    
+
+      input{
+        border-radius: 20px;
+        border: 1px solid $secondary;
+        padding: 10px;
+        font-size: larger;
+        width: 100%;
+      }
       .titleSMS{
         font-size: 1.5rem;
         font-weight: bold;

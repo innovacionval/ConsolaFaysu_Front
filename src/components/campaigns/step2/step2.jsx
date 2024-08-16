@@ -46,12 +46,7 @@ export const Step2 = ({
       label: "Seleccionar identidad corporativa",
       name: "corporateEntity",
       type: "select",
-    },
-    {
-      label: "Seleccionar correo/Wa remitente",
-      name: "sender",
-      type: "select",
-    },
+    }
   ];
 
   const watchPeriodicity = watch("periodicity");

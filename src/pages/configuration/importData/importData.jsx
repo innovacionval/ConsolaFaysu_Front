@@ -55,6 +55,8 @@ export const ImportData = () => {
       fetchInfo()
     }
   }, [search, refetch]);
+
+
   const actions = [
     {
       name: "Ver",

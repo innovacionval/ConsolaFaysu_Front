@@ -4,6 +4,16 @@
     position: relative;
     width: 100%;
 
+    .customClientSelect{
+      border-radius: 20px;
+        border: 1px solid $secondary;
+        background-color: white;
+        padding: 5px;
+        font-size: larger;
+        width: 300px;
+        min-width: 100px
+    }
+
     .containerOptions{
       position: absolute;
       top: 100%;

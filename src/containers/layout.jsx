@@ -14,6 +14,7 @@ import { Loading } from '@/components/shared/loading/Loading';
 export const Layout = () => {
   const {isOpen} = useContext(ModalContext);
   const {loading} = useContext(LoadingContext);
+  
   return (
     <>
     {isOpen.users && <ModalUsers/>}

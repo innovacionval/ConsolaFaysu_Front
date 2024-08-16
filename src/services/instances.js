@@ -25,7 +25,6 @@ const addTokenToRequest = async (config) => {
   if (token) {
     const decodedToken = jwtDecode(token);
     const currentTime = Date.now();
-    console.log(decodedToken);
     const tokenExpirationTime = decodedToken.exp * 1000; 
 
     

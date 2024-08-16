@@ -1,7 +1,7 @@
 import { useState } from "react"
 import styles from "./MultipleSelect.module.scss"
 
-export const MultipleSelect = ({clients, setClients, data}) => {
+export const MultipleSelect = ({clients, setClients, data, campaign = false}) => {
   const [isOpen, setIsOpen] = useState(false)
   const openSelect = () => {
     setIsOpen(!isOpen)
@@ -15,7 +15,7 @@ export const MultipleSelect = ({clients, setClients, data}) => {
   }
   return (
     <div className={styles.container}>
-      <button type="button" onClick={openSelect}>Seleccionar Clientes</button>
+      <button className={campaign ? styles.customClientSelect : ''} type="button" onClick={openSelect}>Seleccionar Clientes</button>
       {
         isOpen && (
           <div className={styles.containerOptions}>

@@ -1,12 +1,15 @@
 import { useForm } from "react-hook-form";
 import styles from "./campaigns.module.scss";
 import { MdArrowForwardIos } from "react-icons/md";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Table } from "@/components/table/table";
 import { FaEdit, FaPlus, FaSearch } from "react-icons/fa";
 import { Step2 } from "@/components/campaigns/step2/step2";
 import { Step3 } from "@/components/campaigns/step3/step3";
 import { RiArrowGoBackFill } from "react-icons/ri";
+import { MultipleSelect } from "@/components/shared/multipleSelect/MultipleSelect";
+import { getAllCustomersTotal } from "@/services/customers.service";
+import { LoadingContext } from "@/contexts/LoadingContext";
 
 export const Campaigns = () => {
   const {
@@ -35,6 +38,9 @@ export const Campaigns = () => {
       status: "Terminada",
     },
   ]);
+  const { setLoading } = useContext(LoadingContext);
+  const [optionsClient, setOptionsClient] = useState([]);
+  const [clients, setClients] = useState([]);
   const [search, setSearch] = useState("");
   const [steps, setSteps] = useState(3);
 
@@ -186,6 +192,20 @@ export const Campaigns = () => {
     setDataCampaign([...dataTable]);
   }, [steps]);
 
+  useEffect(() => {
+    setLoading(true);
+    getAllCustomersTotal().then((response) => {
+      setOptionsClient(response.data.map((item) => {
+        return {
+          value: item.UUID,
+          label: item.name
+        }
+      }))
+    }).catch((error) => {
+      console.log(error);
+    }).finally(() => setLoading(false));
+  }, []);
+
   return (
     <div className={styles.container}>
       <div className={styles.containerTitle}>
@@ -198,6 +218,14 @@ export const Campaigns = () => {
         <>
           <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
             {inputs.map((input, index) => {
+              if(input.name == "client") {
+                return (
+                  <div key={`${input.name}${index}`} className={styles.formGroupClient}>
+                    <label className={styles.labelTitle} htmlFor={input.name}>{input.label}</label>
+                    <MultipleSelect campaign={true} clients={clients} setClients={setClients} data={optionsClient} />
+                  </div>
+                );
+              }
               if (input.name == "daysOfDelay" || input.name == "balances") {
                 return (
                   <div

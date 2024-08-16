@@ -112,6 +112,20 @@
         cursor: pointer;
       }
     }
+    .formGroupClient{
+      display: flex;
+      align-items: center;
+      gap: 50px;
+      width: 100%;
+
+      .labelTitle{
+        font-weight: bold;
+        font-size: 1.4rem;
+        width: 200px;
+        min-width: 200px;
+        white-space: nowrap;
+      }
+    }
     .containerBtn{
       display: flex;
       justify-content: center;

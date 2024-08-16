@@ -172,11 +172,14 @@ export const Step3 = ({
                 {selectedOption == "E-mail" ? (
                   <>
                     <div className={styles.containerInput}>
-                      <input
-                        type="text"
-                        {...register("subject", { required: true })}
-                        placeholder="Asunto"
-                      />
+                      <div >
+                        <input type="text" placeholder="Remitente" />
+                        <input
+                          type="text"
+                          {...register("subject", { required: true })}
+                          placeholder="Asunto"
+                        />
+                      </div>
                       <div className={styles.containerInputFile}>
                         <input
                           hidden
@@ -214,6 +217,7 @@ export const Step3 = ({
                 ) : (
                   <div className={styles.containerSMS}>
                     <h3 className={styles.titleSMS}>Ingresa el texto</h3>
+                    <input type="text" placeholder="Remitente" />
                     <textarea
                       id="message"
                       className={styles.textAreaSMS}
@@ -256,7 +260,7 @@ export const Step3 = ({
             </button>
             <button className={styles.button}>
               <MdArrowForwardIos />
-              Siguiente
+              Guardar
             </button>
           </div>
         </form>
