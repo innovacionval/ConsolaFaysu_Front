@@ -19,6 +19,21 @@ export const axiosInstanceFormData = axios.create({
   },
 })
 
+let isRefreshing = false;
+let failedQueue = [];
+
+const processQueue = (error, token = null) => {
+  failedQueue.forEach(prom => {
+    if (error) {
+      prom.reject(error);
+    } else {
+      prom.resolve(token);
+    }
+  });
+
+  failedQueue = [];
+};
+
 const addTokenToRequest = async (config) => {
   const token = sessionStorage.getItem("token");
 
@@ -28,7 +43,7 @@ const addTokenToRequest = async (config) => {
     const tokenExpirationTime = decodedToken.exp * 1000; 
 
     
-    if (tokenExpirationTime - currentTime < TOKEN_REFRESH_MARGIN) {
+    if (tokenExpirationTime - currentTime < TOKEN_REFRESH_MARGIN && !isRefreshing) {
       try {
         await refreshAuthToken(); 
       } catch (error) {
@@ -44,18 +59,36 @@ const addTokenToRequest = async (config) => {
 };
 
 const refreshAuthToken = async () => {
-  const refreshToken = sessionStorage.getItem("refreshToken");
-
-  if (!refreshToken) {
-    throw new Error("No refresh token available");
+  if (isRefreshing) {
+    return new Promise(function (resolve, reject) {
+      failedQueue.push({ resolve, reject });
+    });
   }
 
-  const refreshResponse = await axiosInstanceBearer.post('/refresh', {
-    refreshToken: refreshToken,
-  });
+  isRefreshing = true;
 
-  const newToken = refreshResponse.data.access_token;
-  sessionStorage.setItem('token', newToken);
+  try {
+    const refreshToken = sessionStorage.getItem("refreshToken");
+
+    if (!refreshToken) {
+      throw new Error("No refresh token available");
+    }
+
+    const refreshResponse = await axiosInstanceBearer.post('/refresh', {
+      refreshToken: refreshToken,
+    });
+
+    const newToken = refreshResponse.data.access_token;
+    sessionStorage.setItem('token', newToken);
+    isRefreshing = false;
+    processQueue(null, newToken);
+
+    return newToken;
+  } catch (error) {
+    isRefreshing = false;
+    processQueue(error, null);
+    throw error;
+  }
 };
 
 const handleTokenExpiration = async (error) => {
@@ -65,9 +98,8 @@ const handleTokenExpiration = async (error) => {
     originalRequest._retry = true;
 
     try {
-      await refreshAuthToken();
+      const newToken = await refreshAuthToken();
 
-      const newToken = sessionStorage.getItem("token");
       axiosInstanceBearer.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
       axiosInstanceFormData.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
       originalRequest.headers['Authorization'] = `Bearer ${newToken}`;

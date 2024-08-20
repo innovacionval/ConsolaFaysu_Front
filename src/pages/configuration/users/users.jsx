@@ -22,7 +22,7 @@ export const Users = () => {
   },
   {
     name: "identity",
-    label: "Identidad",
+    label: "Identificación",
   },
   {
     name: "email",
