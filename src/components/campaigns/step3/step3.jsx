@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { FaPaperclip, FaStar } from "react-icons/fa";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css"; // import styles
+import { getAllUsers } from "@/services/users.service";
 
 export const Step3 = ({
   handleSubmit,
@@ -25,12 +26,21 @@ export const Step3 = ({
   const [selectedOption, setSelectedOption] = useState("E-mail");
   const [openVariables, setOpenVariables] = useState(false);
   const [valueMessage, setValueMessage] = useState("");
+  const [usersData, setUsersData] = useState([]);
   const quillRef = useRef(null);
   const maxLength = 300;
   const message = watch("message");
 
   useEffect(() => {
     setValue("typeCampaignStep3", "E-mail");
+    getAllUsers().then((response) => {
+      setUsersData(response.data.map((user) => {
+        return {
+          id: user.id,
+          email: user.email,
+        };
+      }));
+    });
   }, []);
 
   useEffect(() => {
@@ -173,7 +183,14 @@ export const Step3 = ({
                   <>
                     <div className={styles.containerInput}>
                       <div >
-                        <input type="text" placeholder="Remitente" />
+                        <select type="text" placeholder="Remitente">
+                          <option value="Remitente">Remitente</option>
+                          {usersData.map((user) => (
+                            <option key={user.id} value={user.email}>
+                              {user.email}
+                            </option>
+                          ))}
+                        </select>
                         <input
                           type="text"
                           {...register("subject", { required: true })}
@@ -217,7 +234,14 @@ export const Step3 = ({
                 ) : (
                   <div className={styles.containerSMS}>
                     <h3 className={styles.titleSMS}>Ingresa el texto</h3>
-                    <input type="text" placeholder="Remitente" />
+                    <select type="text" placeholder="Remitente" >
+                      <option value="Remitente">Remitente</option>
+                      {usersData.map((user) => (
+                        <option key={user.id} value={user.email}>
+                          {user.email}
+                        </option>
+                      ))}
+                    </select>
                     <textarea
                       id="message"
                       className={styles.textAreaSMS}

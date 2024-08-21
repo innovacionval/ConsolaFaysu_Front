@@ -12,6 +12,7 @@ export const ModalCorporateEntity = () => {
   const {register, handleSubmit, setValue, formState:{errors}} = useForm();
   const [previewImg, setPreviewImg] = useState(null)
   const [file, setFile] = useState(null)
+  const [errorFile, setErrorFile] = useState(false)
   const [primaryColor, setPrimaryColor] = useState("#000000")
   const [secondaryColor, setSecondaryColor] = useState("#000000")
 
@@ -44,6 +45,11 @@ export const ModalCorporateEntity = () => {
   }
   
   const handleCreate = (data) => {
+    if(!file) {
+      setErrorFile(true)
+      setLoading(false)
+      return
+    }
     const formData = new FormData()
     formData.append("name", data.name)
     formData.append("user", data.user)
@@ -84,6 +90,12 @@ export const ModalCorporateEntity = () => {
 
   const handleChangeFile = (e) => {
     const file = e.target.files[0]
+    const maxSize = 2 * 1024 * 1024
+    console.log(file.size)
+    if(file.size > maxSize){
+      setErrorFile(true)
+      return
+    }
     const reader = new FileReader()
     setFile(file)
     reader.onload = () => {
@@ -92,6 +104,8 @@ export const ModalCorporateEntity = () => {
       }
     }
     reader.readAsDataURL(file)
+    setErrorFile(false)
+
   }
 
   const inputs = [
@@ -110,7 +124,7 @@ export const ModalCorporateEntity = () => {
     {
       type: "file",
       name: "logo",
-      label: "Logo",
+      label: "Logo (2MB)",
       required: previewImg ? false : true,
     },
     {
@@ -155,6 +169,7 @@ export const ModalCorporateEntity = () => {
                     <div className={styles.containerFile}>
                       <input type={input.type} {...register(input.name, {required: { value: input.required, message: input.label}, onChange:(e) => handleChangeFile(e)})} accept='image/png, image/jpeg'  />
                       {previewImg&&<img src={previewImg} alt="preview" />}
+                      {errorFile && <span className={styles.error}>El archivo no debe superar los 2MB</span>}
                     </div>
                     </>
                     : input.type === "color" ?

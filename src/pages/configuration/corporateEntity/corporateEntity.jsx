@@ -5,13 +5,13 @@ import { ModalContext } from "@/contexts/modalContext";
 import { FaEdit, FaPlus, FaRegTrashAlt, FaSearch } from "react-icons/fa";
 import { Table } from "@/components/table/table";
 import { RiArrowGoBackFill } from "react-icons/ri";
-import { getAllCorporateImages, getCorporateImageById } from "@/services/corporateImage.service";
+import { deleteCorporateImage, getAllCorporateImages, getCorporateImageById } from "@/services/corporateImage.service";
 import { Pagination } from "@/components/shared/pagination/Pagination";
 import { LoadingContext } from "@/contexts/LoadingContext";
 
 export const CorporateEntity = () => {
   const [search, setSearch] = useState("");
-  const { openModal, refetch, addData } = useContext(ModalContext);
+  const { openModal, setRefetch, refetch, addData } = useContext(ModalContext);
   const { setLoading } = useContext(LoadingContext);
   const [data, setData] = useState([{}]);
   const [pagination, setPagination] = useState(null);
@@ -81,7 +81,14 @@ export const CorporateEntity = () => {
     {
       name: "Eliminar",
       icon: <FaRegTrashAlt />,
-      action: () => alert("Eliminar"),
+      action: (id) => {
+        setLoading(true);
+        deleteCorporateImage(id).then(() => {
+          setRefetch(!refetch);
+        }).catch((error) => {
+          console.log(error);
+        }).finally(() => setLoading(false));
+      },
     },
   ];
 

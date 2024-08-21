@@ -10,6 +10,7 @@ import { RiArrowGoBackFill } from "react-icons/ri";
 import { MultipleSelect } from "@/components/shared/multipleSelect/MultipleSelect";
 import { getAllCustomersTotal } from "@/services/customers.service";
 import { LoadingContext } from "@/contexts/LoadingContext";
+import { getAllSourceFiles } from "@/services/sourceFile.service";
 
 export const Campaigns = () => {
   const {
@@ -43,6 +44,14 @@ export const Campaigns = () => {
   const [clients, setClients] = useState([]);
   const [search, setSearch] = useState("");
   const [steps, setSteps] = useState(3);
+  const [importData, setImportData] = useState([]);
+
+  useEffect(() => {
+    setLoading(true);
+    getAllSourceFiles().then((response) => {
+      setImportData(response.data);
+    });
+  }, []);
 
   const [daysPeriodicity, setDaysPeriodicity] = useState({
     monday: false,
@@ -85,6 +94,12 @@ export const Campaigns = () => {
       label: "Empresa/importador",
       name: "company",
       type: "select",
+      options: importData.map((item) => {
+        return {
+          value: item.UUID,
+          label: item.name,
+        };
+      }),
     },
     {
       label: "Cliente",
@@ -105,13 +120,40 @@ export const Campaigns = () => {
       label: "Saldos",
       name: "balances",
       type: "select",
-      placeholder: "Mora menor a",
+      options: [
+        {
+          value: "greater",
+          label: "Mayor a",
+        },
+        {
+          value: "less",
+          label: "Menor a",
+        },
+        {
+          value: "equal",
+          label: "Igual a",
+        },
+      ]
     },
     {
       label: "Días de mora",
       name: "daysOfDelay",
       type: "select",
       placeholder: "Mayor a",
+      options: [
+        {
+          value: "greater",
+          label: "Mayor a",
+        },
+        {
+          value: "less",
+          label: "Menor a",
+        },
+        {
+          value: "equal",
+          label: "Igual a",
+        },
+      ]
     },
     {
       label: "Tipo de gestión",
@@ -120,7 +162,6 @@ export const Campaigns = () => {
     },
   ];
   const labels = [
-    
     {
       name: "name",
       label: "Nombre",
@@ -194,16 +235,21 @@ export const Campaigns = () => {
 
   useEffect(() => {
     setLoading(true);
-    getAllCustomersTotal().then((response) => {
-      setOptionsClient(response.data.map((item) => {
-        return {
-          value: item.UUID,
-          label: item.name
-        }
-      }))
-    }).catch((error) => {
-      console.log(error);
-    }).finally(() => setLoading(false));
+    getAllCustomersTotal()
+      .then((response) => {
+        setOptionsClient(
+          response.data.map((item) => {
+            return {
+              value: item.UUID,
+              label: item.name,
+            };
+          })
+        );
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+      .finally(() => setLoading(false));
   }, []);
 
   return (
@@ -217,30 +263,69 @@ export const Campaigns = () => {
       {steps == 0 && (
         <>
           <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
-            {inputs.map((input, index) => {
-              if(input.name == "client") {
-                return (
-                  <div key={`${input.name}${index}`} className={styles.formGroupClient}>
-                    <label className={styles.labelTitle} htmlFor={input.name}>{input.label}</label>
-                    <MultipleSelect campaign={true} clients={clients} setClients={setClients} data={optionsClient} />
-                  </div>
-                );
-              }
-              if (input.name == "daysOfDelay" || input.name == "balances") {
+            <div className={styles.formGrid}>
+              {inputs.map((input, index) => {
+                if (input.name == "client") {
+                  return (
+                    <div
+                      key={`${input.name}${index}`}
+                      className={styles.formGroupClient}
+                    >
+                      <label className={styles.labelTitle} htmlFor={input.name}>
+                        {input.label}
+                      </label>
+                      <MultipleSelect
+                        campaign={true}
+                        clients={clients}
+                        setClients={setClients}
+                        data={optionsClient}
+                      />
+                    </div>
+                  );
+                }
+                if (input.name == "daysOfDelay" || input.name == "balances") {
+                  return (
+                    <div
+                      key={`${input.name}_${index}`}
+                      className={styles.formGroup}
+                    >
+                      <label htmlFor={input.name}>{input.label}</label>
+                      <div className={styles.containerInputs}>
+                        <select {...register(input.name)}>
+                          <option value="" disabled>
+                            {input.label}
+                          </option>
+                          {input?.options?.map((option, index) => (
+                            <option key={index} value={option.value}>
+                              {option.label}
+                            </option>
+                          ))}
+                        </select>
+                        <input
+                          type="number"
+                          placeholder={input.name == "daysOfDelay" ? "Número de días" : "Valor"}
+                          {...register(`${input.name}numDays`)}
+                        />
+                      </div>
+                      {errors[input.name] && (
+                        <span className={styles.error}>{`El campo ${
+                          errors[input.name].message
+                        } es requerido`}</span>
+                      )}
+                    </div>
+                  );
+                }
                 return (
                   <div
-                    key={`${input.name}_${index}`}
+                    key={`${input.name}${index}`}
                     className={styles.formGroup}
                   >
                     <label htmlFor={input.name}>{input.label}</label>
                     <select {...register(input.name)}>
-                      <option value="">{input.placeholder}</option>
+                      <option disabled value="">
+                        {input.label}
+                      </option>
                     </select>
-                    <input
-                      type="number"
-                      placeholder="Número de días"
-                      {...register(`${input.name}numDays`)}
-                    />
                     {errors[input.name] && (
                       <span className={styles.error}>{`El campo ${
                         errors[input.name].message
@@ -248,23 +333,8 @@ export const Campaigns = () => {
                     )}
                   </div>
                 );
-              }
-              return (
-                <div key={`${input.name}${index}`} className={styles.formGroup}>
-                  <label htmlFor={input.name}>{input.label}</label>
-                  <select {...register(input.name)}>
-                    <option disabled value="">
-                      {input.label}
-                    </option>
-                  </select>
-                  {errors[input.name] && (
-                    <span className={styles.error}>{`El campo ${
-                      errors[input.name].message
-                    } es requerido`}</span>
-                  )}
-                </div>
-              );
-            })}
+              })}
+            </div>
             <div className={styles.containerBtn}>
               <button onClick={() => setSteps(3)} className={styles.button}>
                 <RiArrowGoBackFill /> Atrás

@@ -6,6 +6,24 @@
   align-items: stretch;
   gap: 10px;
   width: 100%;
+
+  .formGrid{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 20px;
+    width: 100%;
+    box-sizing: border-box;
+
+  }
+  @media screen and (max-width: 1200px){
+    .formGrid{
+      grid-template-columns: 1fr;
+      grid-template-rows: repeat(6, 1fr);
+      
+    }
+    
+  }
   .error{
     font-weight: bold;
     font-size: small;
@@ -14,13 +32,13 @@
   }
   .formGroup{
     display: flex;
-    align-items: center;
-    justify-content: start;
+    flex-direction: column;
     gap: 20px;
     width: 100%;
 
     .days{
       display: flex;
+      align-items: center;
       gap: 20px;
 
       .active{
