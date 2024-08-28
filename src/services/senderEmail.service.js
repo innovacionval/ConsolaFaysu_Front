@@ -1,7 +1,7 @@
-import { axiosInstanceBearer } from "./instances";
+import { axiosInstanceBearer, axiosInstanceFormData } from "./instances";
 
-export const getAllSenderEmails = async () => {
-    const response = await axiosInstanceBearer.get("/sender-emails");
+export const getAllSenderEmails = async (page) => {
+    const response = await axiosInstanceBearer.get(`${page != 1 && page ? `/sender-emails/?page=${page}` : "/sender-emails/"}`);
     return response.data;
 }
 
@@ -11,7 +11,7 @@ export const getSenderEmailById = async (id) => {
 }
 
 export const createSenderEmail = async (senderEmail) => {
-    const response = await axiosInstanceBearer.post("/sender-emails", senderEmail);
+    const response = await axiosInstanceFormData.post("/sender-emails/", senderEmail);
     return response.data;
 }
 

@@ -1,6 +1,7 @@
 
 import styles from './configuration.module.scss'
 import { FaRegBuilding, FaUser, FaUserCog } from 'react-icons/fa'
+import { TbMailCog } from 'react-icons/tb'
 import { MdDriveFolderUpload } from 'react-icons/md'
 import { Link } from 'react-router-dom'
 export const Configuration = () => {
@@ -24,6 +25,11 @@ export const Configuration = () => {
       icon: <FaUserCog />,
       title: 'Clientes',
       url: '/configuration/clients'
+    },
+    {
+      icon: <TbMailCog />,
+      title: 'Remitentes',
+      url: '/configuration/senders'
     }
 ]
   return (

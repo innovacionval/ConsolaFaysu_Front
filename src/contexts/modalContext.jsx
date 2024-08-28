@@ -8,6 +8,7 @@ export const ModalProvider = ({children}) => {
     corporateEntity: false,
     importData: false,
     clients: false,
+    sender:false
   });
   const [dataTable, setDataTable] = useState({})
 
@@ -21,7 +22,8 @@ export const ModalProvider = ({children}) => {
       users: false,
       corporateEntity: false,
       importData: false,
-      clients:false
+      clients:false,
+      sender:false
     });
     cleanData();
   }

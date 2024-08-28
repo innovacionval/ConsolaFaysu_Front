@@ -9,9 +9,11 @@
     width: 100%;
 
   .containerCards{
-    display: flex;
-    justify-content: center;
-    gap: 150px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    justify-items: center;
+    align-content: center;
+    gap: 20px;
     align-items: center;
     width: 100%;
     height: 100%;

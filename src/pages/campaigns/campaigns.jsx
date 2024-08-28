@@ -13,6 +13,7 @@ import { LoadingContext } from "@/contexts/LoadingContext";
 import { getAllSourceFiles } from "@/services/sourceFile.service";
 import { getAllCampaigns } from "@/services/campaign.service";
 import { inputsCampaign, labelsCampaign } from "@/utils/inputs";
+import { getAllSenderEmails } from "@/services/senderEmail.service";
 
 export const Campaigns = () => {
   const {
@@ -61,6 +62,12 @@ export const Campaigns = () => {
 
     getAllSourceFiles().then((response) => {
       setImportData(response.data);
+    });
+
+    getAllSenderEmails().then((response) => {
+      console.log(response);
+    }).catch((error) => {
+      console.log(error);
     });
   }, []);
 

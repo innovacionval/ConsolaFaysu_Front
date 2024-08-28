@@ -9,6 +9,7 @@ import { ModalImportData } from '@/components/importData/modal/modal';
 import { ModalClients } from '@/components/clients/modal/modal';
 import { LoadingContext } from '@/contexts/LoadingContext';
 import { Loading } from '@/components/shared/loading/Loading';
+import { ModalSender } from '@/components/sender/modal/modal';
 
 
 export const Layout = () => {
@@ -21,6 +22,7 @@ export const Layout = () => {
     {isOpen.corporateEntity && <ModalCorporateEntity/>}
     {isOpen.importData && <ModalImportData/>}
     {isOpen.clients && <ModalClients/>}
+    {isOpen.sender && <ModalSender/>}
     {loading && <Loading/>}
       <div className={styles.container}>
         <Navbar />
