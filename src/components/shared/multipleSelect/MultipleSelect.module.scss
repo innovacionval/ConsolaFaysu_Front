@@ -19,7 +19,8 @@
       top: 100%;
       left: 0;
       background-color: white;
-      height: 200px;
+      min-height: min-content;
+      max-height: 200px;
       overflow-y: auto;
       overflow-x: hidden;
       padding: 20px;

@@ -1,5 +1,6 @@
 @import '@/styles/colors.scss';
 
+
 .form{
   display: flex;
   flex-direction: column;
@@ -10,7 +11,6 @@
   .formGrid{
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: repeat(3, 1fr);
     gap: 20px;
     width: 100%;
     box-sizing: border-box;
@@ -33,13 +33,26 @@
   .formGroup{
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 5px;
     width: 100%;
+
+    .containerYear{
+      display: flex;
+      gap: 20px;
+    }
 
     .days{
       display: flex;
-      align-items: center;
-      gap: 20px;
+      flex-direction: column;
+      gap: 5px;
+
+      label{
+        font-weight: bold;
+        font-size: 1.2rem;
+        white-space: nowrap;
+        width: min-content;
+        min-width: 0px;
+      }
 
       .active{
         background-color: $primary;
@@ -64,7 +77,7 @@
     }
     label{
       font-weight: bold;
-      font-size: 1.4rem;
+      font-size: 1.2rem;
       width: 400px;
       min-width: 400px;
       white-space: nowrap;
@@ -73,13 +86,13 @@
       border-radius: 20px;
       border: 1px solid $secondary;
       padding: 5px 10px;
-      font-size: larger;
+      font-size: medium;
     }
     select{
       border-radius: 20px;
       border: 1px solid $secondary;
       padding: 5px;
-      font-size: larger;
+      font-size: medium;
       width: 300px;
       min-width: 100px
     }

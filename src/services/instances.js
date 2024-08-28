@@ -47,7 +47,10 @@ const addTokenToRequest = async (config) => {
       try {
         await refreshAuthToken(); 
       } catch (error) {
-        console.error('Error refreshing token:', error);
+        console.error('Error al renovar el token:', error);
+        sessionStorage.clear();
+        window.location.href = '/';
+        return Promise.reject(error);
       }
     }
 
@@ -88,6 +91,7 @@ const refreshAuthToken = async () => {
     isRefreshing = false;
     processQueue(error, null);
     throw error;
+
   }
 };
 

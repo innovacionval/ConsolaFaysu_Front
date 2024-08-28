@@ -156,6 +156,7 @@ export const ModalImportData = () => {
                 {input.type === "file" ? (
                   <>
                     <input
+                    accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
                       hidden
                       type={input.type}
                       {...register(input.name, {

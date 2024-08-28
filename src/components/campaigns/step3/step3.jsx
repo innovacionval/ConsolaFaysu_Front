@@ -6,6 +6,7 @@ import { FaPaperclip, FaStar } from "react-icons/fa";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css"; // import styles
 import { getAllUsers } from "@/services/users.service";
+import { configQuill, variablesStep3 } from "@/utils/inputs";
 
 export const Step3 = ({
   handleSubmit,
@@ -16,23 +17,42 @@ export const Step3 = ({
   setValue,
   watch,
 }) => {
-  const inputsRadio = [
-    {
-      name: "typeCampaignStep3",
-      type: "radio",
-      options: ["E-mail", "SMS", "Llamada", "WhatsApp"],
-    },
-  ];
-  const [selectedOption, setSelectedOption] = useState("E-mail");
+  
+  const [selectedOption, setSelectedOption] = useState("correo");
   const [openVariables, setOpenVariables] = useState(false);
   const [valueMessage, setValueMessage] = useState("");
   const [usersData, setUsersData] = useState([]);
   const quillRef = useRef(null);
   const maxLength = 300;
-  const message = watch("message");
+  const message = watch("message_body");
+
+  const inputsRadio = [
+    {
+      name: "campaign_type",
+      type: "radio",
+      options: [
+        {
+          value: "correo",
+          label: "Correo",
+        },
+        {
+          value: "sms",
+          label: "SMS",
+        },
+        {
+          value: "llamada",
+          label: "Llamada",
+        },
+        {
+          value: "whatsapp",
+          label: "WhatsApp",
+        },
+      ]
+    },
+  ];
 
   useEffect(() => {
-    setValue("typeCampaignStep3", "E-mail");
+    setValue("campaign_type", "E-mail");
     getAllUsers().then((response) => {
       setUsersData(response.data.map((user) => {
         return {
@@ -46,12 +66,10 @@ export const Step3 = ({
   useEffect(() => {
     const editor = quillRef?.current?.getEditor();
 
-    // Intercepta el evento de cambio de texto
     editor?.on("text-change", (delta, oldDelta, source) => {
       if (source === "user") {
         const currentLength = editor.getLength();
         if (currentLength > maxLength) {
-          // Si el texto añadido excede el límite, remuévelo
           editor.deleteText(maxLength, currentLength);
         }
       }
@@ -59,95 +77,32 @@ export const Step3 = ({
   }, [quillRef]);
 
   const onChangeTypeCampaign = (e) => {
-    setValue("typeCampaignStep3", e.target.value);
+    setValue("campaign_type", e.target.value);
     setSelectedOption(e.target.value);
-    setValue("message", "");
+    setValue("message_body", "");
     setValue("subject", "");
     setValue("file", "");
   };
   const handleChangeVariables = (e, name) => {
     if (selectedOption != "E-mail") {
-      const cursorPosition = document.getElementById("message").selectionStart;
+      const cursorPosition = document.getElementById("message_body").selectionStart;
       const currentText = message;
       const newText =
         currentText.slice(0, cursorPosition) +
         `{{${name}}}` +
         currentText.slice(cursorPosition);
-      setValue("message", newText);
+      setValue("message_body", newText);
     } else {
       const editor = quillRef.current.getEditor();
       const cursorPosition = editor.getSelection().index;
       editor.insertText(cursorPosition, `{{${name}}}`);
     }
   };
-  const modules = {
-    toolbar: [
-      [{ font: [] }, { size: [] }],
-      ["bold", "italic", "underline", "strike"],
-      [{ color: [] }, { background: [] }],
-      [{ script: "super" }, { script: "sub" }],
-      [{ header: "1" }, { header: "2" }, "blockquote", "code-block"],
-      [
-        { list: "ordered" },
-        { list: "bullet" },
-        { indent: "-1" },
-        { indent: "+1" },
-      ],
-      [{ direction: "rtl" }],
-      [{ align: [] }],
-      ["link", "image", "video"],
-      ["clean"],
-    ],
-  };
+  const modules = configQuill().modules;
 
-  const formats = [
-    "font",
-    "size",
-    "bold",
-    "italic",
-    "underline",
-    "strike",
-    "color",
-    "background",
-    "script",
-    "super",
-    "sub",
-    "header",
-    "blockquote",
-    "code-block",
-    "list",
-    "bullet",
-    "indent",
-    "direction",
-    "align",
-    "link",
-    "image",
-    "video",
-    "clean",
-  ];
+  const formats = configQuill().formats;
 
-  const variables = [
-    {
-      name: "Nombres",
-      value: "juan",
-    },
-    {
-      name: "Saldo",
-      value: "12312",
-    },
-    {
-      name: "Fecha de pago",
-      value: "12/12/2021",
-    },
-    {
-      name: "Cliente",
-      value: "Cliente",
-    },
-    {
-      name: "No. Obligación",
-      value: "123123123",
-    },
-  ];
+  const variables = variablesStep3;
 
   return (
     <>
@@ -162,7 +117,7 @@ export const Step3 = ({
                       <div
                         key={`${index}_${option}`}
                         className={
-                          option == selectedOption
+                          option.value == selectedOption
                             ? styles.active
                             : styles.radio
                         }
@@ -171,15 +126,15 @@ export const Step3 = ({
                           {...register(input.name, { required: true })}
                           type="radio"
                           name={input.name}
-                          value={option}
+                          value={option.value}
                           onChange={onChangeTypeCampaign}
                         />
-                        <label>{option}</label>
+                        <label>{option.label}</label>
                       </div>
                     ))}
                   </div>
                 )}
-                {selectedOption == "E-mail" ? (
+                {selectedOption == "correo" ? (
                   <>
                     <div className={styles.containerInput}>
                       <div >
@@ -245,7 +200,7 @@ export const Step3 = ({
                     <textarea
                       id="message"
                       className={styles.textAreaSMS}
-                      {...register("message", { required: true })}
+                      {...register("message_body", { required: true })}
                     />
                     <p>{`${
                       message?.length == undefined ? 0 : message.length

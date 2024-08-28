@@ -3,6 +3,7 @@ import styles from "./step2.module.scss";
 import { RiArrowGoBackFill } from "react-icons/ri";
 import { useEffect, useState } from "react";
 import { getAllCorporateImages } from "@/services/corporateImage.service";
+import { inputsStep2 } from "@/utils/inputs";
 
 export const Step2 = ({
   handleSubmit,
@@ -14,57 +15,15 @@ export const Step2 = ({
   daysPeriodicity,
   setDaysPeriodicity,
 }) => {
-
   const [corporateData, setCorporateData] = useState([]);
   useEffect(() => {
     getAllCorporateImages().then((response) => {
       setCorporateData(response.data);
     });
   }, []);
-  const inputs = [
-    {
-      label: "Nombre de campaña",
-      name: "campaignName",
-      type: "text",
-    },
-    {
-      label: "Notificar a deudor solidario",
-      name: "notifier",
-      type: "radio",
-      options: ["Si", "No"],
-    },
-    {
-      label: "Fecha de notificación",
-      name: "notificationDate",
-      type: "date",
-    },
-    {
-      label: "Repetir cada",
-    },
-    {
-      label: "Vigencia de campaña",
-      name: "validity",
-      type: "date",
-    },
-    {
-      label: "Horario de envío",
-      name: "schedule",
-      type: "time",
-    },
-    {
-      label: "Seleccionar identidad corporativa",
-      name: "corporateEntity",
-      type: "select",
-      options: corporateData.map((item) => {
-        return {
-          value: item.UUID,
-          label: item.name,
-        };
-      }),
-    },
-  ];
+  const inputs = inputsStep2(corporateData);
 
-  const watchPeriodicity = watch("periodicity");
+  const watchPeriodicity = watch("repetition_type");
 
   const handleDays = (day) => {
     setDaysPeriodicity({
@@ -98,26 +57,26 @@ export const Step2 = ({
                     <div className={styles.periodicity}>
                       <input
                         className={styles.inputMonth}
-                        {...register("periodicityNumber")}
+                        {...register("interval")}
                         type="number"
                       />
-                      <select {...register("periodicity")}>
+                      <select {...register("repetition_type")}>
                         <option value="">Seleccionar</option>
-                        <option value="Día">Día</option>
-                        <option value="Semana">Semana</option>
-                        <option value="Mes">Mes</option>
-                        <option value="Año">Año</option>
+                        <option value="day">Día</option>
+                        <option value="week">Semana</option>
+                        <option value="month">Mes</option>
+                        <option value="year">Año</option>
                       </select>
                     </div>
-                    {watchPeriodicity === "Semana" && (
-                      <div className={styles.days}>
+                    {watchPeriodicity === "week" && (
+                      <div className={styles.containerYear}>
                         <button
                           className={
                             daysPeriodicity.sunday ? styles.active : null
                           }
                           type="button"
                           onClick={() => {
-                            handleDays("sunday");
+                            handleDays("7");
                           }}
                         >
                           D
@@ -128,7 +87,7 @@ export const Step2 = ({
                           }
                           type="button"
                           onClick={() => {
-                            handleDays("monday");
+                            handleDays("1");
                           }}
                         >
                           L
@@ -139,7 +98,7 @@ export const Step2 = ({
                           }
                           type="button"
                           onClick={() => {
-                            handleDays("tuesday");
+                            handleDays("2");
                           }}
                         >
                           M
@@ -150,7 +109,7 @@ export const Step2 = ({
                           }
                           type="button"
                           onClick={() => {
-                            handleDays("wednesday");
+                            handleDays("3");
                           }}
                         >
                           X
@@ -161,7 +120,7 @@ export const Step2 = ({
                           }
                           type="button"
                           onClick={() => {
-                            handleDays("thursday");
+                            handleDays("4");
                           }}
                         >
                           J
@@ -172,7 +131,7 @@ export const Step2 = ({
                           }
                           type="button"
                           onClick={() => {
-                            handleDays("friday");
+                            handleDays("5");
                           }}
                         >
                           V
@@ -183,16 +142,16 @@ export const Step2 = ({
                           }
                           type="button"
                           onClick={() => {
-                            handleDays("saturday");
+                            handleDays("6");
                           }}
                         >
                           S
                         </button>
                       </div>
                     )}
-                    {watchPeriodicity === "Mes" && (
+                    {watchPeriodicity === "month" && (
                       <div className={styles.days}>
-                        El día
+                        <label>El día</label>
                         <input
                           className={styles.inputMonth}
                           {...register("periodicityNumberMonth")}
@@ -200,30 +159,34 @@ export const Step2 = ({
                         />
                       </div>
                     )}
-                    {watchPeriodicity === "Año" && (
-                      <div className={styles.days}>
-                        El día
-                        <input
-                          className={styles.inputMonth}
-                          {...register("periodicityNumberYear")}
-                          type="number"
-                        />
-                        de
-                        <select {...register("periodicityMonth")}>
-                          <option value="">Seleccionar</option>
-                          <option value="Enero">Enero</option>
-                          <option value="Febrero">Febrero</option>
-                          <option value="Marzo">Marzo</option>
-                          <option value="Abril">Abril</option>
-                          <option value="Mayo">Mayo</option>
-                          <option value="Junio">Junio</option>
-                          <option value="Julio">Julio</option>
-                          <option value="Agosto">Agosto</option>
-                          <option value="Septiembre">Septiembre</option>
-                          <option value="Octubre">Octubre</option>
-                          <option value="Noviembre">Noviembre</option>
-                          <option value="Diciembre">Diciembre</option>
-                        </select>
+                    {watchPeriodicity === "year" && (
+                      <div className={styles.containerYear}>
+                        <div className={styles.days}>
+                          <label>El día</label>
+                          <input
+                            className={styles.inputMonth}
+                            {...register("periodicityNumberYear")}
+                            type="number"
+                          />
+                        </div>
+                        <div className={styles.days}>
+                          <label>de</label>
+                          <select {...register("periodicityMonth")}>
+                            <option value="">Seleccionar</option>
+                            <option value="Enero">Enero</option>
+                            <option value="Febrero">Febrero</option>
+                            <option value="Marzo">Marzo</option>
+                            <option value="Abril">Abril</option>
+                            <option value="Mayo">Mayo</option>
+                            <option value="Junio">Junio</option>
+                            <option value="Julio">Julio</option>
+                            <option value="Agosto">Agosto</option>
+                            <option value="Septiembre">Septiembre</option>
+                            <option value="Octubre">Octubre</option>
+                            <option value="Noviembre">Noviembre</option>
+                            <option value="Diciembre">Diciembre</option>
+                          </select>
+                        </div>
                       </div>
                     )}
                   </div>
@@ -236,9 +199,9 @@ export const Step2 = ({
                           <input
                             {...register(input.name /* { required: true } */)}
                             type="radio"
-                            value={option}
+                            value={option.value}
                           />
-                          <label>{option}</label>
+                          <label>{option.label}</label>
                         </div>
                       );
                     })}
@@ -259,14 +222,12 @@ export const Step2 = ({
                     })}
                   </select>
                 )}
-                {
-                  input.type == "time" && (
-                    <input
-                      {...register(input.name /* { required: true } */)}
-                      type="time"
-                    />
-                  )
-                }
+                {input.type == "time" && (
+                  <input
+                    {...register(input.name /* { required: true } */)}
+                    type="time"
+                  />
+                )}
                 {errors[input.name] && (
                   <span className={styles.error}>{`El campo ${
                     errors[input.name].message

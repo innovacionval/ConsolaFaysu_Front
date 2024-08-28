@@ -7,7 +7,7 @@ export const ModalProvider = ({children}) => {
     users: false,
     corporateEntity: false,
     importData: false,
-    clients: false
+    clients: false,
   });
   const [dataTable, setDataTable] = useState({})
 

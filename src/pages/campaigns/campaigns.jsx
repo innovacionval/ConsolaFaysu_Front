@@ -11,6 +11,8 @@ import { MultipleSelect } from "@/components/shared/multipleSelect/MultipleSelec
 import { getAllCustomersTotal } from "@/services/customers.service";
 import { LoadingContext } from "@/contexts/LoadingContext";
 import { getAllSourceFiles } from "@/services/sourceFile.service";
+import { getAllCampaigns } from "@/services/campaign.service";
+import { inputsCampaign, labelsCampaign } from "@/utils/inputs";
 
 export const Campaigns = () => {
   const {
@@ -45,9 +47,18 @@ export const Campaigns = () => {
   const [search, setSearch] = useState("");
   const [steps, setSteps] = useState(3);
   const [importData, setImportData] = useState([]);
+  const [dataForm, setDataForm] = useState({});
+  const watchSource = watch("source2");
 
   useEffect(() => {
     setLoading(true);
+    getAllCampaigns().then((response) => {
+      console.log('response', response)
+      setDataCampaign(response.data);
+    }).catch((error) => {
+      console.log(error);
+    }).finally(() => setLoading(false));
+
     getAllSourceFiles().then((response) => {
       setImportData(response.data);
     });
@@ -64,19 +75,23 @@ export const Campaigns = () => {
   });
 
   const onSubmit = (data) => {
-    setDataCampaign([...dataCampaign, data]);
+    setDataForm([...dataCampaign, data]);
     setSteps(1);
   };
   const onSubmitStep2 = (data) => {
     console.log(data);
-    setDataCampaign([...dataCampaign, data]);
+    setDataForm([...dataCampaign, data]);
     setSteps(2);
   };
   const onSubmitStep3 = (data) => {
     /* setValue("message", getValues("message") + " " + data.message); */
+    setDataCampaign([...dataCampaign, data]);
     console.log(data);
-    /*     setDataCampaign([...dataCampaign, data]);
-    setSteps(3); */
+    /* createCampaign(data).then((response) => {
+      console.log(response);
+    }).catch((error) => {
+      console.log(error);
+    }); */
   };
   const handleBackStep1 = () => {
     setSteps(0);
@@ -84,109 +99,8 @@ export const Campaigns = () => {
   const handleBackStep2 = () => {
     setSteps(1);
   };
-  const inputs = [
-    {
-      label: "Fuente",
-      name: "source",
-      type: "select",
-    },
-    {
-      label: "Empresa/importador",
-      name: "company",
-      type: "select",
-      options: importData.map((item) => {
-        return {
-          value: item.UUID,
-          label: item.name,
-        };
-      }),
-    },
-    {
-      label: "Cliente",
-      name: "client",
-      type: "select",
-    },
-    {
-      label: "Estado de obligación",
-      name: "obligationState",
-      type: "select",
-    },
-    {
-      label: "Clasificación",
-      name: "classification",
-      type: "select",
-    },
-    {
-      label: "Saldos",
-      name: "balances",
-      type: "select",
-      options: [
-        {
-          value: "greater",
-          label: "Mayor a",
-        },
-        {
-          value: "less",
-          label: "Menor a",
-        },
-        {
-          value: "equal",
-          label: "Igual a",
-        },
-      ]
-    },
-    {
-      label: "Días de mora",
-      name: "daysOfDelay",
-      type: "select",
-      placeholder: "Mayor a",
-      options: [
-        {
-          value: "greater",
-          label: "Mayor a",
-        },
-        {
-          value: "less",
-          label: "Menor a",
-        },
-        {
-          value: "equal",
-          label: "Igual a",
-        },
-      ]
-    },
-    {
-      label: "Tipo de gestión",
-      name: "managementType",
-      type: "select",
-    },
-  ];
-  const labels = [
-    {
-      name: "name",
-      label: "Nombre",
-    },
-    {
-      name: "notifier",
-      label: "Notificador",
-    },
-    {
-      name: "media",
-      label: "Medio",
-    },
-    {
-      name: "validity",
-      label: "Vigencia",
-    },
-    {
-      name: "status",
-      label: "Estado",
-    },
-    {
-      name: "",
-      label: "",
-    },
-  ];
+  const inputs = inputsCampaign(watchSource, importData);
+  
 
   const actions = [
     {
@@ -210,7 +124,9 @@ export const Campaigns = () => {
     setSearch(e.target.value);
   };
 
-  const dataTable = [
+  console.log(dataForm)
+
+/*   const dataTable = [
     {
       id: 1,
       name: "Campaña 1",
@@ -227,11 +143,7 @@ export const Campaigns = () => {
       validity: "10/10/2021",
       status: "Terminada",
     },
-  ];
-
-  useEffect(() => {
-    setDataCampaign([...dataTable]);
-  }, [steps]);
+  ]; */
 
   useEffect(() => {
     setLoading(true);
@@ -283,7 +195,7 @@ export const Campaigns = () => {
                     </div>
                   );
                 }
-                if (input.name == "daysOfDelay" || input.name == "balances") {
+                if (input.name == "days_past_due_type" || input.name == "account_balance_type") {
                   return (
                     <div
                       key={`${input.name}_${index}`}
@@ -303,8 +215,8 @@ export const Campaigns = () => {
                         </select>
                         <input
                           type="number"
-                          placeholder={input.name == "daysOfDelay" ? "Número de días" : "Valor"}
-                          {...register(`${input.name}numDays`)}
+                          placeholder={input.name == "days_past_due_type" ? "Número de días" : "Valor"}
+                          {...register(input.name == "account_balance_type" ? `account_balance_value` : "days_past_due_value")}
                         />
                       </div>
                       {errors[input.name] && (
@@ -316,15 +228,21 @@ export const Campaigns = () => {
                   );
                 }
                 return (
+                  input?.isVisibility && (
                   <div
                     key={`${input.name}${index}`}
                     className={styles.formGroup}
                   >
                     <label htmlFor={input.name}>{input.label}</label>
                     <select {...register(input.name)}>
-                      <option disabled value="">
+                      <option value="" disabled>
                         {input.label}
                       </option>
+                      {input?.options?.map((option, index) => (
+                        <option key={index} value={option.value}>
+                          {option.label}
+                        </option>
+                      ))}
                     </select>
                     {errors[input.name] && (
                       <span className={styles.error}>{`El campo ${
@@ -332,6 +250,7 @@ export const Campaigns = () => {
                       } es requerido`}</span>
                     )}
                   </div>
+                  )
                 );
               })}
             </div>
@@ -391,7 +310,7 @@ export const Campaigns = () => {
               Nuevo
             </button>
           </div>
-          <Table labels={labels} data={dataCampaign} actions={actions} />
+          <Table labels={labelsCampaign} data={dataCampaign} actions={actions} />
         </>
       )}
     </div>
