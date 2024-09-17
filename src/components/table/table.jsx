@@ -57,7 +57,7 @@ export const Table = ({labels, data, actions}) => {
                   {
                     actions.map((action, index) => {
                       if (action.name === 'switch') {
-                        return <Switch key={`${index} + $`} isOn={item.statusUser || item.status || item.status =="Vigente"} handleToggle={() => action.action(item.id)} id={item.id} />;
+                        return <Switch key={`${index} + $`} isOn={item.statusUser || item.status || item.active  || item.status =="Vigente"} handleToggle={() => action.action(item.id)} id={item.id} />;
                       }
                       return (
                         <button className={styles.action} key={index} onClick={() => action.action(item.id)}>

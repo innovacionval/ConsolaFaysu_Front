@@ -1,8 +1,6 @@
 import { MdArrowForwardIos } from "react-icons/md";
 import styles from "./step2.module.scss";
 import { RiArrowGoBackFill } from "react-icons/ri";
-import { useEffect, useState } from "react";
-import { getAllCorporateImages } from "@/services/corporateImage.service";
 import { inputsStep2 } from "@/utils/inputs";
 
 export const Step2 = ({
@@ -14,13 +12,9 @@ export const Step2 = ({
   watch,
   daysPeriodicity,
   setDaysPeriodicity,
+  corporateData
 }) => {
-  const [corporateData, setCorporateData] = useState([]);
-  useEffect(() => {
-    getAllCorporateImages().then((response) => {
-      setCorporateData(response.data);
-    });
-  }, []);
+  
   const inputs = inputsStep2(corporateData);
 
   const watchPeriodicity = watch("repetition_type");
@@ -31,6 +25,8 @@ export const Step2 = ({
       [day]: !daysPeriodicity[day],
     });
   };
+  const watchs = watch("corporate_identity");
+  console.log(watchs)
 
   return (
     <>
@@ -42,13 +38,13 @@ export const Step2 = ({
                 <label>{input.label}</label>
                 {input.type === "text" && (
                   <input
-                    {...register(input.name /* { required: true } */)}
+                    {...register(input.name, {required: true})}
                     type="text"
                   />
                 )}
                 {input.type === "date" && (
                   <input
-                    {...register(input.name /* { required: true } */)}
+                    {...register(input.name, { required: true })}
                     type="date"
                   />
                 )}
@@ -72,7 +68,7 @@ export const Step2 = ({
                       <div className={styles.containerYear}>
                         <button
                           className={
-                            daysPeriodicity.sunday ? styles.active : null
+                            daysPeriodicity[7] ? styles.active : null
                           }
                           type="button"
                           onClick={() => {
@@ -83,7 +79,7 @@ export const Step2 = ({
                         </button>
                         <button
                           className={
-                            daysPeriodicity.monday ? styles.active : null
+                            daysPeriodicity[1] ? styles.active : null
                           }
                           type="button"
                           onClick={() => {
@@ -94,7 +90,7 @@ export const Step2 = ({
                         </button>
                         <button
                           className={
-                            daysPeriodicity.tuesday ? styles.active : null
+                            daysPeriodicity[2] ? styles.active : null
                           }
                           type="button"
                           onClick={() => {
@@ -105,7 +101,7 @@ export const Step2 = ({
                         </button>
                         <button
                           className={
-                            daysPeriodicity.wednesday ? styles.active : null
+                            daysPeriodicity[3] ? styles.active : null
                           }
                           type="button"
                           onClick={() => {
@@ -116,7 +112,7 @@ export const Step2 = ({
                         </button>
                         <button
                           className={
-                            daysPeriodicity.thursday ? styles.active : null
+                            daysPeriodicity[4] ? styles.active : null
                           }
                           type="button"
                           onClick={() => {
@@ -127,7 +123,7 @@ export const Step2 = ({
                         </button>
                         <button
                           className={
-                            daysPeriodicity.friday ? styles.active : null
+                            daysPeriodicity[5] ? styles.active : null
                           }
                           type="button"
                           onClick={() => {
@@ -138,7 +134,7 @@ export const Step2 = ({
                         </button>
                         <button
                           className={
-                            daysPeriodicity.saturday ? styles.active : null
+                            daysPeriodicity[6] ? styles.active : null
                           }
                           type="button"
                           onClick={() => {
@@ -149,42 +145,24 @@ export const Step2 = ({
                         </button>
                       </div>
                     )}
-                    {watchPeriodicity === "month" && (
-                      <div className={styles.days}>
-                        <label>El día</label>
-                        <input
-                          className={styles.inputMonth}
-                          {...register("periodicityNumberMonth")}
-                          type="number"
-                        />
-                      </div>
-                    )}
                     {watchPeriodicity === "year" && (
                       <div className={styles.containerYear}>
-                        <div className={styles.days}>
-                          <label>El día</label>
-                          <input
-                            className={styles.inputMonth}
-                            {...register("periodicityNumberYear")}
-                            type="number"
-                          />
-                        </div>
                         <div className={styles.days}>
                           <label>de</label>
                           <select {...register("periodicityMonth")}>
                             <option value="">Seleccionar</option>
-                            <option value="Enero">Enero</option>
-                            <option value="Febrero">Febrero</option>
-                            <option value="Marzo">Marzo</option>
-                            <option value="Abril">Abril</option>
-                            <option value="Mayo">Mayo</option>
-                            <option value="Junio">Junio</option>
-                            <option value="Julio">Julio</option>
-                            <option value="Agosto">Agosto</option>
-                            <option value="Septiembre">Septiembre</option>
-                            <option value="Octubre">Octubre</option>
-                            <option value="Noviembre">Noviembre</option>
-                            <option value="Diciembre">Diciembre</option>
+                            <option value="1">Enero</option>
+                            <option value="2">Febrero</option>
+                            <option value="3">Marzo</option>
+                            <option value="4">Abril</option>
+                            <option value="5">Mayo</option>
+                            <option value="6">Junio</option>
+                            <option value="7">Julio</option>
+                            <option value="8">Agosto</option>
+                            <option value="9">Septiembre</option>
+                            <option value="10">Octubre</option>
+                            <option value="11">Noviembre</option>
+                            <option value="12">Diciembre</option>
                           </select>
                         </div>
                       </div>
@@ -197,7 +175,7 @@ export const Step2 = ({
                       return (
                         <div key={index} className={styles.radio}>
                           <input
-                            {...register(input.name /* { required: true } */)}
+                            {...register(input.name, { required: true })}
                             type="radio"
                             value={option.value}
                           />
@@ -209,13 +187,13 @@ export const Step2 = ({
                 )}
                 {input.type === "select" && (
                   <select
-                    {...register(input.name /* { required: true } */)}
+                    {...register(input.name, { required: true })}
                     name={input.name}
                   >
                     <option value="">Seleccionar</option>
                     {input?.options?.map((option, index) => {
                       return (
-                        <option key={index} value={option.value}>
+                        <option key={`${option}_${index}`} value={option.value}>
                           {option.label}
                         </option>
                       );
@@ -224,7 +202,7 @@ export const Step2 = ({
                 )}
                 {input.type == "time" && (
                   <input
-                    {...register(input.name /* { required: true } */)}
+                    {...register(input.name, { required: true })}
                     type="time"
                   />
                 )}

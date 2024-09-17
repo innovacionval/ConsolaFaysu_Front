@@ -4,8 +4,7 @@ import { MdArrowForwardIos } from "react-icons/md";
 import { useEffect, useRef, useState } from "react";
 import { FaPaperclip, FaStar } from "react-icons/fa";
 import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css"; // import styles
-import { getAllUsers } from "@/services/users.service";
+import "react-quill/dist/quill.snow.css";
 import { configQuill, variablesStep3 } from "@/utils/inputs";
 
 export const Step3 = ({
@@ -16,12 +15,13 @@ export const Step3 = ({
   handleBack,
   setValue,
   watch,
+  usersData,
+  valueMessage,
+  setValueMessage
 }) => {
   
   const [selectedOption, setSelectedOption] = useState("correo");
   const [openVariables, setOpenVariables] = useState(false);
-  const [valueMessage, setValueMessage] = useState("");
-  const [usersData, setUsersData] = useState([]);
   const quillRef = useRef(null);
   const maxLength = 300;
   const message = watch("message_body");
@@ -51,17 +51,6 @@ export const Step3 = ({
     },
   ];
 
-  useEffect(() => {
-    setValue("campaign_type", "E-mail");
-    getAllUsers().then((response) => {
-      setUsersData(response.data.map((user) => {
-        return {
-          id: user.id,
-          email: user.email,
-        };
-      }));
-    });
-  }, []);
 
   useEffect(() => {
     const editor = quillRef?.current?.getEditor();
@@ -84,7 +73,7 @@ export const Step3 = ({
     setValue("file", "");
   };
   const handleChangeVariables = (e, name) => {
-    if (selectedOption != "E-mail") {
+    if (selectedOption != "correo") {
       const cursorPosition = document.getElementById("message_body").selectionStart;
       const currentText = message;
       const newText =
@@ -98,6 +87,9 @@ export const Step3 = ({
       editor.insertText(cursorPosition, `{{${name}}}`);
     }
   };
+  useEffect(() => {
+    setValue("message_body", valueMessage);
+  }, [valueMessage]);
   const modules = configQuill().modules;
 
   const formats = configQuill().formats;
@@ -138,10 +130,10 @@ export const Step3 = ({
                   <>
                     <div className={styles.containerInput}>
                       <div >
-                        <select type="text" placeholder="Remitente">
-                          <option value="Remitente">Remitente</option>
-                          {usersData.map((user) => (
-                            <option key={user.id} value={user.email}>
+                        <select type="text" placeholder="Remitente" {...register("sender",{ required: true})}>
+                          <option value="" disabled>Remitente</option>
+                          {usersData.map((user, index) => (
+                            <option key={`${user.id}_${index}`} value={user.email}>
                               {user.email}
                             </option>
                           ))}
@@ -191,9 +183,9 @@ export const Step3 = ({
                     <h3 className={styles.titleSMS}>Ingresa el texto</h3>
                     <select type="text" placeholder="Remitente" >
                       <option value="Remitente">Remitente</option>
-                      {usersData.map((user) => (
-                        <option key={user.id} value={user.email}>
-                          {user.email}
+                      {usersData.map((user, index) => (
+                        <option key={`${user.id}_${index}`} value={user.email}>
+                          {user.phone}
                         </option>
                       ))}
                     </select>
@@ -206,7 +198,7 @@ export const Step3 = ({
                       message?.length == undefined ? 0 : message.length
                     } / ${maxLength}`}</p>
                     <div className={styles.containerInputFileSMS}>
-                      {selectedOption == "WhatsApp" && (
+                      {selectedOption == "whatsapp" && (
                         <>
                           <input
                             hidden

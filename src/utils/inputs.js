@@ -166,24 +166,20 @@ export const inputsCampaign = (watchSource, importData) => {
 
 export const labelsCampaign = [
   {
-    name: "name",
+    name: "name_campaign",
     label: "Nombre",
   },
   {
-    name: "notifier",
+    name: "notify_the_co_debtor",
     label: "Notificador",
   },
   {
-    name: "media",
-    label: "Medio",
-  },
-  {
-    name: "validity",
+    name: "end_date",
     label: "Vigencia",
   },
   {
-    name: "status",
-    label: "Estado",
+    name: "campaign_type",
+    label: "Medio",
   },
   {
     name: "",

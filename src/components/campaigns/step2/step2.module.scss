@@ -39,6 +39,10 @@
     .containerYear{
       display: flex;
       gap: 20px;
+
+      .active{
+        background-color: $primary;
+      }
     }
 
     .days{
@@ -54,9 +58,7 @@
         min-width: 0px;
       }
 
-      .active{
-        background-color: $primary;
-      }
+      
     }
     .periodicity{
       display: flex;
