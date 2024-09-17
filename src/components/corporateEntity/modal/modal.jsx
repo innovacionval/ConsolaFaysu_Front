@@ -16,6 +16,8 @@ export const ModalCorporateEntity = () => {
   const [primaryColor, setPrimaryColor] = useState("#000000")
   const [secondaryColor, setSecondaryColor] = useState("#000000")
 
+  const urlFile = import.meta.env.VITE_URL_FILE || "https://faysu.valcredit.co:8005"
+
 
   useEffect(() => {
     const formData = new FormData()
@@ -27,7 +29,7 @@ export const ModalCorporateEntity = () => {
       setValue("logo", formData)
       setValue("primaryColor", dataTable.main_color)
       setValue("secondaryColor", dataTable.secondary_color)
-      setPreviewImg(`${import.meta.env.VITE_URL_FILE}${dataTable.logo}`)
+      setPreviewImg(`${urlFile}${dataTable.logo}`)
       setPrimaryColor(dataTable.main_color)
       setSecondaryColor(dataTable.secondary_color)
     }}, [dataTable])

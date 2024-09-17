@@ -16,6 +16,8 @@ export const CorporateEntity = () => {
   const [data, setData] = useState([{}]);
   const [pagination, setPagination] = useState(null);
   const [page, setPage] = useState(1);
+  const urlFile = import.meta.env.VITE_URL_FILE || "https://faysu.valcredit.co:8005"
+
   const labels = [
     {
       name: "name",
@@ -54,7 +56,7 @@ export const CorporateEntity = () => {
             id: item.UUID,
             name: item.name,
             user: item.user,
-            logo: `${import.meta.env.VITE_URL_FILE}${item.logo}`,
+            logo: `${urlFile}${item.logo}`,
             primaryColor: item.main_color,
             secondaryColor: item.secondary_color,
           };
