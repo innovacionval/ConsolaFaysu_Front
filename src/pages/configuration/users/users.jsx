@@ -21,7 +21,7 @@ export const Users = () => {
     label: "Nombres",
   },
   {
-    name: "identity",
+    name: "identification",
     label: "Identificación",
   },
   {
@@ -52,7 +52,7 @@ export const Users = () => {
         return {
           id: item.UUID,
           name: item.firstName + " " + item.lastName,
-          identity: item.identity,
+          identification: item.identification,
           email: item.email,
           role: item.role,
           statusUser: item.emailVerified,

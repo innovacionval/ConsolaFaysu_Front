@@ -24,11 +24,9 @@ export const Table = ({labels, data, actions}) => {
                   Object.keys(item).map((key, index) => {
                     if (!labelNames.has(key)) return null;
                     if (key == 'statusUser') {
-                      console.log(item)
                       return <td key={index} className={item[key] ? styles.active : styles.inactive}>{item[key] ? 'Activo' : 'Inactivo'}</td>
                     }
                     if (key == 'status') {
-                      console.log(item)
                       return <td key={index} className={item[key] == "Vigente" ? styles.active : styles.inactive}>{item[key]}</td>
                     }
                     if(key == 'logo') {

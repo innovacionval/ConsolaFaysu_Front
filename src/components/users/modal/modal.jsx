@@ -17,7 +17,7 @@ export const ModalUsers = () => {
     if(Object.keys(dataTable).length > 0){
       setValue("name", dataTable.firstName)
       setValue("lastName", dataTable.lastName)
-      setValue("identity", dataTable.identity)
+      setValue("identification", dataTable.identification)
       setValue("email", dataTable.email)
       setValue("role", dataTable.role)
       setValue("status", dataTable.status)
@@ -38,7 +38,7 @@ export const ModalUsers = () => {
     },
     {
       type: "number",
-      name: "identity",
+      name: "identification",
       label: "Identificación",
       required: true,
     },
@@ -92,12 +92,13 @@ export const ModalUsers = () => {
 
 
   const handleEdit = (data) => {
-    const dataEdit = {
-    }
+    const dataEdit = {}
     if(data.name !== dataTable.firstName) dataEdit.firstName = data.name
     if(data.lastName !== dataTable.lastName) dataEdit.lastName = data.lastName
-    if(data.role !== dataTable.role) dataEdit.role = data.role
+    dataEdit.role = data.role
+    if(data.identification !== dataTable.identification) dataEdit.identification = data.identification
 
+    console.log(dataEdit)
     if(Object.keys(dataEdit).length === 0) return closeModal()
     updateUser(dataTable.UUID, dataEdit).then((_response) => {
       closeModal()
