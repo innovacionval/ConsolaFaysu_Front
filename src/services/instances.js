@@ -1,7 +1,7 @@
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 
-const API_URL = import.meta.env.VITE_BACK_URL || "http://localhost:7088";
+const API_URL = import.meta.env.VITE_BACK_URL || "https://faysu.valcredit.co:8005/api/v1/";
 const TOKEN_REFRESH_MARGIN = 5 * 60 * 1000; // 5 minutos en milisegundos
 
 

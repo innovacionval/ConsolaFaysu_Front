@@ -17,6 +17,7 @@ export const ImportData = () => {
   const [data, setData] = useState([{}]);
   const [pagination, setPagination] = useState(null);
   const [page, setPage] = useState(1);
+  const urlFile = import.meta.env.VITE_URL_FILE || "https://faysu.valcredit.co:8005"
   const labels = [{
     name: "date",
     label: "Fecha",
@@ -64,7 +65,7 @@ export const ImportData = () => {
       action: (id) => {
         setLoading(true)
         getSourceFileById(id).then((response) => {
-          const url = import.meta.env.VITE_URL_FILE + response.data.file;
+          const url = urlFile + response.data.file;
           window.open(url, "_blank");
         }).catch((error) => {
           console.log(error);
@@ -77,7 +78,7 @@ export const ImportData = () => {
       action: (id) => {
         setLoading(true)
         getSourceFileById(id).then((response) => {
-          const url = window.URL.createObjectURL(new Blob([import.meta.env.VITE_URL_FILE + response.data.file]));
+          const url = window.URL.createObjectURL(new Blob([urlFile + response.data.file]));
           const link = document.createElement("a");
           link.href = url;
           link.setAttribute("download", response.data.file_name);
