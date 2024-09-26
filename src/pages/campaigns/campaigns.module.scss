@@ -8,6 +8,20 @@
   gap: 20px;
   box-sizing: border-box;
 
+  .pagination{
+    display: flex;
+    width: 100%;
+    gap: 10px;
+    button{
+      border: none;
+      background-color: $darkGray;
+      color: white;
+      padding: 5px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  }
+
   .containerTitle{
     display: flex;
     width: 100%;

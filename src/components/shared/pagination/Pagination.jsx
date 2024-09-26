@@ -14,7 +14,7 @@ export const Pagination = ({ page, setPage, total }) => {
   );
 
   return (
-    <div>
+    <>
       <button onClick={() => setPage(page - 1)} disabled={page === 1}>
         &laquo;
       </button>
@@ -32,6 +32,6 @@ export const Pagination = ({ page, setPage, total }) => {
       <button onClick={() => setPage(page + 1)} disabled={page === pages}>
         &raquo;
       </button>
-    </div>
+    </>
   );
 };

@@ -26,6 +26,12 @@ export const Step3 = ({
   const maxLength = 300;
   const message = watch("message_body");
 
+  useEffect(() => {
+    setSelectedOption("correo");
+    setValue("campaign_type", "correo");
+  }, []);
+
+
   const inputsRadio = [
     {
       name: "campaign_type",
@@ -96,6 +102,7 @@ export const Step3 = ({
 
   const variables = variablesStep3;
 
+
   return (
     <>
       <div className={styles.containerCampaignType}>
@@ -133,7 +140,7 @@ export const Step3 = ({
                         <select type="text" placeholder="Remitente" {...register("sender",{ required: true})}>
                           <option value="" disabled>Remitente</option>
                           {usersData.map((user, index) => (
-                            <option key={`${user.id}_${index}`} value={user.email}>
+                            <option key={`${user.id}_${index}`} value={user.id}>
                               {user.email}
                             </option>
                           ))}
@@ -158,6 +165,7 @@ export const Step3 = ({
                         <button
                           className={styles.btnVariables}
                           onClick={() => setOpenVariables(!openVariables)}
+                          type="button"
                         >
                           <FaStar />
                           Variables
@@ -184,7 +192,7 @@ export const Step3 = ({
                     <select type="text" placeholder="Remitente" >
                       <option value="Remitente">Remitente</option>
                       {usersData.map((user, index) => (
-                        <option key={`${user.id}_${index}`} value={user.email}>
+                        <option key={`${user.id}_${index}`} value={user.id}>
                           {user.phone}
                         </option>
                       ))}

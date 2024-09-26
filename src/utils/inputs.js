@@ -170,8 +170,8 @@ export const labelsCampaign = [
     label: "Nombre",
   },
   {
-    name: "notify_the_co_debtor",
-    label: "Notificador",
+    name: "sender",
+    label: "Remitente",
   },
   {
     name: "end_date",
