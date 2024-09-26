@@ -21,9 +21,13 @@ import {
   updateCampaign,
 } from "@/services/campaign.service";
 import { inputsCampaign, labelsCampaign } from "@/utils/inputs";
-import { getAllSenderEmails } from "@/services/senderEmail.service";
+import {
+  getAllSenderEmails,
+  getSenderEmailById,
+} from "@/services/senderEmail.service";
 import { ModalContext } from "@/contexts/modalContext";
 import { getAllCorporateImages } from "@/services/corporateImage.service";
+import { Pagination } from "@/components/shared/pagination/Pagination";
 
 export const Campaigns = () => {
   const {
@@ -33,7 +37,7 @@ export const Campaigns = () => {
     setValue,
     watch,
     getValues,
-    reset
+    reset,
   } = useForm();
   const [dataCampaign, setDataCampaign] = useState([]);
   const [valueMessage, setValueMessage] = useState("");
@@ -45,6 +49,9 @@ export const Campaigns = () => {
   const [steps, setSteps] = useState(3);
   const [importData, setImportData] = useState([]);
   const [dataForm, setDataForm] = useState({});
+  const [pagination, setPagination] = useState(null);
+  const [page, setPage] = useState(1);
+
   const [usersData, setUsersData] = useState([]);
   const [isEdit, setIsEdit] = useState(false);
   const [idEdit, setIdEdit] = useState(null);
@@ -63,7 +70,7 @@ export const Campaigns = () => {
           .filter((item) => item.status)
           .map((user) => {
             return {
-              id: user.id,
+              id: user.UUID,
               email: user.sender_email,
               phone: user.phone,
             };
@@ -75,14 +82,28 @@ export const Campaigns = () => {
   useEffect(() => {
     setLoading(true);
     getAllCampaigns()
-      .then((response) => {
-        console.log("response", response);
-        response.data.map((item) => {
-          item.id = item.UUID;
-          item.end_date = new Date(item.end_date).toLocaleDateString();
-          item.start_date = new Date(item.start_date).toLocaleDateString();
-        });
-        setDataCampaign(response.data);
+      .then(async (response) => {
+        const updatedData = await Promise.all(
+          response.data.map(async (item) => {
+            item.id = item.UUID;
+            item.end_date = new Date(item.end_date).toLocaleDateString();
+            item.start_date = new Date(item.start_date).toLocaleDateString();
+
+            // Obtener el sender de acuerdo al tipo de campaña
+            if (item.campaign_type === "correo") {
+              const emailResponse = await getSenderEmailById(item.sender.UUID);
+              item.sender = emailResponse.data.sender_email;
+            } else {
+              const phoneResponse = await getSenderEmailById(item.sender.UUID);
+              item.sender = phoneResponse.data.phone;
+            }
+
+            return item; // Retornar el item actualizado
+          })
+        );
+
+        setDataCampaign(updatedData); // Establecer la nueva data en el estado
+        setPagination(response.paging)
       })
       .catch((error) => {
         console.log(error);
@@ -150,7 +171,9 @@ export const Campaigns = () => {
           send_time: data.send_time,
           corporate_identity: data.corporate_identity,
           campaign_type: data.campaign_type,
-          message_body: data.sender + "" + data.subject + "" + data.message_body,
+          message_body: data.message_body,
+          sender: data.sender,
+          subject: data.subject,
           active: true,
           week_days: Object.keys(daysPeriodicity).filter(
             (day) => daysPeriodicity[day]
@@ -175,7 +198,9 @@ export const Campaigns = () => {
           send_time: data.send_time,
           corporate_identity: data.corporate_identity,
           campaign_type: data.campaign_type,
-          message_body: data.sender + "" + data.subject + "" + data.message_body,
+          message_body: data.message_body,
+          sender: data.sender,
+          subject: data.subject,
           active: true,
           month: data.periodicityMonth,
         };
@@ -198,22 +223,24 @@ export const Campaigns = () => {
           send_time: data.send_time,
           corporate_identity: data.corporate_identity,
           campaign_type: data.campaign_type,
-          message_body: data.sender + "" + data.subject + "" + data.message_body,
+          message_body: data.message_body,
+          sender: data.sender,
+          subject: data.subject,
           active: true,
         };
     }
-    if(isEdit) {
+    if (isEdit) {
       updateCampaign(idEdit, fixData)
-      .then((response) => {
-        setRefetch(!refetch);
-      })
-      .catch((error) => {
-        console.log(error);
-      })
-      .finally(() => {
-        setLoading(false);
-        setSteps(3);
-      });
+        .then((response) => {
+          setRefetch(!refetch);
+        })
+        .catch((error) => {
+          console.log(error);
+        })
+        .finally(() => {
+          setLoading(false);
+          setSteps(3);
+        });
       return;
     }
     createCampaign(fixData)
@@ -319,8 +346,7 @@ export const Campaigns = () => {
     reset();
     setIsEdit(false);
     setIdEdit(null);
-  }
-
+  };
 
   return (
     <div className={styles.container}>
@@ -518,6 +544,9 @@ export const Campaigns = () => {
             data={dataCampaign}
             actions={actions}
           />
+          <div className={styles.pagination}>
+        <Pagination total={pagination?.count} page={page} setPage={setPage} />
+      </div>
         </>
       )}
     </div>
