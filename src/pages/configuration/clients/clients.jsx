@@ -1,17 +1,17 @@
-import { FaEdit, FaPlus, FaSearch } from 'react-icons/fa';
+import { FaEdit, FaPlus, FaRegTrashAlt, FaSearch } from 'react-icons/fa';
 import styles from './clients.module.scss'
 import { Table } from '@/components/table/table';
 import { RiArrowGoBackFill } from 'react-icons/ri';
 import { useNavigate } from 'react-router-dom';
 import { useContext, useEffect, useState } from 'react';
 import { ModalContext } from '@/contexts/modalContext';
-import { getAllCustomers, getCustomerById } from '@/services/customers.service';
+import { deleteCustomer, getAllCustomers, getCustomerById } from '@/services/customers.service';
 import { Pagination } from '@/components/shared/pagination/Pagination';
 import { LoadingContext } from '@/contexts/LoadingContext';
 
 export const Clients = () => {
   const [search, setSearch] = useState("");
-  const {openModal, refetch, addData} = useContext(ModalContext);
+  const {openModal, refetch, setRefetch, addData} = useContext(ModalContext);
   const {setLoading} = useContext(LoadingContext);
   const [data, setData] = useState([{}]);
   const [pagination, setPagination] = useState(null);
@@ -45,14 +45,6 @@ export const Clients = () => {
 
   }, [search, refetch, page]);
   const actions = [
-/*     {
-      name: "switch",
-      action: (id) => {
-        const item = data.find(item => item.id === id);
-        item.status = item.status === 'Activo' ? 'Inactivo' : 'Activo';
-        setData([...data]);
-      }
-    }, */
     {
       name: "edit",
       icon: <FaEdit />,
@@ -66,6 +58,18 @@ export const Clients = () => {
         }).finally(() => setLoading(false));
       }
     },
+    {
+      name: "delete",
+      icon: <FaRegTrashAlt />,
+      action: (id) => {
+        setLoading(true);
+        deleteCustomer(id).then(() => {
+          setRefetch(!refetch);
+        }).catch((error) => {
+          console.log(error);
+        }).finally(() => setLoading(false));
+      }
+    }
   ];
 
 
@@ -89,7 +93,7 @@ export const Clients = () => {
   }
   return (
     <div className={styles.container}>
-      <h2>Usuarios</h2>
+      <h2>Clientes</h2>
       <div className={styles.containerHeader}>
         <form className={styles.containerInput}>
           <input
