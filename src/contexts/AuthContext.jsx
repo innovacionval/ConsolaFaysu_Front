@@ -11,6 +11,7 @@ export const AuthProvider = ({ children }) => {
   const [isLogged, setIsLogged] = useState(false)
   const [isValid, setIsValid] = useState(false)
   const {setLoading} = useContext(LoadingContext);
+  const [errorModal, setErrorModal] = useState(false)
 
   const handleLogin = (username, password) => {
     setLoading(true)
@@ -23,6 +24,7 @@ export const AuthProvider = ({ children }) => {
       })
       .catch(() => {
         setIsValid(false)
+        setErrorModal(true)
       }).finally(()=>setLoading(false))
   }
 
@@ -45,7 +47,7 @@ export const AuthProvider = ({ children }) => {
   }, [isValid])
 
   return (
-    <AuthContext.Provider value={{ isLogged, setIsLogged, handleLogin, logout }}>
+    <AuthContext.Provider value={{ isLogged, setIsLogged, handleLogin, logout, setErrorModal, errorModal }}>
       {children}
     </AuthContext.Provider>
   )

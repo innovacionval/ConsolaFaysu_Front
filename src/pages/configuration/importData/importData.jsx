@@ -136,6 +136,10 @@ export const ImportData = () => {
   const handleOpen = () => {
     openModal("importData");
   }
+  const downloadPlantilla = () => {
+    const url = "/campañas-faysu.xlsx";
+    window.open(url, "_blank");
+  }
 
   return (
     <div className={styles.container}>
@@ -157,6 +161,10 @@ export const ImportData = () => {
           <button onClick={handleOpen} className={styles.button}>
           <FaFileUpload />
             Cargar plantilla
+          </button>
+          <button onClick={downloadPlantilla} className={styles.button}>
+            <FaDownload />
+            Descargar plantilla
           </button>
         </div>
       </div>

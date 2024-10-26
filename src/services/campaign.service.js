@@ -1,4 +1,4 @@
-import { axiosInstanceBearer } from "./instances";
+import { axiosInstanceBearer, axiosInstanceFormData } from "./instances";
 
 export const getAllCampaigns = async (page) => {
     const response = await axiosInstanceBearer.get(`${page != 1 && page ? `/campaign/?page=${page}` : "/campaign/"}`);
@@ -11,7 +11,7 @@ export const getCampaignById = async (id) => {
 }
 
 export const createCampaign = async (campaign) => {
-    const response = await axiosInstanceBearer.post("/campaign/", campaign);
+    const response = await axiosInstanceFormData.post("/campaign/", campaign);
     return response.data;
 }
 

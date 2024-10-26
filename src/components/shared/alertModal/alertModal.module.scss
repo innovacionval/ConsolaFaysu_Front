@@ -1,0 +1,23 @@
+@use '../../../styles/modal.scss';
+@import 'styles/colors.scss';
+
+.modalContainer{
+    .modal{
+      .header{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        ;
+        svg{
+          font-size: 3rem;
+          color: $primary;
+        }
+      }
+        .body{
+          .text{
+            text-align: center;
+          }
+        }
+    }
+}

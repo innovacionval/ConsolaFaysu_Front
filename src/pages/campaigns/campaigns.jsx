@@ -151,10 +151,12 @@ export const Campaigns = () => {
   const onSubmitStep3 = (data) => {
     setLoading(true);
     setDataCampaign([...dataCampaign, data]);
+    const formData = new FormData();
     let fixData = {};
     switch (data.repetition_type) {
       case "week":
-        fixData = {
+        /* fixData = {
+          img: data.file,
           source: data.source,
           account_balance_type: data.account_balance_type,
           account_balance_value: data.account_balance_value,
@@ -178,10 +180,37 @@ export const Campaigns = () => {
           week_days: Object.keys(daysPeriodicity).filter(
             (day) => daysPeriodicity[day]
           ),
-        };
+        }; */
+        formData.append("img", data.file);
+        formData.append("source", data.source);
+        formData.append("account_balance_type", data.account_balance_type);
+        formData.append("account_balance_value", data.account_balance_value);
+        formData.append("days_past_due_type", data.days_past_due_type);
+        formData.append("days_past_due_value", data.days_past_due_value);
+        formData.append("name_campaign", data.name_campaign);
+        formData.append("notify_the_co_debtor", data.notify_the_co_debtor);
+        formData.append("start_date", new Date(data.start_date).toISOString());
+        formData.append("end_date", new Date(data.end_date).toISOString());
+        formData.append("is_recurring", true);
+        formData.append("repetition_type", data.repetition_type);
+        formData.append("interval", data.interval);
+        /* formData.append("end_recurrence", data.end_date); */
+        formData.append("send_time", data.send_time);
+        formData.append("corporate_identity", data.corporate_identity);
+        formData.append("campaign_type", data.campaign_type);
+        formData.append("message_body", data.message_body);
+        formData.append("sender", data.sender);
+        formData.append("subject", data.subject);
+        formData.append("active", true);
+        formData.append(
+          "week_days",
+          Object.keys(daysPeriodicity).filter((day) => daysPeriodicity[day])
+        );
+
         break;
       case "year":
-        fixData = {
+        /* fixData = {
+          img: data.file,
           source: data.source,
           account_balance_type: data.account_balance_type,
           account_balance_value: data.account_balance_value,
@@ -203,10 +232,33 @@ export const Campaigns = () => {
           subject: data.subject,
           active: true,
           month: data.periodicityMonth,
-        };
+        }; */
+        formData.append("img", data.file);
+        formData.append("source", data.source);
+        formData.append("account_balance_type", data.account_balance_type);
+        formData.append("account_balance_value", data.account_balance_value);
+        formData.append("days_past_due_type", data.days_past_due_type);
+        formData.append("days_past_due_value", data.days_past_due_value);
+        formData.append("name_campaign", data.name_campaign);
+        formData.append("notify_the_co_debtor", data.notify_the_co_debtor);
+        formData.append("start_date", new Date(data.start_date).toISOString());
+        formData.append("end_date", new Date(data.end_date).toISOString());
+        formData.append("is_recurring", true);
+        formData.append("repetition_type", data.repetition_type);
+        formData.append("interval", data.interval);
+        /* formData.append("end_recurrence", data.end_date); */
+        formData.append("send_time", data.send_time);
+        formData.append("corporate_identity", data.corporate_identity);
+        formData.append("campaign_type", data.campaign_type);
+        formData.append("message_body", data.message_body);
+        formData.append("sender", data.sender);
+        formData.append("subject", data.subject);
+        formData.append("active", true);
+        formData.append("month", data.periodicityMonth);
         break;
       default:
-        fixData = {
+        /* fixData = {
+          img: data.file,
           source: data.source,
           account_balance_type: data.account_balance_type,
           account_balance_value: data.account_balance_value,
@@ -227,7 +279,34 @@ export const Campaigns = () => {
           sender: data.sender,
           subject: data.subject,
           active: true,
-        };
+        }; */
+        if (data.file && data.file instanceof File) {
+          formData.append("img", data.file);
+      } else {
+          console.error("El archivo no es válido");
+          setLoading(false);
+          return;
+      }
+        formData.append("source", data.source);
+        formData.append("account_balance_type", data.account_balance_type);
+        formData.append("account_balance_value", data.account_balance_value);
+        formData.append("days_past_due_type", data.days_past_due_type);
+        formData.append("days_past_due_value", data.days_past_due_value);
+        formData.append("name_campaign", data.name_campaign);
+        formData.append("notify_the_co_debtor", data.notify_the_co_debtor);
+        formData.append("start_date", new Date(data.start_date).toISOString());
+        formData.append("end_date", new Date(data.end_date).toISOString());
+        formData.append("is_recurring", true);
+        formData.append("repetition_type", data.repetition_type);
+        formData.append("interval", data.interval);
+        /* formData.append("end_recurrence", data.end_date); */
+        formData.append("send_time", data.send_time);
+        formData.append("corporate_identity", data.corporate_identity);
+        formData.append("campaign_type", data.campaign_type);
+        formData.append("message_body", data.message_body);
+        formData.append("sender", data.sender);
+        formData.append("subject", data.subject);
+        formData.append("active", true);
     }
     if (isEdit) {
       updateCampaign(idEdit, fixData)
@@ -243,7 +322,7 @@ export const Campaigns = () => {
         });
       return;
     }
-    createCampaign(fixData)
+    createCampaign(formData)
       .then((response) => {
         setRefetch(!refetch);
       })

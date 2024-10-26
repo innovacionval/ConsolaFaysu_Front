@@ -7,8 +7,8 @@ export const inputsCampaign = (watchSource, importData) => {
       isVisibility: true,
       options: [
         {
-          value: "gitic",
-          label: "Gitic",
+          value: "giitic",
+          label: "Giitic",
         },
         {
           value: "importador",
@@ -259,6 +259,9 @@ export const variablesStep3 = [
     name: "No. Obligación",
     value: "123123123",
   },
+  {
+    name:"Días de mora"
+  }
 ];
 
 export const configQuill = () => {
