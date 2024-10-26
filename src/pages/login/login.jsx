@@ -4,9 +4,10 @@ import { useForm } from 'react-hook-form'
 import { useContext } from 'react'
 import { AuthContext } from '@/contexts/AuthContext'
 import { useNavigate } from 'react-router-dom'
+import { AlertModal } from '@/components/shared/alertModal/alertModal'
 export const Login = () => {
   const {register, handleSubmit} = useForm()
-  const{handleLogin} = useContext(AuthContext)
+  const{handleLogin, errorModal} = useContext(AuthContext)
   const navigate = useNavigate()
 
   const onSubmit = (data) => {
@@ -27,6 +28,9 @@ export const Login = () => {
           <a className={styles.text}><span >¿Olvidaste tu contraseña?</span></a>
         </div>
       </div>
+      {errorModal && (
+        <AlertModal />
+      )}
     </div>
   )
 }

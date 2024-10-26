@@ -22,6 +22,8 @@ export const Step3 = ({
   
   const [selectedOption, setSelectedOption] = useState("correo");
   const [openVariables, setOpenVariables] = useState(false);
+  const [isSubjectFocused, setIsSubjectFocused] = useState(false);
+  const [image, setImage] = useState(null);
   const quillRef = useRef(null);
   const maxLength = 300;
   const message = watch("message_body");
@@ -78,8 +80,28 @@ export const Step3 = ({
     setValue("subject", "");
     setValue("file", "");
   };
+  const subjectElement = document.getElementById("subject");
+
+  useEffect(() => {
+    const handleMouseOver = () => {
+      setIsSubjectFocused(true);
+    };
+  
+
+    if (subjectElement) {
+      subjectElement.addEventListener("focus", handleMouseOver);
+    }
+  
+    // Cleanup the event listeners when the component unmounts
+    return () => {
+      if (subjectElement) {
+        subjectElement.removeEventListener("focus", handleMouseOver);
+      }
+    };
+  }, [subjectElement]);
+  
   const handleChangeVariables = (e, name) => {
-    if (selectedOption != "correo") {
+    if (selectedOption !== "correo") {
       const cursorPosition = document.getElementById("message_body").selectionStart;
       const currentText = message;
       const newText =
@@ -88,14 +110,37 @@ export const Step3 = ({
         currentText.slice(cursorPosition);
       setValue("message_body", newText);
     } else {
+      if (isSubjectFocused) {
+        handleChangeVariablesOnSubject(e, name);
+        setIsSubjectFocused(false);
+        return;
+      }
       const editor = quillRef.current.getEditor();
       const cursorPosition = editor.getSelection().index;
       editor.insertText(cursorPosition, `{{${name}}}`);
     }
   };
+
+
+  const handleChangeVariablesOnSubject = (e, name) => {
+    const cursorPosition = document.getElementById("subject").selectionStart;
+    const currentText = watch("subject");
+    const newText =
+      currentText.slice(0, cursorPosition) +
+      `{{${name}}}` +
+      currentText.slice(cursorPosition);
+    setValue("subject", newText);
+  }
   useEffect(() => {
     setValue("message_body", valueMessage);
   }, [valueMessage]);
+
+  const onChangeFile = (e) => {
+    setImage(URL.createObjectURL(e.target.files[0]));
+    setValue("file", e.target.files[0]);
+  };
+
+
   const modules = configQuill().modules;
 
   const formats = configQuill().formats;
@@ -149,6 +194,7 @@ export const Step3 = ({
                           type="text"
                           {...register("subject", { required: true })}
                           placeholder="Asunto"
+                          id="subject"
                         />
                       </div>
                       <div className={styles.containerInputFile}>
@@ -157,11 +203,22 @@ export const Step3 = ({
                           type="file"
                           {...register("file")}
                           id="file"
+                          accept="image/*"
+                          onChange={onChangeFile}
                         />
                         <label htmlFor="file">
                           <FaPaperclip />
                           Cargar imagen
                         </label>
+                        {image && (
+                          <img
+                            src={image}
+                            alt="imagen"
+                            className={styles.image}
+                            width={100}
+                          />
+                        )}
+
                         <button
                           className={styles.btnVariables}
                           onClick={() => setOpenVariables(!openVariables)}
