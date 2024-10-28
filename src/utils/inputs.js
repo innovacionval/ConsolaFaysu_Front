@@ -241,26 +241,27 @@ export const inputsStep2 = (corporateData) => {
 export const variablesStep3 = [
   {
     name: "Nombres",
-    value: "juan",
+    value: "names",
   },
   {
     name: "Saldo",
-    value: "12312",
+    value: "balance",
   },
   {
     name: "Fecha de pago",
-    value: "12/12/2021",
+    value: "payment_date",
   },
   {
     name: "Cliente",
-    value: "Cliente",
+    value: "customer",
   },
   {
     name: "No. Obligación",
-    value: "123123123",
+    value: "obligation_number",
   },
   {
-    name:"Días de mora"
+    name:"Días de mora",
+    value: "days_default"
   }
 ];
 
