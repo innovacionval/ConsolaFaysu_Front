@@ -308,7 +308,7 @@ export const Step3 = ({
             {variables.map((variable, index) => (
               <button
                 key={`${variable.name}${index}`}
-                onClick={(e) => handleChangeVariables(e, variable.name)}
+                onClick={(e) => handleChangeVariables(e, variable.value)}
               >
                 {variable.name}
               </button>
