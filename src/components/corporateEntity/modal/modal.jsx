@@ -5,6 +5,7 @@ import { useContext, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { createCorporateImage, updateCorporateImage } from '@/services/corporateImage.service';
 import { LoadingContext } from '@/contexts/LoadingContext';
+import { AuthContext } from '@/contexts/AuthContext';
 
 export const ModalCorporateEntity = () => {
   const {closeModal, refetch, setRefetch, dataTable} = useContext(ModalContext);
@@ -15,8 +16,11 @@ export const ModalCorporateEntity = () => {
   const [errorFile, setErrorFile] = useState(false)
   const [primaryColor, setPrimaryColor] = useState("#000000")
   const [secondaryColor, setSecondaryColor] = useState("#000000")
+  const {user} = useContext(AuthContext)
 
   const urlFile = import.meta.env.VITE_URL_FILE || "https://faysu.valcredit.co:8005"
+
+  console.log(user)
 
 
   useEffect(() => {
@@ -33,6 +37,13 @@ export const ModalCorporateEntity = () => {
       setPrimaryColor(dataTable.main_color)
       setSecondaryColor(dataTable.secondary_color)
     }}, [dataTable])
+
+  
+  useEffect(() => {
+    if(user){
+      setValue("user", user.name)
+    }
+  }, [user])
 
   const handleClose = () => {
     closeModal()
@@ -116,30 +127,35 @@ export const ModalCorporateEntity = () => {
       name: "name",
       label: "Nombre",
       required: true,
+      disabled: false
     },
     {
       type: "text",
       name: "user",
       label: "Usuario",
       required: true,
+      disabled: true
     },
     {
       type: "file",
       name: "logo",
       label: "Logo (2MB)",
       required: previewImg ? false : true,
+      disabled: false
     },
     {
       type: "color",
       name: "primaryColor",
       label: "Color Principal",
       required: true,
+      disabled: false
     },
     {
       type: "color",
       name: "secondaryColor",
       label: "Color Secundario",
       required: true,
+      disabled: false
     }
   ]
 
@@ -169,17 +185,17 @@ export const ModalCorporateEntity = () => {
                     input.type === "file" ?
                     <>
                     <div className={styles.containerFile}>
-                      <input type={input.type} {...register(input.name, {required: { value: input.required, message: input.label}, onChange:(e) => handleChangeFile(e)})} accept='image/png, image/jpeg'  />
+                      <input disabled={input.disabled} type={input.type} {...register(input.name, {required: { value: input.required, message: input.label}, onChange:(e) => handleChangeFile(e)})} accept='image/png, image/jpeg'  />
                       {previewImg&&<img src={previewImg} alt="preview" />}
                       {errorFile && <span className={styles.error}>El archivo no debe superar los 2MB</span>}
                     </div>
                     </>
                     : input.type === "color" ?
                     <>
-                      <input  type={input.type} {...register(input.name, {required: { value: input.required, message: input.label}, onChange:(e) => handleColor(e)} )}/>
+                      <input disabled={input.disabled} type={input.type} {...register(input.name, {required: { value: input.required, message: input.label}, onChange:(e) => handleColor(e)} )}/>
                       <p>{input.name == "primaryColor" ? primaryColor : secondaryColor}</p>
                     </>
-                    : <input type={input.type} {...register(input.name, {required: { value: input.required, message: input.label}})}/>
+                    : <input disabled={input.disabled} type={input.type} {...register(input.name, {required: { value: input.required, message: input.label}})}/>
                   }
                 </div>
                 {errors[input.name] && <span className={styles.error}>{`El campo ${errors[input.name].message} es requerido`}</span>}

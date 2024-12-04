@@ -11,107 +11,114 @@ import { LoadingContext } from "@/contexts/LoadingContext";
 
 export const Users = () => {
   const [search, setSearch] = useState("");
-  const {openModal, refetch, setRefetch, addData} = useContext(ModalContext);
-  const {setLoading} = useContext(LoadingContext);
+  const { openModal, refetch, setRefetch, addData } = useContext(ModalContext);
+  const { setLoading } = useContext(LoadingContext);
+  const [dataSearch, setDataSearch] = useState([{}]);
   const [data, setData] = useState([{}]);
   const [pagination, setPagination] = useState(null);
   const [page, setPage] = useState(1);
-  const labels = [{
-    name: "name",
-    label: "Nombres",
-  },
-  {
-    name: "identification",
-    label: "Identificación",
-  },
-  {
-    name: "email",
-    label: "Email",
-  },
-  {
-    name: "role",
-    label: "Rol",
-  },
-  {
-    name: "statusUser",
-    label: "Estado",
-  },
-  {
-    name: "",
-    label: "",
-  }];
+  const labels = [
+    {
+      name: "name",
+      label: "Nombres",
+    },
+    {
+      name: "identification",
+      label: "Identificación",
+    },
+    {
+      name: "email",
+      label: "Email",
+    },
+    {
+      name: "role",
+      label: "Rol",
+    },
+    {
+      name: "statusUser",
+      label: "Estado",
+    },
+    {
+      name: "",
+      label: "",
+    },
+  ];
   const navigate = useNavigate();
 
   useEffect(() => {
-    setLoading(true)
-    if(search == ""){
-    getAllUsers().then((response) => {
-      setPagination(response.paging)
-      console.log(response)
-      let dataUser = response.data.map((item) => {
-        return {
-          id: item.UUID,
-          name: item.firstName + " " + item.lastName,
-          identification: item.identification,
-          email: item.email,
-          role: item.role,
-          statusUser: item.emailVerified,
-        };
-      });
-      setData(dataUser);
-    }).catch((error) => {
-      console.log(error);
-    }).finally(() => setLoading(false));
-  }
-  }, [search, refetch]);
-
+    setLoading(true);
+    getAllUsers()
+      .then((response) => {
+        console.log(response)
+        setPagination(response.paging);
+        let dataUser = response.data.map((item) => {
+          return {
+            id: item.UUID,
+            name: item.firstName + " " + item.lastName,
+            identification: item.identification,
+            email: item.email,
+            role: item.role,
+            statusUser: item.emailVerified,
+          };
+        });
+        setData(dataUser);
+        setDataSearch(dataUser);
+      })
+      .catch((error) => {
+        /* TODO hacer modal error de que se repita el correo*/
+        console.log(error);
+      })
+      .finally(() => setLoading(false));
+  }, [refetch]);
 
   const actions = [
     {
       name: "switch",
       action: (id) => {
-        setLoading(true)
-        const item = data.find(item => item.id === id);
+        setLoading(true);
+        const item = data.find((item) => item.id === id);
         item.statusUser = item.statusUser ? false : true;
-        updateUser(id, {emailVerified: item.statusUser, role:item.role}).then(() => {
-          setRefetch(!refetch)
-        }).catch((error) => {
-          console.log(error)
-        }).finally(() => setLoading(false))
-      }
+        updateUser(id, { emailVerified: item.statusUser, role: item.role })
+          .then(() => {
+            setRefetch(!refetch);
+          })
+          .catch((error) => {
+            console.log(error);
+          })
+          .finally(() => setLoading(false));
+      },
     },
     {
       name: "edit",
       icon: <FaEdit />,
       action: async (id) => {
-        setLoading(true)
+        setLoading(true);
         const user = await getUserById(id);
         openModal("users");
         addData(user.data);
-        setLoading(false)
-      }
+        setLoading(false);
+      },
     },
   ];
-
 
   const handleChange = (e) => {
     e.preventDefault();
     setSearch(e.target.value);
-    const filtered = data.filter((item) =>
-      item.name.toLowerCase().includes(search.toLowerCase())
+    const filtered = dataSearch.filter((item) =>
+      item.name.toLowerCase().includes(e.target.value.toLowerCase())
     );
-    if (search === "") {
-      setData(data);
+    if (e.target.value.length == 0) {
+      setDataSearch(data);
     } else {
-      setData(filtered);
+      setDataSearch(filtered);
     }
   };
   const handleBack = () => {
     navigate("/configuration");
-  }
+  };
   const handleOpen = () => {
     openModal("users");
-  }
+  };
 
   return (
     <div className={styles.container}>
@@ -125,16 +132,13 @@ export const Users = () => {
             value={search}
             onChange={handleChange}
           />
-          <button>
-            <FaSearch />
-          </button>
         </form>
         <button onClick={handleOpen} className={styles.button}>
           <FaPlus />
           Nuevo
         </button>
       </div>
-      <Table labels={labels} data={data} actions={actions} />
+      <Table labels={labels} data={dataSearch} actions={actions} />
       <div className={styles.pagination}>
         <Pagination total={pagination?.count} page={page} setPage={setPage} />
       </div>

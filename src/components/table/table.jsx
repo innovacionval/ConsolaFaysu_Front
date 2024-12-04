@@ -22,7 +22,6 @@ export const Table = ({ labels, data, actions }) => {
 
                 if (item[key] !== undefined) {
                   if (key === "active") {
-                    // Si es el status de activo
                     return (
                       <td
                         key={i}
@@ -45,7 +44,7 @@ export const Table = ({ labels, data, actions }) => {
                       return (
                         <Switch
                           key={`${i} + action`}
-                          isOn={item.active}
+                          isOn={item.statusUser || item.status || item.active}
                           handleToggle={() => action.action(item.id)}
                           id={item.id}
                         />

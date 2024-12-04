@@ -81,8 +81,9 @@ export const Campaigns = () => {
 
   useEffect(() => {
     setLoading(true);
-    getAllCampaigns()
+    getAllCampaigns(page)
       .then(async (response) => {
+        console.log(response)
         const updatedData = await Promise.all(
           response.data.map(async (item) => {
             item.id = item.UUID;
@@ -116,12 +117,11 @@ export const Campaigns = () => {
 
     getAllSenderEmails()
       .then((response) => {
-        console.log(response);
       })
       .catch((error) => {
         console.log(error);
       });
-  }, [refetch]);
+  }, [page,refetch]);
 
   useEffect(() => {
     if (!watchImport) return;
@@ -431,9 +431,9 @@ export const Campaigns = () => {
     <div className={styles.container}>
       <div className={styles.containerTitle}>
         <h2>{steps == 2 ? "Tipo de campaña" : "Campaña"}</h2>
-        {steps == 0 && <h2>Paso 1</h2>}
-        {steps == 1 && <h2>Paso 2</h2>}
-        {steps == 2 && <h2>Paso 3</h2>}
+        {steps == 0 && <h2 className={styles.steps}>Paso 1</h2>}
+        {steps == 1 && <h2 className={styles.steps}>Paso 2</h2>}
+        {steps == 2 && <h2 className={styles.steps}>Paso 3</h2>}
       </div>
       {steps == 0 && (
         <>

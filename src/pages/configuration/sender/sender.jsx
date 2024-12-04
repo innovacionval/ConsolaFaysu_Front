@@ -15,6 +15,7 @@ export const Senders = () => {
   const {setLoading} = useContext(LoadingContext);
   const [data, setData] = useState([{}]);
   const [pagination, setPagination] = useState(null);
+  const [dataSearch, setDataSearch] = useState([{}]);
   const [page, setPage] = useState(1);
   const labels = [
   {
@@ -32,7 +33,6 @@ export const Senders = () => {
   const navigate = useNavigate();
   useEffect(() => {
     setLoading(true);
-    if(search == ""){
       getAllSenderEmails(page).then((response) => {
         console.log(response)
         setPagination(response.paging)
@@ -45,12 +45,11 @@ export const Senders = () => {
           }
         })
         setData(fixData);
+        setDataSearch(fixData);
       }).catch((error) => {
         console.log(error);
       }).finally(() => setLoading(false));
-  }
-
-  }, [search, refetch, page]);
+  }, [refetch, page]);
   const actions = [
     {
       name: "switch",
@@ -82,17 +81,16 @@ export const Senders = () => {
     },
   ];
 
-
   const handleChange = (e) => {
     e.preventDefault();
     setSearch(e.target.value);
-    const filtered = data.filter((item) =>
-      item.name.toLowerCase().includes(search.toLowerCase())
+    const filtered = dataSearch.filter((item) =>
+      item.name.toLowerCase().includes(e.target.value.toLowerCase())
     );
-    if (search === "") {
-      setData(data);
+    if (e.target.value.length == 0) {
+      setDataSearch(data);
     } else {
-      setData(filtered);
+      setDataSearch(filtered);
     }
   };
   const handleBack = () => {
@@ -113,16 +111,13 @@ export const Senders = () => {
             value={search}
             onChange={handleChange}
           />
-          <button>
-            <FaSearch />
-          </button>
         </form>
         <button onClick={handleOpen} className={styles.button}>
           <FaPlus />
           Nuevo
         </button>
       </div>
-      <Table labels={labels} data={data} actions={actions} />
+      <Table labels={labels} data={dataSearch} actions={actions} />
       <div className={styles.pagination}>
         <Pagination total={pagination?.count} page={page} setPage={setPage} />
       </div>

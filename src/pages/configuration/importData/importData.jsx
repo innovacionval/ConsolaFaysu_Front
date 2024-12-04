@@ -137,7 +137,7 @@ export const ImportData = () => {
     openModal("importData");
   }
   const downloadPlantilla = () => {
-    const url = "/campañas-faysu.xlsx";
+    const url = import.meta.env.DEV ? "/campañas-faysu.xlsx" : "/ConsolaFaysu_Front/campañas-faysu.xlsx";
     window.open(url, "_blank");
   }
 

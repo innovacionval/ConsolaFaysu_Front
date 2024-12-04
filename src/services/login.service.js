@@ -4,6 +4,8 @@ export const login = async (username, password) => {
     const response = await axiosInstanceBearer.post("/login", {
       username,
       password,
+    },{
+      skipAuthRefresh: true
     });
     return response.data;
 }

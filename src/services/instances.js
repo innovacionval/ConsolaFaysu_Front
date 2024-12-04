@@ -35,6 +35,11 @@ const processQueue = (error, token = null) => {
 };
 
 const addTokenToRequest = async (config) => {
+
+  if(config.skipAuthRefresh) {
+    return config;
+  }
+
   const token = sessionStorage.getItem("token");
 
   if (token) {
@@ -98,6 +103,10 @@ const refreshAuthToken = async () => {
 const handleTokenExpiration = async (error) => {
   const originalRequest = error.config;
 
+  if(originalRequest.skipAuthRefresh){
+    return Promise.reject(error);
+  }
+
   if (error.response.status === 401 && !originalRequest._retry) {
     originalRequest._retry = true;
 
@@ -112,7 +121,7 @@ const handleTokenExpiration = async (error) => {
     } catch (refreshError) {
       console.error('Error al renovar el token:', refreshError);
       sessionStorage.clear();
-      window.location.href = '/';
+      window.location.href = import.meta.env.DEV ? '/' : '/ConsolaFaysu_Front/';
       return Promise.reject(refreshError);
     }
   }

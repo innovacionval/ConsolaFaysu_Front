@@ -21,6 +21,7 @@ export const Pagination = ({ page, setPage, total }) => {
 
       {numbers.map((number) => (
         <button
+        style={{ backgroundColor: page == number ? "#FFB71B" : "" }}
           key={number}
           onClick={() => setPage(number)}
           disabled={page === number}

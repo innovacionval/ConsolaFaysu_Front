@@ -5,18 +5,24 @@ import { ModalContext } from "@/contexts/modalContext";
 import { FaEdit, FaPlus, FaRegTrashAlt, FaSearch } from "react-icons/fa";
 import { Table } from "@/components/table/table";
 import { RiArrowGoBackFill } from "react-icons/ri";
-import { deleteCorporateImage, getAllCorporateImages, getCorporateImageById } from "@/services/corporateImage.service";
+import {
+  deleteCorporateImage,
+  getAllCorporateImages,
+  getCorporateImageById,
+} from "@/services/corporateImage.service";
 import { Pagination } from "@/components/shared/pagination/Pagination";
 import { LoadingContext } from "@/contexts/LoadingContext";
 
 export const CorporateEntity = () => {
   const [search, setSearch] = useState("");
+  const [dataSearch, setDataSearch] = useState([{}]);
   const { openModal, setRefetch, refetch, addData } = useContext(ModalContext);
   const { setLoading } = useContext(LoadingContext);
   const [data, setData] = useState([{}]);
   const [pagination, setPagination] = useState(null);
   const [page, setPage] = useState(1);
-  const urlFile = import.meta.env.VITE_URL_FILE || "https://faysu.valcredit.co:8005"
+  const urlFile =
+    import.meta.env.VITE_URL_FILE || "https://faysu.valcredit.co:8005";
 
   const labels = [
     {
@@ -48,8 +54,8 @@ export const CorporateEntity = () => {
 
   useEffect(() => {
     setLoading(true);
-    if (search == "") {
-      getAllCorporateImages().then((response) => {
+    getAllCorporateImages()
+      .then((response) => {
         setPagination(response.paging);
         let dataCorporateImage = response.data.map((item) => {
           return {
@@ -62,11 +68,13 @@ export const CorporateEntity = () => {
           };
         });
         setData(dataCorporateImage);
-      }).catch((error) => {
+        setDataSearch(dataCorporateImage);
+      })
+      .catch((error) => {
         console.log(error);
-      }).finally(() => setLoading(false));
-    }
-  }, [search, refetch]);
+      })
+      .finally(() => setLoading(false));
+  }, [refetch]);
 
   const actions = [
     {
@@ -85,11 +93,14 @@ export const CorporateEntity = () => {
       icon: <FaRegTrashAlt />,
       action: (id) => {
         setLoading(true);
-        deleteCorporateImage(id).then(() => {
-          setRefetch(!refetch);
-        }).catch((error) => {
-          console.log(error);
-        }).finally(() => setLoading(false));
+        deleteCorporateImage(id)
+          .then(() => {
+            setRefetch(!refetch);
+          })
+          .catch((error) => {
+            console.log(error);
+          })
+          .finally(() => setLoading(false));
       },
     },
   ];
@@ -97,13 +108,13 @@ export const CorporateEntity = () => {
   const handleChange = (e) => {
     e.preventDefault();
     setSearch(e.target.value);
-    const filtered = data.filter((item) =>
-      item.name.toLowerCase().includes(search.toLowerCase())
+    const filtered = dataSearch.filter((item) =>
+      item.name.toLowerCase().includes(e.target.value.toLowerCase())
     );
-    if (search === "") {
-      setData(data);
+    if (e.target.value.length == 0) {
+      setDataSearch(data);
     } else {
-      setData(filtered);
+      setDataSearch(filtered);
     }
   };
   const handleBack = () => {
@@ -125,16 +136,13 @@ export const CorporateEntity = () => {
             value={search}
             onChange={handleChange}
           />
-          <button>
-            <FaSearch />
-          </button>
         </form>
         <button onClick={handleOpen} className={styles.button}>
           <FaPlus />
           Nuevo
         </button>
       </div>
-      <Table labels={labels} data={data} actions={actions} />
+      <Table labels={labels} data={dataSearch} actions={actions} />
       <div className={styles.pagination}>
         <Pagination total={pagination?.count} page={page} setPage={setPage} />
       </div>
