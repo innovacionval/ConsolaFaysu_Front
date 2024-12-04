@@ -1,6 +1,6 @@
 import { Table } from "@/components/table/table";
 import styles from "./users.module.scss";
-import { FaEdit, FaPlus, FaSearch } from "react-icons/fa";
+import { FaEdit, FaPlus } from "react-icons/fa";
 import { RiArrowGoBackFill } from "react-icons/ri";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";

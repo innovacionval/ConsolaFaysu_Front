@@ -81,6 +81,7 @@ export const ModalUsers = () => {
       lastName: data.lastName,
       email: data.email,
       role: data.role,
+      identification: data.identification
     }
     createUser(dataCreate).then((response) => {
       closeModal()
