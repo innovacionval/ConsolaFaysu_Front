@@ -35,10 +35,6 @@ export const Users = () => {
       label: "Rol",
     },
     {
-      name: "statusUser",
-      label: "Estado",
-    },
-    {
       name: "",
       label: "",
     },
@@ -106,6 +102,11 @@ export const Users = () => {
     setSearch(e.target.value);
     const filtered = dataSearch.filter((item) =>
       item.name.toLowerCase().includes(e.target.value.toLowerCase())
+    || item.identification.toLowerCase().includes(e.target.value.toLowerCase())
+    || item.email.toLowerCase().includes(e.target.value.toLowerCase())
+    || item.role.toLowerCase().includes(e.target.value.toLowerCase())
+    || item.statusUser.toString().toLowerCase().includes(e.target.value.toLowerCase())
+
     );
     if (e.target.value.length == 0) {
       setDataSearch(data);

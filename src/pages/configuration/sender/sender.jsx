@@ -84,8 +84,10 @@ export const Senders = () => {
   const handleChange = (e) => {
     e.preventDefault();
     setSearch(e.target.value);
+    console.log(dataSearch)
     const filtered = dataSearch.filter((item) =>
-      item.name.toLowerCase().includes(e.target.value.toLowerCase())
+      item.sender_email.toLowerCase().includes(e.target.value.toLowerCase())
+    || item.phone.toLowerCase().includes(e.target.value.toLowerCase())
     );
     if (e.target.value.length == 0) {
       setDataSearch(data);

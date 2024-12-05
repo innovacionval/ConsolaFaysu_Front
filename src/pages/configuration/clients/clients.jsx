@@ -12,6 +12,7 @@ import { LoadingContext } from '@/contexts/LoadingContext';
 export const Clients = () => {
   const [search, setSearch] = useState("");
   const {openModal, refetch, setRefetch, addData} = useContext(ModalContext);
+  const [dataSearch, setDataSearch] = useState([{}]);
   const {setLoading} = useContext(LoadingContext);
   const [data, setData] = useState([{}]);
   const [pagination, setPagination] = useState(null);
@@ -38,12 +39,13 @@ export const Clients = () => {
           };
         });
         setData(dataCustomer);
+        setDataSearch(dataCustomer);
       }).catch((error) => {
         console.log(error);
       }).finally(() => setLoading(false));
   }
 
-  }, [search, refetch, page]);
+  }, [refetch, page]);
   const actions = [
     {
       name: "edit",
@@ -77,12 +79,12 @@ export const Clients = () => {
     e.preventDefault();
     setSearch(e.target.value);
     const filtered = data.filter((item) =>
-      item.name.toLowerCase().includes(search.toLowerCase())
+      item.name.toLowerCase().includes(e.target.value.toLowerCase())
     );
     if (search === "") {
-      setData(data);
+      setDataSearch(data);
     } else {
-      setData(filtered);
+      setDataSearch(filtered);
     }
   };
   const handleBack = () => {
@@ -103,16 +105,13 @@ export const Clients = () => {
             value={search}
             onChange={handleChange}
           />
-          <button>
-            <FaSearch />
-          </button>
         </form>
         <button onClick={handleOpen} className={styles.button}>
           <FaPlus />
           Nuevo
         </button>
       </div>
-      <Table labels={labels} data={data} actions={actions} />
+      <Table labels={labels} data={dataSearch} actions={actions} />
       <div className={styles.pagination}>
         <Pagination total={pagination?.count} page={page} setPage={setPage} />
       </div>

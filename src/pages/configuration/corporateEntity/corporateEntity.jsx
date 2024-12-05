@@ -110,6 +110,9 @@ export const CorporateEntity = () => {
     setSearch(e.target.value);
     const filtered = dataSearch.filter((item) =>
       item.name.toLowerCase().includes(e.target.value.toLowerCase())
+    || item.user.toLowerCase().includes(e.target.value.toLowerCase())
+    || item.primaryColor.toLowerCase().includes(e.target.value.toLowerCase())
+    || item.secondaryColor.toLowerCase().includes(e.target.value.toLowerCase())
     );
     if (e.target.value.length == 0) {
       setDataSearch(data);

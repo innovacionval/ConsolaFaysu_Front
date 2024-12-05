@@ -40,6 +40,7 @@ export const Campaigns = () => {
     reset,
   } = useForm();
   const [dataCampaign, setDataCampaign] = useState([]);
+  const [dataSearch, setDataSearch] = useState([]);
   const [valueMessage, setValueMessage] = useState("");
   const { setRefetch, refetch } = useContext(ModalContext);
   const { setLoading } = useContext(LoadingContext);
@@ -83,7 +84,6 @@ export const Campaigns = () => {
     setLoading(true);
     getAllCampaigns(page)
       .then(async (response) => {
-        console.log(response)
         const updatedData = await Promise.all(
           response.data.map(async (item) => {
             item.id = item.UUID;
@@ -104,6 +104,8 @@ export const Campaigns = () => {
         );
 
         setDataCampaign(updatedData); // Establecer la nueva data en el estado
+        setDataSearch(updatedData); // Establecer la nueva data en el estado
+
         setPagination(response.paging)
       })
       .catch((error) => {
@@ -399,6 +401,18 @@ export const Campaigns = () => {
   ];
   const handleChange = (e) => {
     setSearch(e.target.value);
+    const filtered = dataCampaign.filter((item) =>
+      item.name_campaign.toLowerCase().includes(e.target.value.toLowerCase())
+    || item.sender.toLowerCase().includes(e.target.value.toLowerCase())
+    || item.end_date.toLowerCase().includes(e.target.value.toLowerCase())
+    || item.campaign_type.toLowerCase().includes(e.target.value.toLowerCase())
+
+    );
+    if (e.target.value.length == 0) {
+      setDataSearch(dataCampaign);
+    } else {
+      setDataSearch(filtered);
+    }
   };
 
   useEffect(() => {
@@ -609,9 +623,6 @@ export const Campaigns = () => {
                 value={search}
                 onChange={handleChange}
               />
-              <button>
-                <FaSearch />
-              </button>
             </form>
             <button onClick={handleNewCampaign} className={styles.button}>
               <FaPlus />
@@ -620,7 +631,7 @@ export const Campaigns = () => {
           </div>
           <Table
             labels={labelsCampaign}
-            data={dataCampaign}
+            data={dataSearch}
             actions={actions}
           />
           <div className={styles.pagination}>

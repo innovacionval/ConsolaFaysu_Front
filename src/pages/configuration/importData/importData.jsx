@@ -15,6 +15,7 @@ export const ImportData = () => {
   const {openModal, refetch, setRefetch, addData} = useContext(ModalContext);
   const {setLoading} = useContext(LoadingContext);
   const [data, setData] = useState([{}]);
+  const [dataSearch, setDataSearch] = useState([{}]);
   const [pagination, setPagination] = useState(null);
   const [page, setPage] = useState(1);
   const urlFile = import.meta.env.VITE_URL_FILE || "https://faysu.valcredit.co:8005"
@@ -50,12 +51,14 @@ export const ImportData = () => {
           name: item.file_name,
         }
       })
-    ).then((data) => setData(data)).finally(() => setLoading(false))
+    ).then((data) => {
+      setData(data)
+      setDataSearch(data)
     }
-    if(search == ""){
+  ).finally(() => setLoading(false))
+    }
       fetchInfo()
-    }
-  }, [search, refetch]);
+  }, [refetch]);
 
 
   const actions = [
@@ -121,13 +124,16 @@ export const ImportData = () => {
   const handleChange = (e) => {
     e.preventDefault();
     setSearch(e.target.value);
-    const filtered = data.filter((item) =>
-      item.name.toLowerCase().includes(search.toLowerCase())
+    const filtered = dataSearch.filter((item) =>
+      
+      item.date.toLowerCase().includes(e.target.value.toLowerCase())
+    || item.user.toLowerCase().includes(e.target.value.toLowerCase())
+    || item.name.toLowerCase().includes(e.target.value.toLowerCase())
     );
-    if (search === "") {
-      setData(data);
+    if (e.target.value.length == 0) {
+      setDataSearch(data);
     } else {
-      setData(filtered);
+      setDataSearch(filtered);
     }
   };
   const handleBack = () => {
@@ -153,9 +159,6 @@ export const ImportData = () => {
             value={search}
             onChange={handleChange}
           />
-          <button>
-            <FaSearch />
-          </button>
         </form>
         <div className={styles.containerBtn}>
           <button onClick={handleOpen} className={styles.button}>
@@ -168,7 +171,7 @@ export const ImportData = () => {
           </button>
         </div>
       </div>
-      <Table labels={labels} data={data} actions={actions} />
+      <Table labels={labels} data={dataSearch} actions={actions} />
       <div className={styles.pagination}>
         <Pagination total={pagination?.count} page={page} setPage={setPage} />
       </div>
