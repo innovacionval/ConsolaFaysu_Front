@@ -1,11 +1,11 @@
 import { Table } from "@/components/table/table";
 import styles from "./users.module.scss";
-import { FaEdit, FaPlus } from "react-icons/fa";
+import { FaEdit, FaPlus, FaRegTrashAlt, FaTrash } from "react-icons/fa";
 import { RiArrowGoBackFill } from "react-icons/ri";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ModalContext } from "@/contexts/modalContext";
-import { getAllUsers, getUserById, updateUser } from "@/services/users.service";
+import { deleteUser, getAllUsers, getUserById, updateUser } from "@/services/users.service";
 import { Pagination } from "@/components/shared/pagination/Pagination";
 import { LoadingContext } from "@/contexts/LoadingContext";
 
@@ -95,6 +95,18 @@ export const Users = () => {
         setLoading(false);
       },
     },
+    {
+      name: "delete",
+      icon: <FaRegTrashAlt />,
+      action: (id) => {
+        setLoading(true);
+        deleteUser(id).then(() => {
+          setRefetch(!refetch);
+        }).catch((error) => {
+          console.log(error);
+        }).finally(() => setLoading(false));
+      },
+    }
   ];
 
   const handleChange = (e) => {

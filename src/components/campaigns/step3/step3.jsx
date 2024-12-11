@@ -1,9 +1,8 @@
 import { RiArrowGoBackFill } from "react-icons/ri";
 import styles from "./step3.module.scss";
 import { MdArrowForwardIos } from "react-icons/md";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { FaPaperclip, FaStar } from "react-icons/fa";
-import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { configQuill, variablesStep3 } from "@/utils/inputs";
 
@@ -17,14 +16,12 @@ export const Step3 = ({
   watch,
   usersData,
   valueMessage,
-  setValueMessage
 }) => {
   
   const [selectedOption, setSelectedOption] = useState("correo");
   const [openVariables, setOpenVariables] = useState(false);
   const [isSubjectFocused, setIsSubjectFocused] = useState(false);
   const [image, setImage] = useState(null);
-  const quillRef = useRef(null);
   const maxLength = 300;
   const message = watch("message_body");
 
@@ -60,18 +57,6 @@ export const Step3 = ({
   ];
 
 
-  useEffect(() => {
-    const editor = quillRef?.current?.getEditor();
-
-    editor?.on("text-change", (delta, oldDelta, source) => {
-      if (source === "user") {
-        const currentLength = editor.getLength();
-        if (currentLength > maxLength) {
-          editor.deleteText(maxLength, currentLength);
-        }
-      }
-    });
-  }, [quillRef]);
 
   const onChangeTypeCampaign = (e) => {
     setValue("campaign_type", e.target.value);
@@ -102,8 +87,8 @@ export const Step3 = ({
   
   const handleChangeVariables = (e, name) => {
     if (selectedOption !== "correo") {
-      const cursorPosition = document.getElementById("message_body").selectionStart;
-      const currentText = message;
+      const cursorPosition = document.getElementById("message").selectionStart;
+      const currentText = watch("message_body");
       const newText =
         currentText.slice(0, cursorPosition) +
         `{{${name}}}` +
@@ -115,9 +100,15 @@ export const Step3 = ({
         setIsSubjectFocused(false);
         return;
       }
-      const editor = quillRef.current.getEditor();
-      const cursorPosition = editor.getSelection().index;
-      editor.insertText(cursorPosition, `{{${name}}}`);
+      
+      const cursorPosition = document.getElementById("message").selectionStart;
+      const currentText = watch("message_body");
+      const newText =
+        currentText.slice(0, cursorPosition) +
+        `{{${name}}}` +
+        currentText.slice(cursorPosition);
+      setValue("message_body", newText);
+
     }
   };
 
@@ -131,6 +122,7 @@ export const Step3 = ({
       currentText.slice(cursorPosition);
     setValue("subject", newText);
   }
+
   useEffect(() => {
     setValue("message_body", valueMessage);
   }, [valueMessage]);
@@ -139,11 +131,6 @@ export const Step3 = ({
     setImage(URL.createObjectURL(e.target.files[0]));
     setValue("file", e.target.files[0]);
   };
-
-
-  const modules = configQuill().modules;
-
-  const formats = configQuill().formats;
 
   const variables = variablesStep3;
 
@@ -229,13 +216,10 @@ export const Step3 = ({
                         </button>
                       </div>
                     </div>
-                    <ReactQuill
-                      value={valueMessage}
-                      onChange={setValueMessage}
-                      modules={modules}
-                      formats={formats}
+                    <textarea
+                      id="message"
                       className={styles.containerText}
-                      ref={quillRef}
+                      {...register("message_body", { required: true })}
                     />
                     {errors[input.name] && (
                       <span className={styles.error}>{`El campo ${

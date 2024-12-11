@@ -151,6 +151,7 @@ export const Campaigns = () => {
     setSteps(2);
   };
   const onSubmitStep3 = (data) => {
+    console.log(data)
     setLoading(true);
     setDataCampaign([...dataCampaign, data]);
     const formData = new FormData();
@@ -282,13 +283,7 @@ export const Campaigns = () => {
           subject: data.subject,
           active: true,
         }; */
-        if (data.file && data.file instanceof File) {
-          formData.append("img", data.file);
-      } else {
-          console.error("El archivo no es válido");
-          setLoading(false);
-          return;
-      }
+        formData.append("img", data.file);
         formData.append("source", data.source);
         formData.append("account_balance_type", data.account_balance_type);
         formData.append("account_balance_value", data.account_balance_value);
@@ -324,7 +319,7 @@ export const Campaigns = () => {
         });
       return;
     }
-    createCampaign(formData)
+    /* createCampaign(formData)
       .then((response) => {
         setRefetch(!refetch);
       })
@@ -334,7 +329,7 @@ export const Campaigns = () => {
       .finally(() => {
         setLoading(false);
         setSteps(3);
-      });
+      }); */
   };
   const handleBackStep1 = () => {
     setSteps(0);
@@ -376,17 +371,8 @@ export const Campaigns = () => {
               if (key == "notify_the_co_debtor") {
                 value = value ? "true" : "false";
               }
-              /* if(key == "corporate_identity") {
-              console.log(value)
-              value = value.UUID;
-            } */
-              if (key == "message_body") {
-                setValue("message_body", value);
-                setValueMessage(value);
-              }
               setValue(key, value);
             });
-            console.log(getValues());
             setValue("source2", "importador");
             setSteps(0);
           })
@@ -607,8 +593,6 @@ export const Campaigns = () => {
           getValues={getValues}
           watch={watch}
           usersData={usersData}
-          valueMessage={valueMessage}
-          setValueMessage={setValueMessage}
         />
       )}
 
