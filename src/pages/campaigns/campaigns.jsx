@@ -87,8 +87,8 @@ export const Campaigns = () => {
         const updatedData = await Promise.all(
           response.data.map(async (item) => {
             item.id = item.UUID;
-            item.end_date = new Date(item.end_date).toLocaleDateString();
-            item.start_date = new Date(item.start_date).toLocaleDateString();
+            item.end_date = new Date(item.end_date).toISOString().split("T")[0];
+            item.start_date = new Date(item.start_date).toISOString().split("T")[0];
 
             // Obtener el sender de acuerdo al tipo de campaña
             if (item.campaign_type === "correo") {
@@ -151,7 +151,7 @@ export const Campaigns = () => {
     setSteps(2);
   };
   const onSubmitStep3 = (data) => {
-    console.log(data)
+    data.account_balance_value = data.account_balance_value.replace(/\D/g, "");
     setLoading(true);
     setDataCampaign([...dataCampaign, data]);
     const formData = new FormData();
@@ -466,8 +466,8 @@ export const Campaigns = () => {
                   );
                 }
                 if (
-                  input.name == "days_past_due_type" ||
-                  input.name == "account_balance_type"
+                  input.name == "days_past_due_type"
+                  
                 ) {
                   return (
                     <div
@@ -511,6 +511,84 @@ export const Campaigns = () => {
                               },
                             }
                           )}
+                        />
+                      </div>
+                      {errors[input.name] && (
+                        <span className={styles.error}>{`El campo ${
+                          errors[input.name].message
+                        } es requerido`}</span>
+                      )}
+                      {errors[
+                        input.name == "account_balance_type"
+                          ? `account_balance_value`
+                          : "days_past_due_value"
+                      ] && (
+                        <span className={styles.error}>{`El campo ${
+                          errors[
+                            input.name == "account_balance_type"
+                              ? `account_balance_value`
+                              : "days_past_due_value"
+                          ].message
+                        } es requerido`}</span>
+                      )}
+                    </div>
+                  );
+                }
+                if(input.name == "account_balance_type"){
+                  return (
+                    <div
+                      key={`${input.name}_${index}`}
+                      className={styles.formGroup}
+                    >
+                      <label htmlFor={input.name}>{input.label}</label>
+                      <div className={styles.containerInputs}>
+                        <select
+                          {...register(input.name, {
+                            required: {
+                              value: true,
+                              message: `${input.label}`,
+                            },
+                          })}
+                        >
+                          <option value="" disabled>
+                            {input.label}
+                          </option>
+                          {input?.options?.map((option, index) => (
+                            <option key={index} value={option.value}>
+                              {option.label}
+                            </option>
+                          ))}
+                        </select>
+                        <input
+                          type="text"
+                          placeholder={
+                            input.name == "days_past_due_type"
+                              ? "Número de días"
+                              : "Valor"
+                          }
+                          {...register(
+                            input.name == "account_balance_type"
+                              ? `account_balance_value`
+                              : "days_past_due_value",
+                            {
+                              required: {
+                                value: true,
+                                message: `${input.label}`,
+                              },
+                            }
+                          )}
+                          onChange={(e) => {
+                            const rawValue = e.target.value.replace(/\D/g, ""); // Elimina caracteres no numéricos
+                            const formattedValue = new Intl.NumberFormat("es-CO", {
+                              style: "currency",
+                              currency: "COP",
+                              maximumFractionDigits: 0, // Para COP no usamos decimales
+                            }).format(rawValue);
+
+                            // Actualiza el valor del input con el formato
+                            e.target.value = formattedValue;
+                          }
+                          }
                         />
                       </div>
                       {errors[input.name] && (
