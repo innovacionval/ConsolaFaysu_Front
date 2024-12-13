@@ -184,7 +184,10 @@ export const Campaigns = () => {
             (day) => daysPeriodicity[day]
           ),
         }; */
-        formData.append("img", data.file);
+        if (data.file && data.file instanceof File) {
+          formData.append("img", data.file);
+      }
+          
         formData.append("source", data.source);
         formData.append("account_balance_type", data.account_balance_type);
         formData.append("account_balance_value", data.account_balance_value);
@@ -236,7 +239,9 @@ export const Campaigns = () => {
           active: true,
           month: data.periodicityMonth,
         }; */
-        formData.append("img", data.file);
+        if (data.file && data.file instanceof File) {
+          formData.append("img", data.file);
+      }
         formData.append("source", data.source);
         formData.append("account_balance_type", data.account_balance_type);
         formData.append("account_balance_value", data.account_balance_value);
@@ -283,7 +288,9 @@ export const Campaigns = () => {
           subject: data.subject,
           active: true,
         }; */
-        formData.append("img", data.file);
+        if (data.file && data.file instanceof File) {
+          formData.append("img", data.file);
+      }
         formData.append("source", data.source);
         formData.append("account_balance_type", data.account_balance_type);
         formData.append("account_balance_value", data.account_balance_value);
