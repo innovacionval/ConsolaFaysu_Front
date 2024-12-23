@@ -11,6 +11,7 @@ import { CorporateEntity } from '@/pages/configuration/corporateEntity/corporate
 import { ImportData } from '@/pages/configuration/importData/importData'
 import { Clients } from '@/pages/configuration/clients/clients'
 import { Senders } from '@/pages/configuration/sender/sender'
+import { VerifyEmail } from '@/pages/verifyEmail/VerifyEmail'
 
 function App() {
 
@@ -34,7 +35,11 @@ const { isLogged } = useContext(AuthContext)
             <Route path="campaigns" element={<Campaigns />} />
           </Route>
         ) : (
-          <Route path="/*" element={<Login />} />
+          <>
+            <Route path="/*" element={<Login />} />
+            <Route path="password" element={<VerifyEmail />} />
+            <Route path="resetPassword" element={<VerifyEmail />} />
+          </>
         )}
       </Routes>
     </BrowserRouter>

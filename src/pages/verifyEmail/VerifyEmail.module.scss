@@ -1,0 +1,49 @@
+@import '@/styles/colors.scss';
+
+.containerCard{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+
+    .card{
+        width: 400px;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        background-color: #fff;
+        text-align: center;
+
+        form{
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 10px;
+
+        }
+
+        h2{
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+
+        input {
+          border-radius: 20px;
+          border: 1px solid #ccc;
+          padding: 5px 10px;
+          font-size: larger;
+          width: 100%;
+        }
+
+        button{
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: $primary;
+            color: #fff;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+    }
+}

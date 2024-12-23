@@ -31,6 +31,9 @@ export const Table = ({ labels, data, actions }) => {
                       </td>
                     );
                   }
+                  if (key == "logo"){
+                    return <td key={i}><img src={item[key]} alt="logo" className={styles.logo} width={100}/></td>
+                  }
                   return <td key={i}>{item[key]}</td>; // Para los otros campos
                 }
 

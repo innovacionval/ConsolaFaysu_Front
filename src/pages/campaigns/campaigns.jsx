@@ -78,7 +78,7 @@ export const Campaigns = () => {
           })
       );
     });
-  }, []);
+  }, [refetch]);
 
   useEffect(() => {
     setLoading(true);

@@ -30,7 +30,7 @@ export const resetPassword = async (credentials) => {
     return response.data;
 }
 
-/* export const userActivation = async (token) => {
-    const response = await axiosInstanceBearer.post(`/users/activation/${token}`);
+export const userActivation = async (data) => {
+    const response = await axiosInstanceBearer.post(`/users/`, data);
     return response.data;
-} */
+}
