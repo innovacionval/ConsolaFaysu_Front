@@ -188,8 +188,8 @@ export const ImportData = () => {
   };
   const downloadPlantilla = () => {
     const url = import.meta.env.DEV
-      ? "/campañas-faysu.xlsx"
-      : "/ConsolaFaysu_Front/campañas-faysu.xlsx";
+      ? "/campanas-faysu.xlsx"
+      : "/ConsolaFaysu_Front/campanas-faysu.xlsx";
     window.open(url, "_blank");
   };
 
