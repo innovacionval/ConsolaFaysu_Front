@@ -150,8 +150,25 @@ export const Campaigns = () => {
     setDataForm([...dataCampaign, data]);
     setSteps(2);
   };
+  function formatDateInputToISOWithTimezone(inputDateValue) {
+    const date = new Date(`${inputDateValue}T00:00:00`); 
+  
+    const timezoneOffset = date.getTimezoneOffset();
+  
+    const offsetHours = Math.abs(Math.floor(timezoneOffset / 60)).toString().padStart(2, '0');
+    const offsetMinutes = Math.abs(timezoneOffset % 60).toString().padStart(2, '0');
+    const timezoneSign = timezoneOffset > 0 ? '-' : '+';
+    const timezoneString = `${timezoneSign}${offsetHours}:${offsetMinutes}`;
+  
+    const isoDate = date.toISOString().split('.')[0]; 
+  
+    return `${isoDate}${timezoneString}`;
+  }
   const onSubmitStep3 = (data) => {
     data.account_balance_value = data.account_balance_value.replace(/\D/g, "");
+    data.start_date = formatDateInputToISOWithTimezone(data.start_date);
+    data.end_date = formatDateInputToISOWithTimezone(data.end_date);
+    console.log(data.start_date)
     setLoading(true);
     setDataCampaign([...dataCampaign, data]);
     const formData = new FormData();
@@ -326,7 +343,7 @@ export const Campaigns = () => {
         });
       return;
     }
-    createCampaign(formData)
+    /* createCampaign(formData)
       .then((response) => {
         setRefetch(!refetch);
       })
@@ -336,7 +353,7 @@ export const Campaigns = () => {
       .finally(() => {
         setLoading(false);
         setSteps(3);
-      });
+      }); */
   };
   const handleBackStep1 = () => {
     setSteps(0);
