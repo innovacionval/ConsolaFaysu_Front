@@ -343,7 +343,7 @@ export const Campaigns = () => {
         });
       return;
     }
-    /* createCampaign(formData)
+    createCampaign(formData)
       .then((response) => {
         setRefetch(!refetch);
       })
@@ -353,7 +353,7 @@ export const Campaigns = () => {
       .finally(() => {
         setLoading(false);
         setSteps(3);
-      }); */
+      });
   };
   const handleBackStep1 = () => {
     setSteps(0);
