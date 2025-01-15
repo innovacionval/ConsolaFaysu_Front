@@ -254,14 +254,6 @@ export const Step3 = ({
                 ) : (
                   <div className={styles.containerSMS}>
                     <h3 className={styles.titleSMS}>Ingresa el texto</h3>
-                    <select type="text" placeholder="Remitente" >
-                      <option value="Remitente">Remitente</option>
-                      {usersData.map((user, index) => (
-                        <option key={`${user.id}_${index}`} value={user.id}>
-                          {user.phone}
-                        </option>
-                      ))}
-                    </select>
                     <textarea
                       id="message"
                       className={styles.textAreaSMS}
@@ -287,6 +279,7 @@ export const Step3 = ({
                       )}
                       <button
                         className={styles.btnVariables}
+                        type="button"
                         onClick={() => setOpenVariables(!openVariables)}
                       >
                         <FaStar />

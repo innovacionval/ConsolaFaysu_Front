@@ -83,6 +83,7 @@ export const Campaigns = () => {
     });
   }, [refetch]);
 
+
   useEffect(() => {
     setLoading(true);
     getAllCampaigns(page)
@@ -97,13 +98,18 @@ export const Campaigns = () => {
             item.start_date = new Date(item.start_date)
               .toISOString()
               .split("T")[0];
+              if(item.sender == null) {
+                return item;
+              }
 
             // Obtener el sender de acuerdo al tipo de campaña
             if (item.campaign_type === "correo") {
-              const emailResponse = await getSenderEmailById(item.sender.UUID);
+              
+              const emailResponse = await getSenderEmailById(item?.sender?.UUID);
               item.sender = emailResponse.data.sender_email;
             } else {
-              const phoneResponse = await getSenderEmailById(item.sender.UUID);
+              const phoneResponse = await getSenderEmailById(item?.sender
+                ?.UUID);
               item.sender = phoneResponse.data.phone;
             }
 
@@ -179,6 +185,7 @@ export const Campaigns = () => {
     data.account_balance_value = data.account_balance_value.replace(/\D/g, "");
     data.start_date = formatDateInputToISOWithTimezone(data.start_date);
     data.end_date = formatDateInputToISOWithTimezone(data.end_date);
+    const selectedDays = Object.keys(daysPeriodicity).filter((day) => daysPeriodicity[day])
     setLoading(true);
     setDataCampaign([...dataCampaign, data]);
     const formData = new FormData();
@@ -233,10 +240,9 @@ export const Campaigns = () => {
         formData.append("sender", data.sender);
         formData.append("subject", data.subject);
         formData.append("active", true);
-        formData.append(
-          "week_days",
-          Object.keys(daysPeriodicity).filter((day) => daysPeriodicity[day])
-        );
+        selectedDays.map((day) => {
+          formData.append("week_days", day);
+        });
 
         break;
       case "year":
@@ -360,6 +366,7 @@ export const Campaigns = () => {
       })
       .finally(() => {
         setLoading(false);
+        setImage(null);
         setSteps(3);
       });
   };
