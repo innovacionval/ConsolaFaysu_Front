@@ -17,6 +17,7 @@ import {
 import {
   createCampaign,
   getAllCampaigns,
+  getAllCampaignsByFilter,
   getCampaignById,
   updateCampaign,
 } from "@/services/campaign.service";
@@ -86,11 +87,11 @@ export const Campaigns = () => {
     setLoading(true);
     getAllCampaigns(page)
       .then(async (response) => {
-        const orderResponse = response.data.sort((a, b) => {
+        /* const orderResponse = response.data.sort((a, b) => {
           new Date(a.created).getTime() - new Date(b.created).getTime();
-        });
+        }); */
         const updatedData = await Promise.all(
-          orderResponse.map(async (item) => {
+          response.data.map(async (item) => {
             item.id = item.UUID;
             item.end_date = new Date(item.end_date).toISOString().split("T")[0];
             item.start_date = new Date(item.start_date)
@@ -442,19 +443,33 @@ export const Campaigns = () => {
   ];
   const handleChange = (e) => {
     setSearch(e.target.value);
-    const filtered = dataCampaign.filter(
-      (item) =>
-        item.name_campaign
-          .toLowerCase()
-          .includes(e.target.value.toLowerCase()) ||
-        item.sender.toLowerCase().includes(e.target.value.toLowerCase()) ||
-        item.end_date.toLowerCase().includes(e.target.value.toLowerCase()) ||
-        item.campaign_type.toLowerCase().includes(e.target.value.toLowerCase())
-    );
+    const filtered = async () => {
+      const response = await getAllCampaignsByFilter(e.target.value);
+      const updatedData = await Promise.all(
+        response.data.map(async (item) => {
+          item.id = item.UUID;
+          item.end_date = new Date(item.end_date)
+            .toISOString()
+            .split("T")[0];
+          item.start_date = new Date(item.start_date)
+            .toISOString()
+            .split("T")[0];
+        if(item.campaign_type == "correo") {
+          const emailResponse = await getSenderEmailById(item.sender.UUID);
+          item.sender = emailResponse.data.sender_email;
+        } else {
+          const phoneResponse = await getSenderEmailById(item.sender.UUID);
+          item.sender = phoneResponse.data.phone;
+        }
+          return item;
+        })
+      );
+      setDataSearch(updatedData);
+    };
     if (e.target.value.length == 0) {
       setDataSearch(dataCampaign);
     } else {
-      setDataSearch(filtered);
+      filtered();
     }
   };
 
