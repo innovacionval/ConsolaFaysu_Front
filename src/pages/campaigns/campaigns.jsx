@@ -84,8 +84,12 @@ export const Campaigns = () => {
     setLoading(true);
     getAllCampaigns(page)
       .then(async (response) => {
+        const orderResponse = response.data.sort((a, b) => {
+          new Date(a.created).getTime() - new Date(b.created).getTime();
+        });
         const updatedData = await Promise.all(
-          response.data.map(async (item) => {
+          
+          orderResponse.map(async (item) => {
             item.id = item.UUID;
             item.end_date = new Date(item.end_date).toISOString().split("T")[0];
             item.start_date = new Date(item.start_date).toISOString().split("T")[0];
@@ -168,7 +172,8 @@ export const Campaigns = () => {
     data.account_balance_value = data.account_balance_value.replace(/\D/g, "");
     data.start_date = formatDateInputToISOWithTimezone(data.start_date);
     data.end_date = formatDateInputToISOWithTimezone(data.end_date);
-    console.log(data.start_date)
+    console.log(data.start_date);
+    console.log(data.end_date);
     setLoading(true);
     setDataCampaign([...dataCampaign, data]);
     const formData = new FormData();
@@ -185,7 +190,7 @@ export const Campaigns = () => {
           name_campaign: data.name_campaign,
           notify_the_co_debtor: data.notify_the_co_debtor,
           start_date: new Date(data.start_date).toISOString(),
-          end_date: new Date(data.end_date).toISOString(),
+          end_date: data.end_date,
           is_recurring: true,
           repetition_type: data.repetition_type,
           interval: data.interval,
@@ -204,7 +209,6 @@ export const Campaigns = () => {
         if (data.file && data.file instanceof File) {
           formData.append("img", data.file);
       }
-          
         formData.append("source", data.source);
         formData.append("account_balance_type", data.account_balance_type);
         formData.append("account_balance_value", data.account_balance_value);
@@ -212,8 +216,8 @@ export const Campaigns = () => {
         formData.append("days_past_due_value", data.days_past_due_value);
         formData.append("name_campaign", data.name_campaign);
         formData.append("notify_the_co_debtor", data.notify_the_co_debtor);
-        formData.append("start_date", new Date(data.start_date).toISOString());
-        formData.append("end_date", new Date(data.end_date).toISOString());
+        formData.append("start_date", data.start_date);
+        formData.append("end_date", data.end_date);
         formData.append("is_recurring", true);
         formData.append("repetition_type", data.repetition_type);
         formData.append("interval", data.interval);
@@ -242,7 +246,7 @@ export const Campaigns = () => {
           name_campaign: data.name_campaign,
           notify_the_co_debtor: data.notify_the_co_debtor,
           start_date: new Date(data.start_date).toISOString(),
-          end_date: new Date(data.end_date).toISOString(),
+          end_date: data.end_date,
           is_recurring: true,
           repetition_type: data.repetition_type,
           interval: data.interval,
@@ -266,8 +270,8 @@ export const Campaigns = () => {
         formData.append("days_past_due_value", data.days_past_due_value);
         formData.append("name_campaign", data.name_campaign);
         formData.append("notify_the_co_debtor", data.notify_the_co_debtor);
-        formData.append("start_date", new Date(data.start_date).toISOString());
-        formData.append("end_date", new Date(data.end_date).toISOString());
+        formData.append("start_date", data.start_date);
+        formData.append("end_date", data.end_date);
         formData.append("is_recurring", true);
         formData.append("repetition_type", data.repetition_type);
         formData.append("interval", data.interval);
@@ -291,8 +295,8 @@ export const Campaigns = () => {
           days_past_due_value: data.days_past_due_value,
           name_campaign: data.name_campaign,
           notify_the_co_debtor: data.notify_the_co_debtor,
-          start_date: new Date(data.start_date).toISOString(),
-          end_date: new Date(data.end_date).toISOString(),
+          start_date: data.start_date,
+          end_date: data.end_date,
           is_recurring: true,
           repetition_type: data.repetition_type,
           interval: data.interval,
@@ -315,8 +319,8 @@ export const Campaigns = () => {
         formData.append("days_past_due_value", data.days_past_due_value);
         formData.append("name_campaign", data.name_campaign);
         formData.append("notify_the_co_debtor", data.notify_the_co_debtor);
-        formData.append("start_date", new Date(data.start_date).toISOString());
-        formData.append("end_date", new Date(data.end_date).toISOString());
+        formData.append("start_date", data.start_date);
+        formData.append("end_date", data.end_date);
         formData.append("is_recurring", true);
         formData.append("repetition_type", data.repetition_type);
         formData.append("interval", data.interval);
@@ -330,7 +334,7 @@ export const Campaigns = () => {
         formData.append("active", true);
     }
     if (isEdit) {
-      updateCampaign(idEdit, fixData)
+      updateCampaign(idEdit, formData)
         .then((response) => {
           setRefetch(!refetch);
         })
@@ -388,6 +392,7 @@ export const Campaigns = () => {
         setIdEdit(id);
         getCampaignById(id)
           .then((response) => {
+            console.log(response)
             Object.entries(response.data).map(([key, value]) => {
               if (key == "start_date" || key == "end_date") {
                 value = new Date(value).toISOString().split("T")[0];

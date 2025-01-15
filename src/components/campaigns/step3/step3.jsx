@@ -66,15 +66,26 @@ export const Step3 = ({
     setValue("file", "");
   };
   const subjectElement = document.getElementById("subject");
+  const messageElement = document.getElementById("message");
 
   useEffect(() => {
     const handleMouseOver = () => {
       setIsSubjectFocused(true);
     };
+
+    const handleMouseOverMessage = () => {
+      setIsSubjectFocused(false);
+    };
+
+    
   
 
     if (subjectElement) {
       subjectElement.addEventListener("focus", handleMouseOver);
+    }
+
+    if (messageElement) {
+      messageElement.addEventListener("focus", handleMouseOverMessage);
     }
   
     // Cleanup the event listeners when the component unmounts
@@ -82,10 +93,16 @@ export const Step3 = ({
       if (subjectElement) {
         subjectElement.removeEventListener("focus", handleMouseOver);
       }
+      if (messageElement) {
+        messageElement.removeEventListener("focus", handleMouseOverMessage);
+      }
     };
   }, [subjectElement]);
   
+
+  
   const handleChangeVariables = (e, name) => {
+    setIsSubjectFocused(false);
     if (selectedOption !== "correo") {
       const cursorPosition = document.getElementById("message").selectionStart;
       const currentText = watch("message_body");
@@ -96,8 +113,8 @@ export const Step3 = ({
       setValue("message_body", newText);
     } else {
       if (isSubjectFocused) {
+        console.log('entro')
         handleChangeVariablesOnSubject(e, name);
-        setIsSubjectFocused(false);
         return;
       }
       
@@ -121,11 +138,8 @@ export const Step3 = ({
       `{{${name}}}` +
       currentText.slice(cursorPosition);
     setValue("subject", newText);
+    setIsSubjectFocused(false);
   }
-
-  useEffect(() => {
-    setValue("message_body", valueMessage);
-  }, [valueMessage]);
 
   const onChangeFile = (e) => {
     setImage(URL.createObjectURL(e.target.files[0]));

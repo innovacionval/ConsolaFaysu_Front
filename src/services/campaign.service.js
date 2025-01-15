@@ -16,7 +16,7 @@ export const createCampaign = async (campaign) => {
 }
 
 export const updateCampaign = async (id, campaign) => {
-    const response = await axiosInstanceBearer.patch(`/campaign/${id}`, campaign);
+    const response = await axiosInstanceFormData.patch(`/campaign/${id}`, campaign);
     return response.data;
 }
 
