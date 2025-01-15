@@ -56,6 +56,8 @@ export const Campaigns = () => {
   const [usersData, setUsersData] = useState([]);
   const [isEdit, setIsEdit] = useState(false);
   const [idEdit, setIdEdit] = useState(null);
+  const [image, setImage] = useState(null);
+  const [registerSelected, setRegisterSelected] = useState(null);
   const watchSource = watch("source2");
   const watchImport = watch("source");
 
@@ -88,11 +90,12 @@ export const Campaigns = () => {
           new Date(a.created).getTime() - new Date(b.created).getTime();
         });
         const updatedData = await Promise.all(
-          
           orderResponse.map(async (item) => {
             item.id = item.UUID;
             item.end_date = new Date(item.end_date).toISOString().split("T")[0];
-            item.start_date = new Date(item.start_date).toISOString().split("T")[0];
+            item.start_date = new Date(item.start_date)
+              .toISOString()
+              .split("T")[0];
 
             // Obtener el sender de acuerdo al tipo de campaña
             if (item.campaign_type === "correo") {
@@ -110,7 +113,7 @@ export const Campaigns = () => {
         setDataCampaign(updatedData); // Establecer la nueva data en el estado
         setDataSearch(updatedData); // Establecer la nueva data en el estado
 
-        setPagination(response.paging)
+        setPagination(response.paging);
       })
       .catch((error) => {
         console.log(error);
@@ -122,12 +125,11 @@ export const Campaigns = () => {
     });
 
     getAllSenderEmails()
-      .then((response) => {
-      })
+      .then((response) => {})
       .catch((error) => {
         console.log(error);
       });
-  }, [page,refetch]);
+  }, [page, refetch]);
 
   useEffect(() => {
     if (!watchImport) return;
@@ -155,29 +157,30 @@ export const Campaigns = () => {
     setSteps(2);
   };
   function formatDateInputToISOWithTimezone(inputDateValue) {
-    const date = new Date(`${inputDateValue}T00:00:00`); 
-  
+    const date = new Date(`${inputDateValue}T00:00:00`);
+
     const timezoneOffset = date.getTimezoneOffset();
-  
-    const offsetHours = Math.abs(Math.floor(timezoneOffset / 60)).toString().padStart(2, '0');
-    const offsetMinutes = Math.abs(timezoneOffset % 60).toString().padStart(2, '0');
-    const timezoneSign = timezoneOffset > 0 ? '-' : '+';
+
+    const offsetHours = Math.abs(Math.floor(timezoneOffset / 60))
+      .toString()
+      .padStart(2, "0");
+    const offsetMinutes = Math.abs(timezoneOffset % 60)
+      .toString()
+      .padStart(2, "0");
+    const timezoneSign = timezoneOffset > 0 ? "-" : "+";
     const timezoneString = `${timezoneSign}${offsetHours}:${offsetMinutes}`;
-  
-    const isoDate = date.toISOString().split('.')[0]; 
-  
+
+    const isoDate = date.toISOString().split(".")[0];
+
     return `${isoDate}${timezoneString}`;
   }
   const onSubmitStep3 = (data) => {
     data.account_balance_value = data.account_balance_value.replace(/\D/g, "");
     data.start_date = formatDateInputToISOWithTimezone(data.start_date);
     data.end_date = formatDateInputToISOWithTimezone(data.end_date);
-    console.log(data.start_date);
-    console.log(data.end_date);
     setLoading(true);
     setDataCampaign([...dataCampaign, data]);
     const formData = new FormData();
-    let fixData = {};
     switch (data.repetition_type) {
       case "week":
         /* fixData = {
@@ -208,7 +211,7 @@ export const Campaigns = () => {
         }; */
         if (data.file && data.file instanceof File) {
           formData.append("img", data.file);
-      }
+        }
         formData.append("source", data.source);
         formData.append("account_balance_type", data.account_balance_type);
         formData.append("account_balance_value", data.account_balance_value);
@@ -262,7 +265,7 @@ export const Campaigns = () => {
         }; */
         if (data.file && data.file instanceof File) {
           formData.append("img", data.file);
-      }
+        }
         formData.append("source", data.source);
         formData.append("account_balance_type", data.account_balance_type);
         formData.append("account_balance_value", data.account_balance_value);
@@ -311,7 +314,7 @@ export const Campaigns = () => {
         }; */
         if (data.file && data.file instanceof File) {
           formData.append("img", data.file);
-      }
+        }
         formData.append("source", data.source);
         formData.append("account_balance_type", data.account_balance_type);
         formData.append("account_balance_value", data.account_balance_value);
@@ -392,13 +395,36 @@ export const Campaigns = () => {
         setIdEdit(id);
         getCampaignById(id)
           .then((response) => {
-            console.log(response)
+            setRegisterSelected(response.data);
             Object.entries(response.data).map(([key, value]) => {
               if (key == "start_date" || key == "end_date") {
                 value = new Date(value).toISOString().split("T")[0];
               }
               if (key == "notify_the_co_debtor") {
                 value = value ? "true" : "false";
+              }
+              if(key == "account_balance_value") {
+                value = new Intl.NumberFormat("es-CO", {
+                  style: "currency",
+                  currency: "COP",
+                  maximumFractionDigits: 0,
+                }).format(value);
+              }
+
+              if (key == "week_days") {
+                value.map((day) => {
+                  setDaysPeriodicity((prev) => {
+                    return {
+                      ...prev,
+                      [day]: true,
+                    };
+                  });
+                });
+              }
+              if (key == "img") {
+                if (value) {
+                  setImage(`https://faysu.valcredit.co:8005${value}`);
+                }
               }
               setValue(key, value);
             });
@@ -416,12 +442,14 @@ export const Campaigns = () => {
   ];
   const handleChange = (e) => {
     setSearch(e.target.value);
-    const filtered = dataCampaign.filter((item) =>
-      item.name_campaign.toLowerCase().includes(e.target.value.toLowerCase())
-    || item.sender.toLowerCase().includes(e.target.value.toLowerCase())
-    || item.end_date.toLowerCase().includes(e.target.value.toLowerCase())
-    || item.campaign_type.toLowerCase().includes(e.target.value.toLowerCase())
-
+    const filtered = dataCampaign.filter(
+      (item) =>
+        item.name_campaign
+          .toLowerCase()
+          .includes(e.target.value.toLowerCase()) ||
+        item.sender.toLowerCase().includes(e.target.value.toLowerCase()) ||
+        item.end_date.toLowerCase().includes(e.target.value.toLowerCase()) ||
+        item.campaign_type.toLowerCase().includes(e.target.value.toLowerCase())
     );
     if (e.target.value.length == 0) {
       setDataSearch(dataCampaign);
@@ -487,10 +515,7 @@ export const Campaigns = () => {
                     </div>
                   );
                 }
-                if (
-                  input.name == "days_past_due_type"
-                  
-                ) {
+                if (input.name == "days_past_due_type") {
                   return (
                     <div
                       key={`${input.name}_${index}`}
@@ -556,7 +581,7 @@ export const Campaigns = () => {
                     </div>
                   );
                 }
-                if(input.name == "account_balance_type"){
+                if (input.name == "account_balance_type") {
                   return (
                     <div
                       key={`${input.name}_${index}`}
@@ -600,17 +625,20 @@ export const Campaigns = () => {
                             }
                           )}
                           onChange={(e) => {
+                            
                             const rawValue = e.target.value.replace(/\D/g, ""); // Elimina caracteres no numéricos
-                            const formattedValue = new Intl.NumberFormat("es-CO", {
-                              style: "currency",
-                              currency: "COP",
-                              maximumFractionDigits: 0, // Para COP no usamos decimales
-                            }).format(rawValue);
+                            const formattedValue = new Intl.NumberFormat(
+                              "es-CO",
+                              {
+                                style: "currency",
+                                currency: "COP",
+                                maximumFractionDigits: 0, // Para COP no usamos decimales
+                              }
+                            ).format(rawValue);
 
                             // Actualiza el valor del input con el formato
                             e.target.value = formattedValue;
-                          }
-                          }
+                          }}
                         />
                       </div>
                       {errors[input.name] && (
@@ -691,6 +719,8 @@ export const Campaigns = () => {
       )}
       {steps == 2 && (
         <Step3
+          image={image}
+          setImage={setImage}
           handleSubmit={handleSubmit}
           register={register}
           errors={errors}
@@ -720,14 +750,14 @@ export const Campaigns = () => {
               Nuevo
             </button>
           </div>
-          <Table
-            labels={labelsCampaign}
-            data={dataSearch}
-            actions={actions}
-          />
+          <Table labels={labelsCampaign} data={dataSearch} actions={actions} />
           <div className={styles.pagination}>
-        <Pagination total={pagination?.count} page={page} setPage={setPage} />
-      </div>
+            <Pagination
+              total={pagination?.count}
+              page={page}
+              setPage={setPage}
+            />
+          </div>
         </>
       )}
     </div>

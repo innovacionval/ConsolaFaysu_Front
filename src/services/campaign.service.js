@@ -1,7 +1,12 @@
 import { axiosInstanceBearer, axiosInstanceFormData } from "./instances";
 
-export const getAllCampaigns = async (page) => {
+export const getAllCampaigns = async (page,) => {
     const response = await axiosInstanceBearer.get(`${page != 1 && page ? `/campaign/?page=${page}` : "/campaign/"}`);
+    return response.data;
+}
+
+export const getAllCampaignsByFilter = async (filter) => {
+    const response = await axiosInstanceBearer.get(`/campaign?$filter=name_campaign=${filter}`);
     return response.data;
 }
 

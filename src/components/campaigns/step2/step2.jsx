@@ -26,7 +26,7 @@ export const Step2 = ({
     });
   };
   const watchs = watch("corporate_identity");
-  console.log(watchs)
+
 
   return (
     <>

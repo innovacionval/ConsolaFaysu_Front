@@ -16,12 +16,14 @@ export const Step3 = ({
   watch,
   usersData,
   valueMessage,
+  image,
+  setImage
 }) => {
   
   const [selectedOption, setSelectedOption] = useState("correo");
   const [openVariables, setOpenVariables] = useState(false);
   const [isSubjectFocused, setIsSubjectFocused] = useState(false);
-  const [image, setImage] = useState(null);
+  const [errorFile, setErrorFile] = useState(false);
   const maxLength = 300;
   const message = watch("message_body");
 
@@ -113,7 +115,6 @@ export const Step3 = ({
       setValue("message_body", newText);
     } else {
       if (isSubjectFocused) {
-        console.log('entro')
         handleChangeVariablesOnSubject(e, name);
         return;
       }
@@ -142,6 +143,14 @@ export const Step3 = ({
   }
 
   const onChangeFile = (e) => {
+    const maxSize = 2 * 1024 * 1024
+    if(e.target.files[0].size > maxSize){
+      setErrorFile(true)
+      return
+    }
+    else{
+      setErrorFile(false)
+    }
     setImage(URL.createObjectURL(e.target.files[0]));
     setValue("file", e.target.files[0]);
   };
@@ -182,7 +191,7 @@ export const Step3 = ({
                 {selectedOption == "correo" ? (
                   <>
                     <div className={styles.containerInput}>
-                      <div >
+                      <div className={styles.containerRemitente}>
                         <select type="text" placeholder="Remitente" {...register("sender",{ required: true})}>
                           <option value="" disabled>Remitente</option>
                           {usersData.map((user, index) => (
@@ -207,6 +216,7 @@ export const Step3 = ({
                           accept="image/*"
                           onChange={onChangeFile}
                         />
+                        {errorFile && <span className={styles.error}>El archivo no debe superar los 2MB</span>}
                         <label htmlFor="file">
                           <FaPaperclip />
                           Cargar imagen
