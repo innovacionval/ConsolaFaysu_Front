@@ -19,8 +19,8 @@ const { isLogged } = useContext(AuthContext)
 
 
   return (
-    //<BrowserRouter basename={import.meta.env.DEV ? '/' : '/ConsolaFaysu_Front/'}>
-    <BrowserRouter basename={import.meta.env.DEV ? '/' : '/'}>
+    <BrowserRouter basename={import.meta.env.DEV ? '/' : '/ConsolaFaysu_Front/'}>
+    {/* <BrowserRouter basename={import.meta.env.DEV ? '/' : '/'}> */}
       <Routes>
         {isLogged ? (
           <Route path="/" element={<Layout />}>
