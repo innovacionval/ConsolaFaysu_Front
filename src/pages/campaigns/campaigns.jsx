@@ -240,9 +240,7 @@ export const Campaigns = () => {
         formData.append("sender", data.sender);
         formData.append("subject", data.subject);
         formData.append("active", true);
-        selectedDays.map((day) => {
-          formData.append("week_days", day);
-        });
+        formData.append("week_days", selectedDays);
 
         break;
       case "year":
