@@ -244,6 +244,22 @@ export const Step3 = ({
                       id="message"
                       className={styles.containerText}
                       {...register("message_body", { required: true })}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault(); // Prevenir el comportamiento predeterminado del Enter
+                          const textarea = e.target;
+                          const value = textarea.value;
+                          const cursorPosition = textarea.selectionStart; // Posición del cursor
+                          const newValue =
+                            value.substring(0, cursorPosition) + '\n ' + value.substring(cursorPosition);
+                    
+                          // Actualizar el valor del campo con el salto de línea
+                          textarea.value = newValue;
+                    
+                          // Opcional: Mover el cursor después del salto de línea
+                          textarea.selectionStart = textarea.selectionEnd = cursorPosition + 1;
+                        }
+                      }}
                     />
                     {errors[input.name] && (
                       <span className={styles.error}>{`El campo ${
@@ -258,6 +274,22 @@ export const Step3 = ({
                       id="message"
                       className={styles.textAreaSMS}
                       {...register("message_body", { required: true })}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault(); // Prevenir el comportamiento predeterminado del Enter
+                          const textarea = e.target;
+                          const value = textarea.value;
+                          const cursorPosition = textarea.selectionStart; // Posición del cursor
+                          const newValue =
+                            value.substring(0, cursorPosition) + '\n ' + value.substring(cursorPosition);
+                    
+                          // Actualizar el valor del campo con el salto de línea
+                          textarea.value = newValue;
+                    
+                          // Opcional: Mover el cursor después del salto de línea
+                          textarea.selectionStart = textarea.selectionEnd = cursorPosition + 1;
+                        }
+                      }}
                     />
                     <p>{`${
                       message?.length == undefined ? 0 : message.length
