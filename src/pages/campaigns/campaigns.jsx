@@ -215,7 +215,9 @@ export const Campaigns = () => {
         formData.append("sender", data.sender);
         formData.append("subject", data.subject);
         formData.append("active", true);
-        formData.append("week_days", selectedDays);
+        selectedDays.map((day) => {
+          formData.append("week_days", day);
+        });
 
         break;
       case "year":
