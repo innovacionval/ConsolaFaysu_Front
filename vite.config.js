@@ -24,7 +24,7 @@ export default defineConfig(({ command }) => {
     base: "/",
   };
   if (command != "serve") {
-    config.base = "/ConsolaFaysu_Front/";
+    config.base = "/faysu/";
     //config.base = "/";
   }
   return config;
