@@ -191,32 +191,6 @@ export const Campaigns = () => {
     const formData = new FormData();
     switch (data.repetition_type) {
       case "week":
-        /* fixData = {
-          img: data.file,
-          source: data.source,
-          account_balance_type: data.account_balance_type,
-          account_balance_value: data.account_balance_value,
-          days_past_due_type: data.days_past_due_type,
-          days_past_due_value: data.days_past_due_value,
-          name_campaign: data.name_campaign,
-          notify_the_co_debtor: data.notify_the_co_debtor,
-          start_date: new Date(data.start_date).toISOString(),
-          end_date: data.end_date,
-          is_recurring: true,
-          repetition_type: data.repetition_type,
-          interval: data.interval,
-          end_recurrence: data.end_date,
-          send_time: data.send_time,
-          corporate_identity: data.corporate_identity,
-          campaign_type: data.campaign_type,
-          message_body: data.message_body,
-          sender: data.sender,
-          subject: data.subject,
-          active: true,
-          week_days: Object.keys(daysPeriodicity).filter(
-            (day) => daysPeriodicity[day]
-          ),
-        }; */
         if (data.file && data.file instanceof File) {
           formData.append("img", data.file);
         }
@@ -244,30 +218,6 @@ export const Campaigns = () => {
 
         break;
       case "year":
-        /* fixData = {
-          img: data.file,
-          source: data.source,
-          account_balance_type: data.account_balance_type,
-          account_balance_value: data.account_balance_value,
-          days_past_due_type: data.days_past_due_type,
-          days_past_due_value: data.days_past_due_value,
-          name_campaign: data.name_campaign,
-          notify_the_co_debtor: data.notify_the_co_debtor,
-          start_date: new Date(data.start_date).toISOString(),
-          end_date: data.end_date,
-          is_recurring: true,
-          repetition_type: data.repetition_type,
-          interval: data.interval,
-          end_recurrence: data.end_date,
-          send_time: data.send_time,
-          corporate_identity: data.corporate_identity,
-          campaign_type: data.campaign_type,
-          message_body: data.message_body,
-          sender: data.sender,
-          subject: data.subject,
-          active: true,
-          month: data.periodicityMonth,
-        }; */
         if (data.file && data.file instanceof File) {
           formData.append("img", data.file);
         }
@@ -294,29 +244,6 @@ export const Campaigns = () => {
         formData.append("month", data.periodicityMonth);
         break;
       default:
-        /* fixData = {
-          img: data.file,
-          source: data.source,
-          account_balance_type: data.account_balance_type,
-          account_balance_value: data.account_balance_value,
-          days_past_due_type: data.days_past_due_type,
-          days_past_due_value: data.days_past_due_value,
-          name_campaign: data.name_campaign,
-          notify_the_co_debtor: data.notify_the_co_debtor,
-          start_date: data.start_date,
-          end_date: data.end_date,
-          is_recurring: true,
-          repetition_type: data.repetition_type,
-          interval: data.interval,
-          end_recurrence: data.end_date,
-          send_time: data.send_time,
-          corporate_identity: data.corporate_identity,
-          campaign_type: data.campaign_type,
-          message_body: data.message_body,
-          sender: data.sender,
-          subject: data.subject,
-          active: true,
-        }; */
         if (data.file && data.file instanceof File) {
           formData.append("img", data.file);
         }
@@ -750,6 +677,8 @@ export const Campaigns = () => {
           getValues={getValues}
           watch={watch}
           usersData={usersData}
+          valueMessage={valueMessage}
+          setValueMessage={setValueMessage}
         />
       )}
 

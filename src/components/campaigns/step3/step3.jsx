@@ -1,10 +1,11 @@
 import { RiArrowGoBackFill } from "react-icons/ri";
 import styles from "./step3.module.scss";
 import { MdArrowForwardIos } from "react-icons/md";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FaPaperclip, FaStar } from "react-icons/fa";
 import "react-quill/dist/quill.snow.css";
 import { configQuill, variablesStep3 } from "@/utils/inputs";
+import ReactQuill from "react-quill";
 
 export const Step3 = ({
   handleSubmit,
@@ -16,6 +17,7 @@ export const Step3 = ({
   watch,
   usersData,
   valueMessage,
+  setValueMessage,
   image,
   setImage
 }) => {
@@ -24,6 +26,7 @@ export const Step3 = ({
   const [openVariables, setOpenVariables] = useState(false);
   const [isSubjectFocused, setIsSubjectFocused] = useState(false);
   const [errorFile, setErrorFile] = useState(false);
+  const quillRef = useRef(null);
   const maxLength = 300;
   const message = watch("message_body");
 
@@ -58,6 +61,8 @@ export const Step3 = ({
     },
   ];
 
+  const modules = configQuill().modules;
+  const formats = configQuill().formats;
 
 
   const onChangeTypeCampaign = (e) => {
@@ -90,7 +95,6 @@ export const Step3 = ({
       messageElement.addEventListener("focus", handleMouseOverMessage);
     }
   
-    // Cleanup the event listeners when the component unmounts
     return () => {
       if (subjectElement) {
         subjectElement.removeEventListener("focus", handleMouseOver);
@@ -118,14 +122,11 @@ export const Step3 = ({
         handleChangeVariablesOnSubject(e, name);
         return;
       }
+      const editor = quillRef.current.getEditor();
+      const cursorPosition = editor.getSelection().index;
+      editor.insertText(cursorPosition, `{{${name}}}`);
       
-      const cursorPosition = document.getElementById("message").selectionStart;
-      const currentText = watch("message_body");
-      const newText =
-        currentText.slice(0, cursorPosition) +
-        `{{${name}}}` +
-        currentText.slice(cursorPosition);
-      setValue("message_body", newText);
+      setValue("message_body", editor.getText());
 
     }
   };
@@ -141,6 +142,10 @@ export const Step3 = ({
     setValue("subject", newText);
     setIsSubjectFocused(false);
   }
+
+  useEffect(() => {
+    setValue("message_body", valueMessage);
+  }, [valueMessage]);
 
   const onChangeFile = (e) => {
     const maxSize = 2 * 1024 * 1024
@@ -240,10 +245,13 @@ export const Step3 = ({
                         </button>
                       </div>
                     </div>
-                    <textarea
-                      id="message"
+                    <ReactQuill
+                      value={valueMessage}
+                      onChange={setValueMessage}
+                      modules={modules}
+                      formats={formats}
                       className={styles.containerText}
-                      {...register("message_body", { required: true })}
+                      ref={quillRef}
                     />
                     {errors[input.name] && (
                       <span className={styles.error}>{`El campo ${

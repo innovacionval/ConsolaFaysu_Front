@@ -281,8 +281,7 @@ export const configQuill = () => {
       ],
       [{ direction: "rtl" }],
       [{ align: [] }],
-      ["link", "image", "video"],
-      ["clean"],
+
     ],
   };
 
