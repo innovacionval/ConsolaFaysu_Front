@@ -121,7 +121,8 @@ const handleTokenExpiration = async (error) => {
     } catch (refreshError) {
       console.error('Error al renovar el token:', refreshError);
       sessionStorage.clear();
-      window.location.href = import.meta.env.DEV ? '/' : '/ConsolaFaysu_Front/';
+      //window.location.href = import.meta.env.DEV ? '/' : '/ConsolaFaysu_Front/';
+      window.location.href = '/faysu/';
       return Promise.reject(refreshError);
     }
   }

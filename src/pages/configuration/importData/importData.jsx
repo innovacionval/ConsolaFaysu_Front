@@ -189,7 +189,7 @@ export const ImportData = () => {
   const downloadPlantilla = () => {
     const url = import.meta.env.DEV
       ? "/campanas-faysu.xlsx"
-      : "/ConsolaFaysu_Front/campanas-faysu.xlsx";
+      : "/faysu/campanas-faysu.xlsx";
     window.open(url, "_blank");
   };
 
