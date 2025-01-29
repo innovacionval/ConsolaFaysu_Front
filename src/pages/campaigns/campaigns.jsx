@@ -3,7 +3,7 @@ import styles from "./campaigns.module.scss";
 import { MdArrowForwardIos } from "react-icons/md";
 import { useContext, useEffect, useState } from "react";
 import { Table } from "@/components/table/table";
-import { FaEdit, FaPlus, FaSearch } from "react-icons/fa";
+import { FaEdit, FaPlus, FaSearch, FaTrashAlt } from "react-icons/fa";
 import { Step2 } from "@/components/campaigns/step2/step2";
 import { Step3 } from "@/components/campaigns/step3/step3";
 import { RiArrowGoBackFill } from "react-icons/ri";
@@ -16,6 +16,7 @@ import {
 } from "@/services/sourceFile.service";
 import {
   createCampaign,
+  deleteCampaign,
   getAllCampaigns,
   getAllCampaignsByFilter,
   getCampaignById,
@@ -372,6 +373,20 @@ export const Campaigns = () => {
           });
       },
     },
+    {
+      name: "delete",
+      icon: <FaTrashAlt />,
+      action: (id) => {
+        setLoading(true);
+        deleteCampaign(id).then((response) => {
+          setRefetch(!refetch);
+        }).catch((error) => {
+          console.log(error);
+        }).finally(() => {
+          setLoading(false);
+        });
+      },
+    }
   ];
   const handleChange = (e) => {
     setSearch(e.target.value);
